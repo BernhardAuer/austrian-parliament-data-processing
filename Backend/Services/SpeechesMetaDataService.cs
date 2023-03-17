@@ -76,4 +76,21 @@ public class SpeechesMetaDataService
 
     public async Task RemoveAsync(string id) =>
         await _speechesMetaDataCollection.DeleteOneAsync(x => x.Id == id);
+
+    // todo: auto create search index on mongodb
+    public async Task<List<TopicSearchResultDto>> SearchTopicsByName(string searchTerm)
+    {
+        return await _speechesMetaDataCollection
+            .Aggregate()
+            .Match(Builders<SpeechesMetaData>.Filter.Text(searchTerm))
+            .Group(key => key.topic, 
+                group => new TopicSearchResultDto()
+                {
+                    Topic = group.Key,
+                    TopNr = group.First().topNr,
+                    Legislature = group.First().legislature,
+                    MeetingNr = group.First().meetingNr
+                })
+            .ToListAsync();
+    }
 }

@@ -31,6 +31,15 @@ namespace WebApi.Controllers
 
             return result;
         }
+        
+        [HttpGet]
+        [Route("searchTopics")]
+        public async Task<List<TopicSearchResultDto>> SearchTopics([FromQuery] string searchTerm)
+        {
+            var speechMetaData = await _speechesMetaDataService.SearchTopicsByName(searchTerm);
+            
+            return speechMetaData;
+        }
 
         [HttpGet]
         public async Task<List<SpeechesMetaData>> Get() =>
