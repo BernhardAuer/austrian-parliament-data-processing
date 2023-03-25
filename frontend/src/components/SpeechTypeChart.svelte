@@ -7,7 +7,6 @@
 
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 	let service = new ChartService();
-	let speechTypes = new TypeOfSpeechCountDto();
 
 	let rerenderTrigger = 0;
 	let data = null;
@@ -17,10 +16,10 @@
 	let selectedMeetingNumber = '197';
 	let selectedPoliticalParties = ['V', 'S', 'F', 'G', 'N'];
 
-	const resetAutoCompleter = () => {		
+	const resetAutoCompleter = () => {
 		selectedTopic = null;
 		rerenderTrigger = rerenderTrigger + 1;
-	}
+	};
 	$: selectedLegislatur, selectedMeetingNumber, resetAutoCompleter();
 	let dataTemplate = {
 		labels: [],
@@ -37,7 +36,7 @@
 		service.fetchSpeechTypes(
 			selectedLegislatur,
 			selectedMeetingNumber,
-			selectedTopic?.topNr ?? "",
+			selectedTopic?.topNr ?? '',
 			selectedPoliticalParties,
 			(response) => {
 				console.log('hahllo');
@@ -54,13 +53,11 @@
 				dataTemplate.labels = Array.from(typeOfSpeechCountList, (element) => element.typeOfSpeech);
 				console.log(dataTemplate);
 				data = dataTemplate;
-				console.log("das:" + JSON.stringify(selectedTopic));
+				console.log('das:' + JSON.stringify(selectedTopic));
 			}
 		);
 	}
 	populateData();
-
-	
 </script>
 
 <h1 class="text-5xl font-normal leading-normal mt-0 mb-2 text-blue-800">
@@ -107,32 +104,26 @@
 			</div>
 			<div class="testparent w-full max-w-xs">
 				<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">TOP:</label>
-				<!-- <input
-					placeholder="Suche nach Top-Nr / Thema"
-					class="input input-bordered w-full max-w-xs"
-					bind:value={inputTopNumber}
-					type="text"
-					id="topNumber"
-					name="TOP"
-				/> -->
+
 				{#key rerenderTrigger}
-				<AutoComplete 
-				minCharactersToSearch=0
-				placeholder="Suche TOPs"				
-				hideArrow=true
-				inputClassName="w-full max-w-xs"
-				className="input input-bordered w-full max-w-xs"
-				noInputStyles=false
-				showClear=true
-				lock=false
-				noResultsText="Kein Suchergebnis gefunden. Geben Sie bitte vollständige Wörter ein"
-				loadingText="Lade Ergebnisse..."
-				searchFunction={(keyword) => service.searchTopics(keyword, selectedLegislatur, selectedMeetingNumber)} 
-				bind:selectedItem={selectedTopic}
-				labelFunction={selected =>  selected.topNr + ': ' + selected.topic}
-				inputId="topNumber"
-				name="TOP"
-				/>
+					<AutoComplete
+						minCharactersToSearch="0"
+						placeholder="Suche TOPs"
+						hideArrow="true"
+						inputClassName="w-full max-w-xs"
+						className="input input-bordered w-full max-w-xs"
+						noInputStyles="false"
+						showClear="true"
+						lock="false"
+						noResultsText="Kein Suchergebnis gefunden. Geben Sie bitte vollständige Wörter ein"
+						loadingText="Lade Ergebnisse..."
+						searchFunction={(keyword) =>
+							service.searchTopics(keyword, selectedLegislatur, selectedMeetingNumber)}
+						bind:selectedItem={selectedTopic}
+						labelFunction={(selected) => selected.topNr + ': ' + selected.topic}
+						inputId="topNumber"
+						name="TOP"
+					/>
 				{/key}
 			</div>
 			<div>
@@ -202,8 +193,7 @@
 
 <style>
 	/* this is a hack ... please help me fixing */
-.testparent :global(.autocomplete) {
- padding-top: 0.7em; 
-}
-
+	.testparent :global(.autocomplete) {
+		padding-top: 0.7em;
+	}
 </style>
