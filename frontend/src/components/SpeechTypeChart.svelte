@@ -117,6 +117,7 @@
 				/> -->
 				{#key rerenderTrigger}
 				<AutoComplete 
+				minCharactersToSearch=0
 				placeholder="Suche TOPs"				
 				hideArrow=true
 				inputClassName="w-full max-w-xs"

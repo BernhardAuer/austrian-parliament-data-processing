@@ -76,14 +76,23 @@ public class SpeechesMetaDataService
 
     public async Task RemoveAsync(string id) =>
         await _speechesMetaDataCollection.DeleteOneAsync(x => x.Id == id);
-
-    public async Task<List<TopicSearchResultDto>> SearchTopicsByName(string searchTerm, string? legislature, int? meetingNumber)
-    { 
+    
+    public async Task<List<TopicSearchResultDto>> SearchTopicsByName(string? searchTerm, string? legislature, int? meetingNumber)
+    {
+        if ((searchTerm is null && meetingNumber is null) || (searchTerm is null && legislature is null))
+        {
+            return new List<TopicSearchResultDto>();
+        }
         
         var query = _speechesMetaDataCollection
-            .Aggregate()
-            .Match(Builders<SpeechesMetaData>.Filter.Text(searchTerm))
-            .AppendStage<SpeechesMetaData>("{$addFields: {textMatchScore: {$meta:'textScore'}}}");
+            .Aggregate(new AggregateOptions{Collation = new Collation(locale:"de", numericOrdering: true)});
+
+        if (searchTerm is not null)
+        {
+            query
+                .Match(Builders<SpeechesMetaData>.Filter.Text(searchTerm))
+                .AppendStage<SpeechesMetaData>("{$addFields: {textMatchScore: {$meta:'textScore'}}}");
+        }
 
         if (legislature is not null)
         {
@@ -95,18 +104,38 @@ public class SpeechesMetaDataService
             query = query.Match(x => x.meetingNr == meetingNumber);
         }
 
-        return await query
-            .Group(key => key.topic,
-                group => new TopicSearchResultDto()
-                {
-                    Topic = group.Key,
-                    TopNr = group.First().topNr,
-                    Legislature = group.First().legislature,
-                    MeetingNr = group.First().meetingNr,
-                    TextMatchScore = group.First().textMatchScore
-                })
-            .SortByDescending(x => x.TextMatchScore)
-            .Limit(20)
-            .ToListAsync();
+        IAggregateFluent<TopicSearchResultDto>? groupedQuery;
+        if (searchTerm is not null)
+        {
+            groupedQuery = query
+                .Group(key => key.topic,
+                    group => new TopicSearchResultDto()
+                    {
+                        Topic = group.Key,
+                        TopNr = group.First().topNr,
+                        Legislature = group.First().legislature,
+                        MeetingNr = group.First().meetingNr,
+                        TextMatchScore = group.First().textMatchScore
+                    })
+                .SortByDescending(x => x.TextMatchScore)
+                .ThenBy(x => x.TopNr)
+                .Limit(25);
+        }
+        else
+        {
+            groupedQuery = query
+                .Group(key => key.topic,
+                    group => new TopicSearchResultDto()
+                    {
+                        Topic = group.Key,
+                        TopNr = group.First().topNr,
+                        Legislature = group.First().legislature,
+                        MeetingNr = group.First().meetingNr
+                    })
+                .SortBy(x => x.TopNr)
+                .Limit(100);
+        }
+        
+        return await groupedQuery.ToListAsync();
     }
 }
