@@ -24,6 +24,9 @@ public class SpeechesMetaData
     public string politicalPartie { get; set; }
     public string topNr { get; set; }
     public int? meetingNr { get; set; }
-    public string legislature { get; set; }
+    public string legislature { get; set; } 
+    
+    [BsonIgnoreIfNull]
+    public double? textMatchScore { get; set; }
     
 }

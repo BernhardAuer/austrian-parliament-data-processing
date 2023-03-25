@@ -77,19 +77,23 @@ public class SpeechesMetaDataService
     public async Task RemoveAsync(string id) =>
         await _speechesMetaDataCollection.DeleteOneAsync(x => x.Id == id);
 
-    public async Task<List<TopicSearchResultDto>> SearchTopicsByName(string searchTerm)
+    public async Task<List<TopicSearchResultDto>> SearchTopicsByName(string searchTerm, string? legislature, int? meetingNumber)
     {
         return await _speechesMetaDataCollection
             .Aggregate()
             .Match(Builders<SpeechesMetaData>.Filter.Text(searchTerm))
+            .AppendStage<SpeechesMetaData>("{$addFields: {TextMatchScore: {$meta:'textScore'}}}")
             .Group(key => key.topic, 
                 group => new TopicSearchResultDto()
                 {
                     Topic = group.Key,
                     TopNr = group.First().topNr,
                     Legislature = group.First().legislature,
-                    MeetingNr = group.First().meetingNr
+                    MeetingNr = group.First().meetingNr,
+                    TextMatchScore = group.First().textMatchScore
                 })
+            .SortByDescending(x => x.TextMatchScore)
+            .Limit(50)
             .ToListAsync();
     }
 }
