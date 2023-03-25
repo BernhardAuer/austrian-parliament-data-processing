@@ -10,6 +10,7 @@ Method | HTTP request | Description
 [**apiSpeechesMetaDataIdGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataIdGet) | **GET** /api/SpeechesMetaData/{id} | 
 [**apiSpeechesMetaDataIdPut**](SpeechesMetaDataApi.md#apiSpeechesMetaDataIdPut) | **PUT** /api/SpeechesMetaData/{id} | 
 [**apiSpeechesMetaDataPost**](SpeechesMetaDataApi.md#apiSpeechesMetaDataPost) | **POST** /api/SpeechesMetaData | 
+[**apiSpeechesMetaDataSearchTopicsGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataSearchTopicsGet) | **GET** /api/SpeechesMetaData/searchTopics | 
 
 <a name="apiSpeechesMetaDataGet"></a>
 # **apiSpeechesMetaDataGet**
@@ -262,4 +263,46 @@ No authorization required
 
  - **Content-Type**: application/json, text/json, application/_*+json
  - **Accept**: Not defined
+
+<a name="apiSpeechesMetaDataSearchTopicsGet"></a>
+# **apiSpeechesMetaDataSearchTopicsGet**
+> [TopicSearchResultDto] apiSpeechesMetaDataSearchTopicsGet(opts)
+
+
+
+### Example
+```javascript
+import {WebApi} from 'web_api';
+
+let apiInstance = new WebApi.SpeechesMetaDataApi();
+let opts = { 
+  'searchTerm': "searchTerm_example" // String | 
+};
+apiInstance.apiSpeechesMetaDataSearchTopicsGet(opts, (error, data, response) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+});
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **searchTerm** | **String**|  | [optional] 
+
+### Return type
+
+[**[TopicSearchResultDto]**](TopicSearchResultDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: text/plain, application/json, text/json
 

@@ -14,6 +14,7 @@
  */
 import {ApiClient} from "../ApiClient";
 import {SpeechesMetaData} from '../model/SpeechesMetaData';
+import {TopicSearchResultDto} from '../model/TopicSearchResultDto';
 import {TypeOfSpeechCountDto} from '../model/TypeOfSpeechCountDto';
 
 /**
@@ -292,6 +293,48 @@ export class SpeechesMetaDataApi {
 
       return this.apiClient.callApi(
         '/api/SpeechesMetaData', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, callback
+      );
+    }
+    /**
+     * Callback function to receive the result of the apiSpeechesMetaDataSearchTopicsGet operation.
+     * @callback moduleapi/SpeechesMetaDataApi~apiSpeechesMetaDataSearchTopicsGetCallback
+     * @param {String} error Error message, if any.
+     * @param {Array.<module:model/TopicSearchResultDto>{ data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.searchTerm 
+     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataSearchTopicsGetCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+     */
+    apiSpeechesMetaDataSearchTopicsGet(opts, callback) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+        
+      };
+      let queryParams = {
+        'searchTerm': opts['searchTerm']
+      };
+      let headerParams = {
+        
+      };
+      let formParams = {
+        
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['text/plain', 'application/json', 'text/json'];
+      let returnType = [TopicSearchResultDto];
+
+      return this.apiClient.callApi(
+        '/api/SpeechesMetaData/searchTopics', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );

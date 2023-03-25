@@ -14,6 +14,7 @@
  */
 import {ApiClient} from './ApiClient';
 import {SpeechesMetaData} from './model/SpeechesMetaData';
+import {TopicSearchResultDto} from './model/TopicSearchResultDto';
 import {TypeOfSpeechCountDto} from './model/TypeOfSpeechCountDto';
 import {SpeechesMetaDataApi} from './api/SpeechesMetaDataApi';
 
@@ -60,6 +61,12 @@ export {
      * @property {module:model/SpeechesMetaData}
      */
     SpeechesMetaData,
+
+    /**
+     * The TopicSearchResultDto model constructor.
+     * @property {module:model/TopicSearchResultDto}
+     */
+    TopicSearchResultDto,
 
     /**
      * The TypeOfSpeechCountDto model constructor.
