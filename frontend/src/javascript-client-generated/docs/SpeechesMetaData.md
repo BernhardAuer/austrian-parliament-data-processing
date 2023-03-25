@@ -19,3 +19,4 @@ Name | Type | Description | Notes
 **topNr** | **String** |  | [optional] 
 **meetingNr** | **Number** |  | [optional] 
 **legislature** | **String** |  | [optional] 
+**textMatchScore** | **Number** |  | [optional] 

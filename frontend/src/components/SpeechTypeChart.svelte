@@ -9,9 +9,19 @@
 	let service = new ChartService();
 	let speechTypes = new TypeOfSpeechCountDto();
 
+	let rerenderTrigger = 0;
 	let data = null;
 	let selectedTopic = null;
+	let chart;
+	let selectedLegislatur = 'XXVII';
+	let selectedMeetingNumber = '197';
+	let selectedPoliticalParties = ['V', 'S', 'F', 'G', 'N'];
 
+	const resetAutoCompleter = () => {		
+		selectedTopic = null;
+		rerenderTrigger = rerenderTrigger + 1;
+	}
+	$: selectedLegislatur, selectedMeetingNumber, resetAutoCompleter();
 	let dataTemplate = {
 		labels: [],
 		datasets: [
@@ -44,13 +54,10 @@
 				dataTemplate.labels = Array.from(typeOfSpeechCountList, (element) => element.typeOfSpeech);
 				console.log(dataTemplate);
 				data = dataTemplate;
+				console.log("das:" + JSON.stringify(selectedTopic));
 			}
 		);
 	}
-	let chart;
-	let selectedLegislatur = 'XXVII';
-	let selectedMeetingNumber = '197';
-	let selectedPoliticalParties = ['V', 'S', 'F', 'G', 'N'];
 	populateData();
 
 	
@@ -108,7 +115,7 @@
 					id="topNumber"
 					name="TOP"
 				/> -->
-
+				{#key rerenderTrigger}
 				<AutoComplete 
 				placeholder="Suche TOPs"				
 				hideArrow=true
@@ -116,15 +123,16 @@
 				className="input input-bordered w-full max-w-xs"
 				noInputStyles=false
 				showClear=true
-				lock=true
+				lock=false
 				noResultsText="Kein Suchergebnis gefunden. Geben Sie bitte vollständige Wörter ein"
 				loadingText="Lade Ergebnisse..."
-				searchFunction={service.searchTopics} 
-				bind:selectedItem={selectedTopic} 
-				labelFunction={selected => selected.topNr + ': ' + selected.topic}
+				searchFunction={(keyword) => service.searchTopics(keyword, selectedLegislatur, selectedMeetingNumber)} 
+				bind:selectedItem={selectedTopic}
+				labelFunction={selected =>  selected.topNr + ': ' + selected.topic}
 				inputId="topNumber"
 				name="TOP"
 				/>
+				{/key}
 			</div>
 			<div>
 				<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">Fraktion:</label>

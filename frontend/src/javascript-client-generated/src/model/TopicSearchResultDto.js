@@ -46,6 +46,8 @@ export class TopicSearchResultDto {
         obj.meetingNr = ApiClient.convertToType(data['meetingNr'], 'Number');
       if (data.hasOwnProperty('legislature'))
         obj.legislature = ApiClient.convertToType(data['legislature'], 'String');
+      if (data.hasOwnProperty('textMatchScore'))
+        obj.textMatchScore = ApiClient.convertToType(data['textMatchScore'], 'Number');
     }
     return obj;
   }
@@ -70,4 +72,9 @@ TopicSearchResultDto.prototype.meetingNr = undefined;
  * @member {String} legislature
  */
 TopicSearchResultDto.prototype.legislature = undefined;
+
+/**
+ * @member {Number} textMatchScore
+ */
+TopicSearchResultDto.prototype.textMatchScore = undefined;
 

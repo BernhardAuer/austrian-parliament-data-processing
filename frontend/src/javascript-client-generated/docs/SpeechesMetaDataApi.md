@@ -276,7 +276,9 @@ import {WebApi} from 'web_api';
 
 let apiInstance = new WebApi.SpeechesMetaDataApi();
 let opts = { 
-  'searchTerm': "searchTerm_example" // String | 
+  'searchTerm': "searchTerm_example", // String | 
+  'legislature': "legislature_example", // String | 
+  'meetingNumber': 56 // Number | 
 };
 apiInstance.apiSpeechesMetaDataSearchTopicsGet(opts, (error, data, response) => {
   if (error) {
@@ -292,6 +294,8 @@ apiInstance.apiSpeechesMetaDataSearchTopicsGet(opts, (error, data, response) => 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **searchTerm** | **String**|  | [optional] 
+ **legislature** | **String**|  | [optional] 
+ **meetingNumber** | **Number**|  | [optional] 
 
 ### Return type
 

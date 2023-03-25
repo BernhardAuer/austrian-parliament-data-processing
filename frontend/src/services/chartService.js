@@ -46,9 +46,11 @@ export default class ChartService {
         });
     }
 
-    searchTopics = (searchTerm) => {
+    searchTopics = (searchTerm, legislature, meetingNumber) => {
         let options = {
-            searchTerm: searchTerm
+            searchTerm: searchTerm,
+            legislature: legislature,
+            meetingNumber: meetingNumber
         }
         return new Promise((resolve, reject) => {
             this.#apiInstance.apiSpeechesMetaDataSearchTopicsGet(options, (error, data, response) => {

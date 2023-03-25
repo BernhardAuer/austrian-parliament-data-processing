@@ -308,6 +308,8 @@ export class SpeechesMetaDataApi {
     /**
      * @param {Object} opts Optional parameters
      * @param {String} opts.searchTerm 
+     * @param {String} opts.legislature 
+     * @param {Number} opts.meetingNumber 
      * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataSearchTopicsGetCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
      */
@@ -319,7 +321,7 @@ export class SpeechesMetaDataApi {
         
       };
       let queryParams = {
-        'searchTerm': opts['searchTerm']
+        'searchTerm': opts['searchTerm'],'legislature': opts['legislature'],'meetingNumber': opts['meetingNumber']
       };
       let headerParams = {
         

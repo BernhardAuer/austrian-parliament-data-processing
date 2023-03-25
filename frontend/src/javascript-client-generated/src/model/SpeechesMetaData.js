@@ -70,6 +70,8 @@ export class SpeechesMetaData {
         obj.meetingNr = ApiClient.convertToType(data['meetingNr'], 'Number');
       if (data.hasOwnProperty('legislature'))
         obj.legislature = ApiClient.convertToType(data['legislature'], 'String');
+      if (data.hasOwnProperty('textMatchScore'))
+        obj.textMatchScore = ApiClient.convertToType(data['textMatchScore'], 'Number');
     }
     return obj;
   }
@@ -154,4 +156,9 @@ SpeechesMetaData.prototype.meetingNr = undefined;
  * @member {String} legislature
  */
 SpeechesMetaData.prototype.legislature = undefined;
+
+/**
+ * @member {Number} textMatchScore
+ */
+SpeechesMetaData.prototype.textMatchScore = undefined;
 

@@ -63,6 +63,12 @@
         // expect(instance.legislature).to.be(expectedValueLiteral);
       });
 
+      it('should have the property textMatchScore (base name: "textMatchScore")', function() {
+        // TODO: update the code to test the property textMatchScore
+        expect(instance).to.have.property('textMatchScore');
+        // expect(instance.textMatchScore).to.be(expectedValueLiteral);
+      });
+
     });
   });
 
