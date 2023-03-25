@@ -121,7 +121,7 @@
 				loadingText="Lade Ergebnisse..."
 				searchFunction={service.searchTopics} 
 				bind:selectedItem={selectedTopic} 
-				labelFieldName="topic"
+				labelFunction={selected => selected.topNr + ': ' + selected.topic}
 				inputId="topNumber"
 				name="TOP"
 				/>

@@ -1,3 +1,4 @@
+using WebApi.Infrastructure;
 using WebApi.Models;
 using WebApi.Services;
 
@@ -48,4 +49,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+MongoDbInit.CreateIndices(
+    builder.Configuration.GetValue<string>("AustrianParliamentScrapeDatabase:ConnectionString"),
+    builder.Configuration.GetValue<string>("AustrianParliamentScrapeDatabase:DatabaseName"),
+    builder.Configuration.GetValue<string>("AustrianParliamentScrapeDatabase:SpeechesMetaDataCollectionName")
+);
+
 app.Run();
+
