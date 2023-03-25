@@ -16,7 +16,8 @@ public static class MongoDbInit
         
         speechesMetaDataCollection.Indexes.CreateOne(
             new CreateIndexModel<SpeechesMetaData>(Builders<SpeechesMetaData>
-                .IndexKeys.Text(x => x.topNr ).Text(x => x.topic)));
+                .IndexKeys.Text(x => x.topNr ).Text(x => x.topic),
+                new CreateIndexOptions{DefaultLanguage = "german"}));
     }
 
 }
