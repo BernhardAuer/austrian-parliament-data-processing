@@ -5,11 +5,13 @@ All URIs are relative to */*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**apiSpeechesMetaDataGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGet) | **GET** /api/SpeechesMetaData | 
+[**apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet) | **GET** /api/SpeechesMetaData/getLegislaturesAndMeetingNumbers | 
 [**apiSpeechesMetaDataGetTypeOfSpeechesCountListGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetTypeOfSpeechesCountListGet) | **GET** /api/SpeechesMetaData/getTypeOfSpeechesCountList | 
 [**apiSpeechesMetaDataIdDelete**](SpeechesMetaDataApi.md#apiSpeechesMetaDataIdDelete) | **DELETE** /api/SpeechesMetaData/{id} | 
 [**apiSpeechesMetaDataIdGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataIdGet) | **GET** /api/SpeechesMetaData/{id} | 
 [**apiSpeechesMetaDataIdPut**](SpeechesMetaDataApi.md#apiSpeechesMetaDataIdPut) | **PUT** /api/SpeechesMetaData/{id} | 
 [**apiSpeechesMetaDataPost**](SpeechesMetaDataApi.md#apiSpeechesMetaDataPost) | **POST** /api/SpeechesMetaData | 
+[**apiSpeechesMetaDataSearchTopicsGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataSearchTopicsGet) | **GET** /api/SpeechesMetaData/searchTopics | 
 
 <a name="apiSpeechesMetaDataGet"></a>
 # **apiSpeechesMetaDataGet**
@@ -37,6 +39,42 @@ This endpoint does not need any parameter.
 ### Return type
 
 [**[SpeechesMetaData]**](SpeechesMetaData.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: text/plain, application/json, text/json
+
+<a name="apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet"></a>
+# **apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet**
+> [LegislatureMeetingsListDto] apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet()
+
+
+
+### Example
+```javascript
+import {WebApi} from 'web_api';
+
+let apiInstance = new WebApi.SpeechesMetaDataApi();
+apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet((error, data, response) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+});
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**[LegislatureMeetingsListDto]**](LegislatureMeetingsListDto.md)
 
 ### Authorization
 
@@ -262,4 +300,50 @@ No authorization required
 
  - **Content-Type**: application/json, text/json, application/_*+json
  - **Accept**: Not defined
+
+<a name="apiSpeechesMetaDataSearchTopicsGet"></a>
+# **apiSpeechesMetaDataSearchTopicsGet**
+> [TopicSearchResultDto] apiSpeechesMetaDataSearchTopicsGet(opts)
+
+
+
+### Example
+```javascript
+import {WebApi} from 'web_api';
+
+let apiInstance = new WebApi.SpeechesMetaDataApi();
+let opts = { 
+  'searchTerm': "searchTerm_example", // String | 
+  'legislature': "legislature_example", // String | 
+  'meetingNumber': 56 // Number | 
+};
+apiInstance.apiSpeechesMetaDataSearchTopicsGet(opts, (error, data, response) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+});
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **searchTerm** | **String**|  | [optional] 
+ **legislature** | **String**|  | [optional] 
+ **meetingNumber** | **Number**|  | [optional] 
+
+### Return type
+
+[**[TopicSearchResultDto]**](TopicSearchResultDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: text/plain, application/json, text/json
 

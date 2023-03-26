@@ -13,7 +13,9 @@
  *
  */
 import {ApiClient} from "../ApiClient";
+import {LegislatureMeetingsListDto} from '../model/LegislatureMeetingsListDto';
 import {SpeechesMetaData} from '../model/SpeechesMetaData';
+import {TopicSearchResultDto} from '../model/TopicSearchResultDto';
 import {TypeOfSpeechCountDto} from '../model/TypeOfSpeechCountDto';
 
 /**
@@ -71,6 +73,46 @@ export class SpeechesMetaDataApi {
 
       return this.apiClient.callApi(
         '/api/SpeechesMetaData', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, callback
+      );
+    }
+    /**
+     * Callback function to receive the result of the apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet operation.
+     * @callback moduleapi/SpeechesMetaDataApi~apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGetCallback
+     * @param {String} error Error message, if any.
+     * @param {Array.<module:model/LegislatureMeetingsListDto>{ data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGetCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+     */
+    apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet(callback) {
+      
+      let postBody = null;
+
+      let pathParams = {
+        
+      };
+      let queryParams = {
+        
+      };
+      let headerParams = {
+        
+      };
+      let formParams = {
+        
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['text/plain', 'application/json', 'text/json'];
+      let returnType = [LegislatureMeetingsListDto];
+
+      return this.apiClient.callApi(
+        '/api/SpeechesMetaData/getLegislaturesAndMeetingNumbers', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );
@@ -292,6 +334,50 @@ export class SpeechesMetaDataApi {
 
       return this.apiClient.callApi(
         '/api/SpeechesMetaData', 'POST',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, callback
+      );
+    }
+    /**
+     * Callback function to receive the result of the apiSpeechesMetaDataSearchTopicsGet operation.
+     * @callback moduleapi/SpeechesMetaDataApi~apiSpeechesMetaDataSearchTopicsGetCallback
+     * @param {String} error Error message, if any.
+     * @param {Array.<module:model/TopicSearchResultDto>{ data The data returned by the service call.
+     * @param {String} response The complete HTTP response.
+     */
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.searchTerm 
+     * @param {String} opts.legislature 
+     * @param {Number} opts.meetingNumber 
+     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataSearchTopicsGetCallback} callback The callback function, accepting three arguments: error, data, response
+     * data is of type: {@link <&vendorExtensions.x-jsdoc-type>}
+     */
+    apiSpeechesMetaDataSearchTopicsGet(opts, callback) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+        
+      };
+      let queryParams = {
+        'searchTerm': opts['searchTerm'],'legislature': opts['legislature'],'meetingNumber': opts['meetingNumber']
+      };
+      let headerParams = {
+        
+      };
+      let formParams = {
+        
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['text/plain', 'application/json', 'text/json'];
+      let returnType = [TopicSearchResultDto];
+
+      return this.apiClient.callApi(
+        '/api/SpeechesMetaData/searchTopics', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, callback
       );

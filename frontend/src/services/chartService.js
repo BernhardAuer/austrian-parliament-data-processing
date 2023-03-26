@@ -45,5 +45,49 @@ export default class ChartService {
             }
         });
     }
+
+    searchTopics = (searchTerm, legislature, meetingNumber) => {
+        let options = {
+            searchTerm: searchTerm,
+            legislature: legislature,
+            meetingNumber: meetingNumber
+        }
+        return new Promise((resolve, reject) => {
+            this.#apiInstance.apiSpeechesMetaDataSearchTopicsGet(options, (error, data, response) => {
+            
+                if (error) {
+                    console.error("search topic api call failed.")
+                    console.error(error);
+                    reject(error);
+                } else {
+                    console.log("search topic api call success.")
+                    let parsedData = JSON.stringify(data)
+                    console.log('API called successfully. Returned data: ' + parsedData);
+                    resolve(data);
+                }
+            });
+        })
+        
+    }
+
+    getLegislaturesAndMeetings = () => {
+      
+        return new Promise((resolve, reject) => {
+            this.#apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet((error, data, response) => {
+            
+                if (error) {
+                    console.error("get legislatures and meetings api call failed.")
+                    console.error(error);
+                    reject(error);
+                } else {
+                    console.log("get legislatures and meetings api call success.")
+                    let parsedData = JSON.stringify(data)
+                    console.log('API called successfully. Returned data: ' + parsedData);
+                    resolve(data);
+                }
+            });
+        })
+        
+    }
 }
 

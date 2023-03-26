@@ -31,6 +31,26 @@ namespace WebApi.Controllers
 
             return result;
         }
+        
+        [HttpGet]
+        [Route("searchTopics")]
+        public async Task<List<TopicSearchResultDto>> SearchTopics([FromQuery] string? searchTerm, 
+            [FromQuery] string? legislature, [FromQuery] int? meetingNumber)
+        {
+            var speechMetaData = await _speechesMetaDataService.SearchTopicsByName(searchTerm, legislature, meetingNumber);
+            
+            return speechMetaData;
+        }
+        
+        [HttpGet]
+        [Route("getLegislaturesAndMeetingNumbers")]
+        public async Task<List<LegislatureMeetingsListDto>> GetLegislaturesAndMeetingNumbers()
+        {
+            var legislaturesAndMeetings = await _speechesMetaDataService.GetLegislaturesAndMeetings();
+            
+            return legislaturesAndMeetings;
+        }
+
 
         [HttpGet]
         public async Task<List<SpeechesMetaData>> Get() =>

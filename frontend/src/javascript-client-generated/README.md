@@ -88,15 +88,19 @@ All URIs are relative to */*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *WebApi.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGet) | **GET** /api/SpeechesMetaData | 
+*WebApi.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet) | **GET** /api/SpeechesMetaData/getLegislaturesAndMeetingNumbers | 
 *WebApi.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetTypeOfSpeechesCountListGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetTypeOfSpeechesCountListGet) | **GET** /api/SpeechesMetaData/getTypeOfSpeechesCountList | 
 *WebApi.SpeechesMetaDataApi* | [**apiSpeechesMetaDataIdDelete**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataIdDelete) | **DELETE** /api/SpeechesMetaData/{id} | 
 *WebApi.SpeechesMetaDataApi* | [**apiSpeechesMetaDataIdGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataIdGet) | **GET** /api/SpeechesMetaData/{id} | 
 *WebApi.SpeechesMetaDataApi* | [**apiSpeechesMetaDataIdPut**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataIdPut) | **PUT** /api/SpeechesMetaData/{id} | 
 *WebApi.SpeechesMetaDataApi* | [**apiSpeechesMetaDataPost**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataPost) | **POST** /api/SpeechesMetaData | 
+*WebApi.SpeechesMetaDataApi* | [**apiSpeechesMetaDataSearchTopicsGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataSearchTopicsGet) | **GET** /api/SpeechesMetaData/searchTopics | 
 
 ## Documentation for Models
 
+ - [WebApi.LegislatureMeetingsListDto](docs/LegislatureMeetingsListDto.md)
  - [WebApi.SpeechesMetaData](docs/SpeechesMetaData.md)
+ - [WebApi.TopicSearchResultDto](docs/TopicSearchResultDto.md)
  - [WebApi.TypeOfSpeechCountDto](docs/TypeOfSpeechCountDto.md)
 
 ## Documentation for Authorization
