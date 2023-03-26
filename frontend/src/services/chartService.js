@@ -69,5 +69,25 @@ export default class ChartService {
         })
         
     }
+
+    getLegislaturesAndMeetings = () => {
+      
+        return new Promise((resolve, reject) => {
+            this.#apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet((error, data, response) => {
+            
+                if (error) {
+                    console.error("get legislatures and meetings api call failed.")
+                    console.error(error);
+                    reject(error);
+                } else {
+                    console.log("get legislatures and meetings api call success.")
+                    let parsedData = JSON.stringify(data)
+                    console.log('API called successfully. Returned data: ' + parsedData);
+                    resolve(data);
+                }
+            });
+        })
+        
+    }
 }
 

@@ -13,6 +13,7 @@
  *
  */
 import {ApiClient} from './ApiClient';
+import {LegislatureMeetingsListDto} from './model/LegislatureMeetingsListDto';
 import {SpeechesMetaData} from './model/SpeechesMetaData';
 import {TopicSearchResultDto} from './model/TopicSearchResultDto';
 import {TypeOfSpeechCountDto} from './model/TypeOfSpeechCountDto';
@@ -55,6 +56,12 @@ export {
      * @property {module:ApiClient}
      */
     ApiClient,
+
+    /**
+     * The LegislatureMeetingsListDto model constructor.
+     * @property {module:model/LegislatureMeetingsListDto}
+     */
+    LegislatureMeetingsListDto,
 
     /**
      * The SpeechesMetaData model constructor.

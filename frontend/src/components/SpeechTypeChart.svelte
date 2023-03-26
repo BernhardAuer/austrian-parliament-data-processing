@@ -1,6 +1,7 @@
 <script>
 	import { TypeOfSpeechCountDto } from './../javascript-client-generated/src/model/TypeOfSpeechCountDto.js';
 	import { Doughnut } from 'svelte-chartjs';
+	import { onMount } from 'svelte';
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
 	import ChartService from './../services/chartService.js';
 	import AutoComplete from 'simple-svelte-autocomplete';
@@ -12,9 +13,10 @@
 	let data = null;
 	let selectedTopic = null;
 	let chart;
-	let selectedLegislatur = 'XXVII';
-	let selectedMeetingNumber = '197';
+	let selectedLegislatur = null;
+	let selectedMeetingNumber = null;
 	let selectedPoliticalParties = ['V', 'S', 'F', 'G', 'N'];
+	let legislatureAndMeetings = null;
 
 	const resetAutoCompleter = () => {
 		selectedTopic = null;
@@ -57,7 +59,11 @@
 			}
 		);
 	}
-	populateData();
+
+	onMount(async () => {
+		populateData();
+		legislatureAndMeetings = await service.getLegislaturesAndMeetings();
+	});
 </script>
 
 <h1 class="text-5xl font-normal leading-normal mt-0 mb-2 text-blue-800">
@@ -85,8 +91,11 @@
 					name="Gesetzgebungsperiode"
 					id="legislatur"
 				>
-					<option value="XXVII">XXVII</option>
-					<option value="nix">nix</option>
+					{#if legislatureAndMeetings !== null}
+						{#each legislatureAndMeetings as item}
+							<option value={item.legislature}>{item.legislature}</option>
+						{/each}
+					{/if}
 				</select>
 			</div>
 			<div>
@@ -99,7 +108,11 @@
 					name="Sitzung"
 					id="meetingNumber"
 				>
-					<option value="197">197</option> <option value="196">196</option>
+					{#if legislatureAndMeetings !== null && selectedLegislatur !== null}
+						{#each legislatureAndMeetings.find(x => x.legislature === selectedLegislatur)?.meetings as meeting}
+							<option value="{meeting}">{meeting}</option>
+						{/each}
+					{/if}
 				</select>
 			</div>
 			<div class="testparent w-full max-w-xs">

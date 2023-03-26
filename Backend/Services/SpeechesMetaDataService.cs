@@ -76,6 +76,17 @@ public class SpeechesMetaDataService
 
     public async Task RemoveAsync(string id) =>
         await _speechesMetaDataCollection.DeleteOneAsync(x => x.Id == id);
+
+    public async Task<List<LegislatureMeetingsListDto>> GetLegislaturesAndMeetings()
+    {
+        return await _speechesMetaDataCollection.Aggregate().Group(key => key.legislature,
+            group => new LegislatureMeetingsListDto()
+            {
+                Legislature = group.Key,
+                Meetings = group.Where(x => x.meetingNr != null).Select(x => x.meetingNr!.Value).Distinct().ToArray()
+            }).ToListAsync();
+
+    }
     
     public async Task<List<TopicSearchResultDto>> SearchTopicsByName(string? searchTerm, string? legislature, int? meetingNumber)
     {

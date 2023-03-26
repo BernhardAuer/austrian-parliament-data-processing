@@ -41,6 +41,16 @@ namespace WebApi.Controllers
             
             return speechMetaData;
         }
+        
+        [HttpGet]
+        [Route("getLegislaturesAndMeetingNumbers")]
+        public async Task<List<LegislatureMeetingsListDto>> GetLegislaturesAndMeetingNumbers()
+        {
+            var legislaturesAndMeetings = await _speechesMetaDataService.GetLegislaturesAndMeetings();
+            
+            return legislaturesAndMeetings;
+        }
+
 
         [HttpGet]
         public async Task<List<SpeechesMetaData>> Get() =>
