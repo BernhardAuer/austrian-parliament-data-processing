@@ -67,17 +67,16 @@
 </script>
 
 <h1 class="text-5xl font-normal leading-normal mt-0 mb-2 text-blue-800">
-	TypeOfSpeech Grafik der Parlamentsreden
+	Übersicht aller Wortmeldungsarten im Nationalrat
 </h1>
 <p class="text-1xl  leading-tight mt-0 mb-2">
-	Folgende Grafik zeigt die Verteilung der Redebeitragsarten bei den Plenarsitzungen des
-	Nationalrates. Benützen Sie den Filter, um die Datengrundlage der Grafik zu verändern.
+	Redebeiträge in den Plenarsitzungen des Nationalrats werden in sogenannten Wortmeldungsarten kategoriersiert. Um einen überblicksmäßigen Eindruck über 
+	die Verteilung der Wortmeldungsarten im Nationalrat zu erhalten, wird diese hier grafisch dargestellt.
+	
+	Benützen Sie den Filter, um die Datengrundlage nach Ihrem Interesse anzupassen.
 
-	<a class="link" href="https://www.parlament.gv.at/verstehen/glossare/abkuerzungen"
-		>Abkürzungsverzeichnis
-	</a>
 </p>
-<div class="flex gap-x-4 gap-y-4 flex-wrap">
+<div class="flex justify-center gap-x-4 gap-y-4 flex-wrap">
 	<div class="card w-fit bg-base-100 shadow-xl">
 		<div class="card-body">
 			<h2 class="card-title">Datenfilter</h2>
