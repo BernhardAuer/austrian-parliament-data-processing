@@ -76,8 +76,8 @@
 	Benützen Sie den Filter, um die Datengrundlage nach Ihrem Interesse anzupassen.
 
 </p>
-<div class="flex justify-center gap-x-4 gap-y-4 flex-wrap">
-	<div class="card w-fit bg-base-100 shadow-xl">
+<div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
+	<div class="card w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
 			<h2 class="card-title">Datenfilter</h2>
 			<div>
@@ -201,10 +201,7 @@
 			<button class="btn " on:click={() => populateData()}>Grafik aktualisieren</button>
 		</div>
 	</div>
-
-	<div />
-
-	<div class="card w-fit bg-base-100 shadow-xl">
+	<div class="card w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
 			<div>
 				<h2 class="card-title">Wortmeldungsarten</h2>
