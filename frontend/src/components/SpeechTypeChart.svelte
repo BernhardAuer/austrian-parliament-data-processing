@@ -66,7 +66,7 @@
 	});
 </script>
 
-<h1 class="text-5xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words max-w-sm">
+<h1 class="text-5xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
 	Übersicht aller Wortmeldungsarten im Nationalrat
 </h1>
 <p class="text-1xl  leading-tight mt-0 mb-2">
