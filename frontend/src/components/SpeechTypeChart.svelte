@@ -140,52 +140,64 @@
 			</div>
 			<div>
 				<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">Fraktion:</label>
-				<input
-					type="checkbox"
-					class="checkbox"
-					id="politicalParty_oevp"
-					bind:group={selectedPoliticalParties}
-					name="ÖVP"
-					value="V"
-				/>
-				<label for="politicalParty_oevp">ÖVP</label>
-				<input
-					type="checkbox"
-					class="checkbox"
-					id="politicalParty_spoe"
-					bind:group={selectedPoliticalParties}
-					name="SPÖ"
-					value="S"
-				/>
-				<label for="politicalParty_spoe">SPÖ</label>
-				<input
-					type="checkbox"
-					class="checkbox"
-					id="politicalParty_fpoe"
-					bind:group={selectedPoliticalParties}
-					name="FPÖ"
-					value="F"
-				/>
-				<label for="politicalParty_fpoe">FPÖ</label>
-				<input
-					type="checkbox"
-					class="checkbox"
-					id="politicalParty_gruene"
-					bind:group={selectedPoliticalParties}
-					name="GRÜNE"
-					value="G"
-				/>
-				<label for="politicalParty_gruene">GRÜNE</label>
-				<input
-					type="checkbox"
-					class="checkbox"
-					id="politicalParty_neos"
-					bind:group={selectedPoliticalParties}
-					name="NEOS"
-					value="N"
-				/>
-				<label for="politicalParty_neos">NEOS</label>
+				<div class="grid grid-cols-3 gap-2 ">
+					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+						<input
+							type="checkbox"
+							class="checkbox"
+							id="politicalParty_oevp"
+							bind:group={selectedPoliticalParties}
+							name="ÖVP"
+							value="V"
+						/>
+						<label for="politicalParty_oevp">ÖVP</label>
+					</div>
+					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+						<input
+							type="checkbox"
+							class="checkbox"
+							id="politicalParty_spoe"
+							bind:group={selectedPoliticalParties}
+							name="SPÖ"
+							value="S"
+						/>
+						<label for="politicalParty_spoe">SPÖ</label>
+					</div>					
+					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+						<input
+							type="checkbox"
+							class="checkbox"
+							id="politicalParty_fpoe"
+							bind:group={selectedPoliticalParties}
+							name="FPÖ"
+							value="F"
+						/>
+						<label for="politicalParty_fpoe">FPÖ</label>
+					</div>
+					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+						<input
+							type="checkbox"
+							class="checkbox"
+							id="politicalParty_gruene"
+							bind:group={selectedPoliticalParties}
+							name="GRÜNE"
+							value="G"
+						/>
+						<label for="politicalParty_gruene">GRÜNE</label>
+					</div>
+					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+						<input
+							type="checkbox"
+							class="checkbox"
+							id="politicalParty_neos"
+							bind:group={selectedPoliticalParties}
+							name="NEOS"
+							value="N"
+						/>
+						<label for="politicalParty_neos">NEOS</label>
+					</div>
 			</div>
+		</div>
 			<button class="btn " on:click={() => populateData()}>Grafik aktualisieren</button>
 		</div>
 	</div>
