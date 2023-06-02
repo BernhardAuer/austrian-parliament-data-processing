@@ -39,8 +39,6 @@
 	</div>
 </div>
 
-<div class="mx-4">
-    <div class="md:container md:mx-auto">
-	    <slot />
-    </div>
+<div class="container px-6 min-w-fit">
+	<slot />
 </div>
