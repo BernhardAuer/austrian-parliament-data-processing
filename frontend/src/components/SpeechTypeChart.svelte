@@ -186,7 +186,7 @@
 				/>
 				<label for="politicalParty_neos">NEOS</label>
 			</div>
-			<button class="btn " on:click={() => populateData()}>draw grafics</button>
+			<button class="btn " on:click={() => populateData()}>Grafik aktualisieren</button>
 		</div>
 	</div>
 
@@ -195,7 +195,7 @@
 	<div class="card w-fit bg-base-100 shadow-xl">
 		<div class="card-body">
 			<div>
-				<h2 class="card-title">Type of Speech Diagramm</h2>
+				<h2 class="card-title">Wortmeldungsarten</h2>
 
 				<Doughnut bind:chart {data} options={{ responsive: true }} />
 			</div>
