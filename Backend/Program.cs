@@ -1,4 +1,5 @@
 using WebApi.Infrastructure;
+using WebApi.Mappings;
 using WebApi.Models;
 using WebApi.Services;
 
@@ -16,8 +17,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// register services
+// register services // todo: check registrations...
 builder.Services.AddSingleton<SpeechesMetaDataService>();
+builder.Services.AddSingleton<AustrianParliamentAbbreviationMappings>();
 
 var app = builder.Build();
 
