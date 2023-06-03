@@ -5,6 +5,7 @@
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
 	import ChartService from './../services/chartService.js';
 	import AutoComplete from 'simple-svelte-autocomplete';
+	import LoadingSpinner from './LoadingSpinner.svelte';
 
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 	let service = new ChartService();
@@ -101,150 +102,159 @@
 <div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
 	<div class="card w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
-			<h2 class="card-title">Datenfilter</h2>			
-			<div class="relative">
-				<label class="block text-gray-700 text-sm font-bold mb-2 basis-2/3" for="legislatur">Gesetzgebungsperiode:</label>				
-				<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Nur vollständig digitalisierte Gesetzgebungsperioden sind verfügbar.">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
-					</svg>	
-				</div>		  
-				<select
-					class="select select-bordered w-full max-w-xs basis-1"
-					bind:value={selectedLegislatur}
-					name="Gesetzgebungsperiode"
-					id="legislatur"
-				>
-					{#if legislatureAndMeetings !== null}
-						{#each legislatureAndMeetings as item}
-							<option value={item.legislature}>{item.legislature}</option>
-						{/each}
-					{/if}
-				</select>
-			</div>
-			<div class="relative">
-				<label class="block text-gray-700 text-sm font-bold mb-2" for="meetingNumber">Sitzung:</label>
-				<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Nur Sitzungen mit mind. einer kategorisierten Wortmeldungsart sind verfügbar.">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
-					</svg>	
-				</div>	
-				<select
-					class="select select-bordered w-full max-w-xs"
-					bind:value={selectedMeetingNumber}
-					name="Sitzung"
-					id="meetingNumber"
-				>
-					{#if legislatureAndMeetings !== null && selectedLegislatur !== null}
-						{#each legislatureAndMeetings.find(x => x.legislature === selectedLegislatur)?.meetings as meeting}
-							<option value="{meeting}">{meeting}</option>
-						{/each}
-					{/if}
-				</select>
-			</div>
-			<div class="testparent w-full max-w-xs relative">
-				<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">TOP:</label>
-				<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Die Suche nach TOPs berücksichtigt die ausgewählte Gesetzgebungsperiode und Sitzung.">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
-					</svg>	
-				</div>	
-				{#key rerenderTrigger}
-					<AutoComplete
-						minCharactersToSearch="0"
-						placeholder="Suche TOPs"
-						hideArrow="true"
-						inputClassName="w-full max-w-xs"
-						className="input input-bordered w-full max-w-xs"
-						noInputStyles="false"
-						showClear="true"
-						lock="false"
-						noResultsText="Kein Suchergebnis gefunden. Geben Sie bitte vollständige Wörter ein"
-						loadingText="Lade Ergebnisse..."
-						searchFunction={(keyword) =>
-							service.searchTopics(keyword, selectedLegislatur, selectedMeetingNumber)}
-						bind:selectedItem={selectedTopic}
-						labelFunction={(selected) => selected.topNr + ': ' + selected.topic}
-						inputId="topNumber"
-						name="TOP"
-					/>
-				{/key}
-			</div>
-			<div class="relative">
-				<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">Fraktion:</label>
-				<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Vorläufig sind nur derzeit im Parlament aktive Fraktionen verfügbar.">
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
-					</svg>	
+			<h2 class="card-title">Datenfilter</h2>	
+			{#if legislatureAndMeetings == null}
+					<LoadingSpinner />
+			{:else}
+				<div class="relative">
+					<label class="block text-gray-700 text-sm font-bold mb-2 basis-2/3" for="legislatur">Gesetzgebungsperiode:</label>				
+					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Nur vollständig digitalisierte Gesetzgebungsperioden sind verfügbar.">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+						</svg>	
+					</div>		  
+					<select
+						class="select select-bordered w-full max-w-xs basis-1"
+						bind:value={selectedLegislatur}
+						name="Gesetzgebungsperiode"
+						id="legislatur"
+					>
+						{#if legislatureAndMeetings !== null}
+							{#each legislatureAndMeetings as item}
+								<option value={item.legislature}>{item.legislature}</option>
+							{/each}
+						{/if}
+					</select>
 				</div>
-				<div class="grid grid-cols-3 gap-2 ">
-					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-						<input
-							type="checkbox"
-							class="checkbox"
-							id="politicalParty_oevp"
-							bind:group={selectedPoliticalParties}
-							name="ÖVP"
-							value="V"
+				<div class="relative">
+					<label class="block text-gray-700 text-sm font-bold mb-2" for="meetingNumber">Sitzung:</label>
+					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Nur Sitzungen mit mind. einer kategorisierten Wortmeldungsart sind verfügbar.">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+						</svg>	
+					</div>	
+					<select
+						class="select select-bordered w-full max-w-xs"
+						bind:value={selectedMeetingNumber}
+						name="Sitzung"
+						id="meetingNumber"
+					>
+						{#if legislatureAndMeetings !== null && selectedLegislatur !== null}
+							{#each legislatureAndMeetings.find(x => x.legislature === selectedLegislatur)?.meetings as meeting}
+								<option value="{meeting}">{meeting}</option>
+							{/each}
+						{/if}
+					</select>
+				</div>
+				<div class="testparent w-full max-w-xs relative">
+					<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">TOP:</label>
+					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Die Suche nach TOPs berücksichtigt die ausgewählte Gesetzgebungsperiode und Sitzung.">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+						</svg>	
+					</div>	
+					{#key rerenderTrigger}
+						<AutoComplete
+							minCharactersToSearch="0"
+							placeholder="Suche TOPs"
+							hideArrow="true"
+							inputClassName="w-full max-w-xs"
+							className="input input-bordered w-full max-w-xs"
+							noInputStyles="false"
+							showClear="true"
+							lock="false"
+							noResultsText="Kein Suchergebnis gefunden. Geben Sie bitte vollständige Wörter ein"
+							loadingText="Lade Ergebnisse..."
+							searchFunction={(keyword) =>
+								service.searchTopics(keyword, selectedLegislatur, selectedMeetingNumber)}
+							bind:selectedItem={selectedTopic}
+							labelFunction={(selected) => selected.topNr + ': ' + selected.topic}
+							inputId="topNumber"
+							name="TOP"
 						/>
-						<label for="politicalParty_oevp">ÖVP</label>
+					{/key}
+				</div>
+				<div class="relative">
+					<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">Fraktion:</label>
+					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Vorläufig sind nur derzeit im Parlament aktive Fraktionen verfügbar.">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+						</svg>	
 					</div>
-					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-						<input
-							type="checkbox"
-							class="checkbox"
-							id="politicalParty_spoe"
-							bind:group={selectedPoliticalParties}
-							name="SPÖ"
-							value="S"
-						/>
-						<label for="politicalParty_spoe">SPÖ</label>
-					</div>					
-					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-						<input
-							type="checkbox"
-							class="checkbox"
-							id="politicalParty_fpoe"
-							bind:group={selectedPoliticalParties}
-							name="FPÖ"
-							value="F"
-						/>
-						<label for="politicalParty_fpoe">FPÖ</label>
-					</div>
-					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-						<input
-							type="checkbox"
-							class="checkbox"
-							id="politicalParty_gruene"
-							bind:group={selectedPoliticalParties}
-							name="GRÜNE"
-							value="G"
-						/>
-						<label for="politicalParty_gruene">GRÜNE</label>
-					</div>
-					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-						<input
-							type="checkbox"
-							class="checkbox"
-							id="politicalParty_neos"
-							bind:group={selectedPoliticalParties}
-							name="NEOS"
-							value="N"
-						/>
-						<label for="politicalParty_neos">NEOS</label>
-					</div>
-			</div>
-		</div>
-			<button class="btn " on:click={() => populateData()}>Grafik aktualisieren</button>
+					<div class="grid grid-cols-3 gap-2 ">
+						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+							<input
+								type="checkbox"
+								class="checkbox"
+								id="politicalParty_oevp"
+								bind:group={selectedPoliticalParties}
+								name="ÖVP"
+								value="V"
+							/>
+							<label for="politicalParty_oevp">ÖVP</label>
+						</div>
+						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+							<input
+								type="checkbox"
+								class="checkbox"
+								id="politicalParty_spoe"
+								bind:group={selectedPoliticalParties}
+								name="SPÖ"
+								value="S"
+							/>
+							<label for="politicalParty_spoe">SPÖ</label>
+						</div>					
+						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+							<input
+								type="checkbox"
+								class="checkbox"
+								id="politicalParty_fpoe"
+								bind:group={selectedPoliticalParties}
+								name="FPÖ"
+								value="F"
+							/>
+							<label for="politicalParty_fpoe">FPÖ</label>
+						</div>
+						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+							<input
+								type="checkbox"
+								class="checkbox"
+								id="politicalParty_gruene"
+								bind:group={selectedPoliticalParties}
+								name="GRÜNE"
+								value="G"
+							/>
+							<label for="politicalParty_gruene">GRÜNE</label>
+						</div>
+						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
+							<input
+								type="checkbox"
+								class="checkbox"
+								id="politicalParty_neos"
+								bind:group={selectedPoliticalParties}
+								name="NEOS"
+								value="N"
+							/>
+							<label for="politicalParty_neos">NEOS</label>
+						</div>
+				</div>
+					
+				</div>				
+				<button class="btn " on:click={() => populateData()}>Grafik aktualisieren</button>
+			{/if}
 		</div>
 	</div>
 	<div class="card w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
-			<div>
-				<h2 class="card-title">Wortmeldungsarten</h2>
-
-				<Doughnut bind:chart {data} options={{ responsive: true }} />
-			</div>
+			
+				<h2 class="card-title">Wortmeldungsarten</h2>			
+				{#if data == null}
+					<LoadingSpinner />
+				{:else}
+				<span class="animate-spin"></span>
+					<Doughnut bind:chart {data} options={{ responsive: true }} />
+				{/if}
+			
 		</div>
 	</div>
 </div>
