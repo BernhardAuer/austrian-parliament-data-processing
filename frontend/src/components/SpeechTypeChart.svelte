@@ -28,8 +28,8 @@
 		datasets: [
 			{
 				data: [],
-				backgroundColor: ['#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
-				hoverBackgroundColor: ['#FF5A5E', '#5AD3D1', '#FFC870', '#A8B3C5', '#616774']
+				backgroundColor: [],
+				hoverBackgroundColor: []
 			}
 		]
 	};
@@ -41,24 +41,46 @@
 			selectedTopic?.topNr ?? '',
 			selectedPoliticalParties,
 			(response) => {
-				console.log('hahllo');
-				console.log('raw:' + response);
 				let typeOfSpeechCountList = Array.from(response, (element) => {
 					console.log('element:' + JSON.stringify(element));
 					return TypeOfSpeechCountDto.constructFromObject(element);
 				});
-				console.log('typed:' + JSON.stringify(typeOfSpeechCountList));
 				dataTemplate.datasets[0].data = Array.from(
 					typeOfSpeechCountList,
 					(element) => element.count
 				);
 				dataTemplate.labels = Array.from(typeOfSpeechCountList, (element) => element.typeOfSpeech);
-				console.log(dataTemplate);
+				dataTemplate.datasets[0].backgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToBackgroundColor(element.typeOfSpeech));
+				dataTemplate.datasets[0].hoverBackgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToHoverColor(element.typeOfSpeech));
 				data = dataTemplate;
-				console.log('das:' + JSON.stringify(selectedTopic));
 			}
 		);
 	}
+	
+	function mapLabelsToBackgroundColor(labelName) {
+		labelName = labelName.toLowerCase();
+		let colorDict = {
+			"pro": "#46BFBD",
+			"contra": "#F7464A",
+			"erste lesung": "#949FB1",
+			"regierungsbank": "#4D5360",
+			"tatsächliche berichtigung": "#FDB45C",
+		}
+		return colorDict[labelName];
+	}
+	
+	function mapLabelsToHoverColor(labelName) {
+		labelName = labelName.toLowerCase();
+		let colorDict = {
+			"pro": "#5AD3D1",
+			"contra": "#FF5A5E",
+			"erste lesung": "#A8B3C5",
+			"regierungsbank": "#616774",
+			"tatsächliche berichtigung": "#FFC870",
+		}
+		return colorDict[labelName];
+	}
+
 
 	onMount(async () => {
 		populateData();
