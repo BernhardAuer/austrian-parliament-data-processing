@@ -79,13 +79,16 @@
 <div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
 	<div class="card w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
-			<h2 class="card-title">Datenfilter</h2>
-			<div>
-				<label class="block text-gray-700 text-sm font-bold mb-2" for="legislatur"
-					>Gesetzgebungsperiode:</label
-				>
+			<h2 class="card-title">Datenfilter</h2>			
+			<div class="relative">
+				<label class="block text-gray-700 text-sm font-bold mb-2 basis-2/3" for="legislatur">Gesetzgebungsperiode:</label>				
+				<div class="tooltip absolute top-0 right-0" data-tip="Nur vollständig digitalisierte Gesetzgebungsperioden sind verfügbar.">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+					</svg>	
+				</div>		  
 				<select
-					class="select select-bordered w-full max-w-xs"
+					class="select select-bordered w-full max-w-xs basis-1"
 					bind:value={selectedLegislatur}
 					name="Gesetzgebungsperiode"
 					id="legislatur"
@@ -97,10 +100,13 @@
 					{/if}
 				</select>
 			</div>
-			<div>
-				<label class="block text-gray-700 text-sm font-bold mb-2" for="meetingNumber"
-					>Sitzung:</label
-				>
+			<div class="relative">
+				<label class="block text-gray-700 text-sm font-bold mb-2" for="meetingNumber">Sitzung:</label>
+				<div class="tooltip absolute top-0 right-0" data-tip="Nur Sitzungen mit mind. einer kategorisierten Wortmeldungsart sind verfügbar.">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+					</svg>	
+				</div>	
 				<select
 					class="select select-bordered w-full max-w-xs"
 					bind:value={selectedMeetingNumber}
@@ -114,9 +120,13 @@
 					{/if}
 				</select>
 			</div>
-			<div class="testparent w-full max-w-xs">
+			<div class="testparent w-full max-w-xs relative">
 				<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">TOP:</label>
-
+				<div class="tooltip absolute top-0 right-0" data-tip="Die Suche nach TOPs berücksichtigt die ausgewählte Gesetzgebungsperiode und Sitzung.">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+					</svg>	
+				</div>	
 				{#key rerenderTrigger}
 					<AutoComplete
 						minCharactersToSearch="0"
@@ -138,8 +148,13 @@
 					/>
 				{/key}
 			</div>
-			<div>
+			<div class="relative">
 				<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">Fraktion:</label>
+				<div class="tooltip absolute top-0 right-0" data-tip="Vorläufig sind nur derzeit im Parlament aktive Fraktionen verfügbar.">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
+					</svg>	
+				</div>
 				<div class="grid grid-cols-3 gap-2 ">
 					<div class="flex flex-row gap-2 border-2 rounded-full items-center">
 						<input
