@@ -65,17 +65,17 @@
 		legislatureAndMeetings = await service.getLegislaturesAndMeetings();
 	});
 </script>
-
-<h1 class="text-5xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
-	Übersicht aller Wortmeldungsarten im Nationalrat
-</h1>
-<p class="text-1xl  leading-tight mt-0 mb-2">
-	Redebeiträge in den Plenarsitzungen des Nationalrats werden in sogenannten Wortmeldungsarten kategoriersiert. Um einen überblicksmäßigen Eindruck über 
-	die Verteilung der Wortmeldungsarten im Nationalrat zu erhalten, wird diese hier grafisch dargestellt.
-	
-	Benützen Sie den Filter, um die Datengrundlage nach Ihrem Interesse anzupassen.
-
-</p>
+<div class="md:2xl:mx-96">
+	<h1 class="text-5xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
+		Übersicht aller Wortmeldungsarten im Nationalrat
+	</h1>
+	<p class="text-1xl  leading-tight mt-0 mb-2">
+		Redebeiträge in den Plenarsitzungen des Nationalrats werden in sogenannten Wortmeldungsarten kategoriersiert. Um einen überblicksmäßigen Eindruck über 
+		die Verteilung der Wortmeldungsarten im Nationalrat zu erhalten, wird diese hier grafisch dargestellt.
+		
+		Benützen Sie den Filter, um die Datengrundlage nach Ihrem Interesse anzupassen.
+	</p>
+</div>
 <div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
 	<div class="card w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
