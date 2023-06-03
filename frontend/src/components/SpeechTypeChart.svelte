@@ -71,7 +71,7 @@
 	</h1>
 	<p class="text-1xl  leading-tight mt-0 mb-2">
 		Redebeiträge in den Plenarsitzungen des Nationalrats werden in sogenannten Wortmeldungsarten kategoriersiert. Um einen überblicksmäßigen Eindruck über 
-		die Verteilung der Wortmeldungsarten im Nationalrat zu erhalten, wird diese hier grafisch dargestellt.
+		die Verteilung der Wortmeldungsarten im Nationalrat zu erhalten, werden diese hier grafisch dargestellt.
 		
 		Benützen Sie den Filter, um die Datengrundlage nach Ihrem Interesse anzupassen.
 	</p>
