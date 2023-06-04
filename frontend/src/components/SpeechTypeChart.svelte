@@ -111,6 +111,10 @@
 			return mapDict[abbrToLower];
 		}).join(", ");
 	}
+	const scrollAutoCompleteToTop = () => {
+		console.log("onfocus");
+		document.getElementById('topNumber').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+	}
 
 	onMount(async () => {
 		populateData();
@@ -184,6 +188,7 @@
 					</div>	
 					{#key rerenderTrigger}
 						<AutoComplete
+							onFocus={() => scrollAutoCompleteToTop()}
 							minCharactersToSearch="0"
 							placeholder="Suche TOPs"
 							hideArrow="true"
