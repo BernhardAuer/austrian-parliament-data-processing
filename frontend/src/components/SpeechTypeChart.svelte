@@ -46,10 +46,18 @@
 			selectedTopic?.topNr ?? '',
 			selectedPoliticalParties,
 			(response) => {
+				console.log(response);
+				if (!Array.isArray(response) && !response.length) {
+					data = dataTemplate;
+					console.log("nix da.")
+					return;
+				}
+
 				let typeOfSpeechCountList = Array.from(response, (element) => {
 					console.log('element:' + JSON.stringify(element));
 					return TypeOfSpeechCountDto.constructFromObject(element);
 				});
+
 				dataTemplate.datasets[0].data = Array.from(
 					typeOfSpeechCountList,
 					(element) => element.count
@@ -271,8 +279,11 @@
 				<h2 class="card-title">Wortmeldungsarten</h2>			
 				{#if data == null}
 					<LoadingSpinner />
-				{:else}
-					<span class="animate-spin"></span>				
+				{:else if !data.labels.length}
+					<div class="flex flex-col items-center my-auto">
+						<p>Für den ausgewählten Filter sind keine Daten verfügbar.</p>
+					</div>
+				{:else}			
 					<div class="block text-gray-700 text-sm font-bold">
 						{#if currentShownLegislatur != null}
 							{currentShownLegislatur}. GP /
@@ -286,8 +297,7 @@
 						{mapPoliticalPartyAbbreviationToLongName(currentShownPoliticalParties)}
 					</div>
 					<Doughnut bind:chart {data} options={{ responsive: true }} />
-				{/if}
-			
+				{/if}	
 		</div>
 	</div>
 </div>
