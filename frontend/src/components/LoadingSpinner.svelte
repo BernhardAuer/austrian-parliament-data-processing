@@ -7,7 +7,7 @@
 </script>
 
 {#if show}
-    <div class="flex flex-col items-center my-auto">
+    <div class="flex flex-col items-center my-auto h-96">
         <span class="loading loading-spinner loading-lg text-primary"></span>
         <p>Wird geladen ...</p>
     </div>	
