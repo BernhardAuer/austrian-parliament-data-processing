@@ -112,8 +112,11 @@
 		}).join(", ");
 	}
 	const scrollAutoCompleteToTop = () => {
-		console.log("onfocus");
 		document.getElementById('topNumber').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+	}
+
+	const scrollToTypeOfSpeechDiagram = () => {
+		document.getElementById('typeOfSpeechDiagram').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
 	}
 
 	onMount(async () => {
@@ -274,11 +277,11 @@
 				</div>
 					
 				</div>				
-				<button class="btn " on:click={() => populateData()}>Grafik aktualisieren</button>
+				<button class="btn " on:click={() => {populateData();scrollToTypeOfSpeechDiagram();}}>Grafik aktualisieren</button>
 			{/if}
 		</div>
 	</div>
-	<div class="card w-full sm:w-96 bg-base-100 shadow-xl">
+	<div class="card w-full sm:w-96 bg-base-100 shadow-xl" id="typeOfSpeechDiagram">
 		<div class="card-body">
 			
 				<h2 class="card-title">Wortmeldungsarten</h2>			
