@@ -6,6 +6,7 @@
 	import ChartService from './../services/chartService.js';
 	import AutoComplete from 'simple-svelte-autocomplete';
 	import LoadingSpinner from './LoadingSpinner.svelte';
+	import { scrollIntoView } from "seamless-scroll-polyfill";
 
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 	let service = new ChartService();
@@ -112,11 +113,11 @@
 		}).join(", ");
 	}
 	const scrollAutoCompleteToTop = () => {
-		document.getElementById('topNumber').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+		scrollIntoView(document.getElementById('topNumber'), { behavior: "smooth", block: "start", inline: "nearest" });
 	}
 
 	const scrollToTypeOfSpeechDiagram = () => {
-		document.getElementById('typeOfSpeechDiagram').scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+		scrollIntoView(document.getElementById('typeOfSpeechDiagram'), { behavior: "smooth", block: "start", inline: "nearest" });
 	}
 
 	onMount(async () => {
