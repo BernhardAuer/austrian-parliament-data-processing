@@ -18,6 +18,10 @@
 	let selectedMeetingNumber = null;
 	let selectedPoliticalParties = ['V', 'S', 'F', 'G', 'N'];
 	let legislatureAndMeetings = null;
+	let currentShownMeetingNumber = null;
+	let currentShownPoliticalParties = null;
+	let currentShownLegislatur = null;
+	let currentTopic = null;
 
 	const resetAutoCompleter = () => {
 		selectedTopic = null;
@@ -54,6 +58,10 @@
 				dataTemplate.datasets[0].backgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToBackgroundColor(element.typeOfSpeech));
 				dataTemplate.datasets[0].hoverBackgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToHoverColor(element.typeOfSpeech));
 				data = dataTemplate;
+				currentShownMeetingNumber = selectedMeetingNumber;
+				currentShownPoliticalParties = selectedPoliticalParties;
+				currentShownLegislatur = selectedLegislatur;
+				currentTopic = selectedTopic;
 			}
 		);
 	}
@@ -82,6 +90,19 @@
 		return colorDict[labelName];
 	}
 
+	function mapPoliticalPartyAbbreviationToLongName(abbr) {
+		let mapDict = {
+			"v": "ÖVP",
+			"s": "SPÖ",
+			"f": "FPÖ",
+			"g": "GRÜNE",
+			"n": "NEOS"
+		}
+		return Array.from(abbr, (element) => {
+			let abbrToLower = element.toLowerCase();
+			return mapDict[abbrToLower];
+		}).join(", ");
+	}
 
 	onMount(async () => {
 		populateData();
@@ -251,7 +272,19 @@
 				{#if data == null}
 					<LoadingSpinner />
 				{:else}
-				<span class="animate-spin"></span>
+					<span class="animate-spin"></span>				
+					<div class="block text-gray-700 text-sm font-bold">
+						{#if currentShownLegislatur != null}
+							{currentShownLegislatur}. GP /
+						{/if}
+						{#if currentShownMeetingNumber != null}
+							{currentShownMeetingNumber}. Sitzung /
+						{/if}
+						{#if currentTopic?.topNr != null}
+							{currentTopic?.topNr} /
+						{/if}
+						{mapPoliticalPartyAbbreviationToLongName(currentShownPoliticalParties)}
+					</div>
 					<Doughnut bind:chart {data} options={{ responsive: true }} />
 				{/if}
 			
