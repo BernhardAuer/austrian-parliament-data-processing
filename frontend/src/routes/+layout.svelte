@@ -39,6 +39,6 @@
 	</div>
 </div>
 
-<div class="container px-6 min-w-fit">
+<div class="container sm:px-6 px-3 sm:min-w-fit min-w-full">
 	<slot />
 </div>

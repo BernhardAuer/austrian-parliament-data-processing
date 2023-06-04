@@ -118,7 +118,7 @@
 	});
 </script>
 <div class="md:2xl:mx-96">
-	<h1 class="text-5xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
+	<h1 class="text-4xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
 		Übersicht aller Wortmeldungsarten im Nationalrat
 	</h1>
 	<p class="text-1xl  leading-tight mt-0 mb-2">
@@ -129,7 +129,7 @@
 	</p>
 </div>
 <div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
-	<div class="card w-96 bg-base-100 shadow-xl">
+	<div class="card w-full sm:w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
 			<h2 class="card-title">Datenfilter</h2>	
 			{#if legislatureAndMeetings == null}
@@ -143,7 +143,7 @@
 						</svg>	
 					</div>		  
 					<select
-						class="select select-bordered w-full max-w-xs basis-1"
+						class="select select-bordered w-full  basis-1"
 						bind:value={selectedLegislatur}
 						name="Gesetzgebungsperiode"
 						id="legislatur"
@@ -163,7 +163,7 @@
 						</svg>	
 					</div>	
 					<select
-						class="select select-bordered w-full max-w-xs"
+						class="select select-bordered w-full"
 						bind:value={selectedMeetingNumber}
 						name="Sitzung"
 						id="meetingNumber"
@@ -175,7 +175,7 @@
 						{/if}
 					</select>
 				</div>
-				<div class="testparent w-full max-w-xs relative">
+				<div class="testparent w-full relative">
 					<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">TOP:</label>
 					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Die Suche nach TOPs berücksichtigt die ausgewählte Gesetzgebungsperiode und Sitzung.">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
@@ -187,8 +187,8 @@
 							minCharactersToSearch="0"
 							placeholder="Suche TOPs"
 							hideArrow="true"
-							inputClassName="w-full max-w-xs"
-							className="input input-bordered w-full max-w-xs"
+							inputClassName="w-full text-base"
+							className="input input-bordered w-full text-base"
 							noInputStyles="false"
 							showClear="true"
 							lock="false"
@@ -273,7 +273,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class="card w-96 bg-base-100 shadow-xl">
+	<div class="card w-full sm:w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
 			
 				<h2 class="card-title">Wortmeldungsarten</h2>			
