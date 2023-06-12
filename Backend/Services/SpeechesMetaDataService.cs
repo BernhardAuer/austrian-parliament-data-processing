@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using RomanNumerals;
 using WebApi.DTOs;
 using WebApi.Models;
 
@@ -79,13 +78,16 @@ public class SpeechesMetaDataService
 
     public async Task<List<LegislatureMeetingsListDto>> GetLegislaturesAndMeetings()
     {
-        return await _speechesMetaDataCollection.Aggregate().Group(key => key.legislature,
+        var legislaturesAndMeetings = await _speechesMetaDataCollection.Aggregate().Group(key => key.legislature,
             group => new LegislatureMeetingsListDto()
             {
                 Legislature = group.Key,
                 Meetings = group.Where(x => x.meetingNr != null).Select(x => x.meetingNr!.Value).Distinct().ToArray()
             }).ToListAsync();
 
+        legislaturesAndMeetings.ForEach(x => x.LegislatureAsInt = (new RomanNumeral(x.Legislature)).ToInt());
+        var sortedLegislaturesAndMeetings = legislaturesAndMeetings.OrderBy(x => x.LegislatureAsInt).ToList();
+        return sortedLegislaturesAndMeetings;
     }
     
     public async Task<List<TopicSearchResultDto>> SearchTopicsByName(string? searchTerm, string? legislature, int? meetingNumber)
