@@ -28,7 +28,15 @@
 		selectedTopic = null;
 		rerenderTrigger = rerenderTrigger + 1;
 	};
+
+	const resetMeetingFilter = () => {
+		if (Array.isArray(legislatureAndMeetings) && legislatureAndMeetings.length) {
+			selectedMeetingNumber = legislatureAndMeetings.filter((x) => x.legislature == selectedLegislatur)[0].meetings.slice(-1)[0];
+		}
+	};
+
 	$: selectedLegislatur, selectedMeetingNumber, resetAutoCompleter();
+	$: selectedLegislatur, resetMeetingFilter();
 	let dataTemplate = {
 		labels: [],
 		datasets: [
