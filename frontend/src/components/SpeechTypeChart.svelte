@@ -137,6 +137,8 @@
 	onMount(async () => {
 		populateData();
 		legislatureAndMeetings = await service.getLegislaturesAndMeetings();
+		selectedLegislatur = legislatureAndMeetings.slice(-1)[0].legislature;
+		selectedMeetingNumber = legislatureAndMeetings.slice(-1)[0].meetings.slice(-1)[0];
 	});
 </script>
 <div class="md:2xl:mx-96">
