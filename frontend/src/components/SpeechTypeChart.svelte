@@ -120,6 +120,20 @@
 		scrollIntoView(document.getElementById('typeOfSpeechDiagram'), { behavior: "smooth", block: "start", inline: "nearest" });
 	}
 
+	const getHeightForDoughnut = (labelCount) => {
+		if (labelCount < 5){			
+			return "h-[15rem]";
+		}
+		if (labelCount < 10){			
+			return "h-[25rem]";
+		}
+		if (labelCount < 15){			
+			return "h-[35rem]";
+		}			
+		return "h-[45rem]";
+		
+	}	
+	
 	onMount(async () => {
 		populateData();
 		legislatureAndMeetings = await service.getLegislaturesAndMeetings();
@@ -282,7 +296,7 @@
 			{/if}
 		</div>
 	</div>
-	<div class="card w-full sm:w-96 bg-base-100 shadow-xl" id="typeOfSpeechDiagram">
+	<div class="card w-full sm:w-[40rem] bg-base-100 shadow-xl" id="typeOfSpeechDiagram">
 		<div class="card-body">
 			
 				<h2 class="card-title">Wortmeldungsarten</h2>			
@@ -305,7 +319,9 @@
 						{/if}
 						{mapPoliticalPartyAbbreviationToLongName(currentShownPoliticalParties)}
 					</div>
-					<Doughnut bind:chart {data} options={{ responsive: true }} />
+					<div class="relative {getHeightForDoughnut(data?.labels?.length)}">
+						<Doughnut bind:chart {data} options={{responsive: true,maintainAspectRatio: false}} />
+					</div>
 				{/if}	
 		</div>
 	</div>
