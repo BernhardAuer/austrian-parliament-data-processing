@@ -9,11 +9,11 @@ export default class ChartService {
         client.basePath = env.PUBLIC_API_URL;
         this.#apiInstance = new SpeechesMetaDataApi(client);
     }
-    fetchSpeechTypes(selectedLegislatur, selectedMeetingNumber, inputTopNumber, selectedPoliticalParties, callback) {
+    fetchSpeechTypes(selectedLegislatur, selectedMeetingNumber, inputTopic, selectedPoliticalParties, callback) {
         let options = {
             legislature:selectedLegislatur,
             meetingNumber: selectedMeetingNumber,
-            topNumber: inputTopNumber,
+            topic: inputTopic,
             politicalParty: selectedPoliticalParties
         }
         console.log("wenigstens die scheisse soll funktionierne")

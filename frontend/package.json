@@ -32,8 +32,9 @@
 	"dependencies": {
 		"@tailwindcss/typography": "^0.5.9",
 		"chart.js": "^4.2.1",
-		"daisyui": "^2.50.1",
+		"daisyui": "^3.0.2",
 		"querystring": "^0.2.1",
+		"seamless-scroll-polyfill": "^2.3.4",
 		"simple-svelte-autocomplete": "^2.5.2",
 		"superagent": "^8.0.9",
 		"svelte-chartjs": "^3.1.2"

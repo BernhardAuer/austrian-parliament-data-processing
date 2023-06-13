@@ -7,5 +7,5 @@ public class TypeOfSpeechFilterDto
     public string[] PoliticalParty { get; set; } = Array.Empty<string>();
     public string? Legislature { get; set; }
     public int? MeetingNumber { get; set; }
-    public string? TopNumber { get; set; }
+    public string? Topic { get; set; }
 }

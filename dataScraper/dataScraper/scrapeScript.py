@@ -26,9 +26,22 @@ def scrape():
             }
             customSettings = settings._to_dict() | overridenSettings
 
+    customSettings = settings   
+    speechesMetaDataBaseUrl = 'https://www.parlament.gv.at/gegenstand/XXVII/NRSITZ/197?json=true'
+    gps = ['XXVII',
+          'XXVI',
+          'XXV',
+          'XXIV',
+          'XXIII',
+          'XXII',
+          'XXI',
+          'XX',
+          ]
+
     process = CrawlerProcess(customSettings)
     process.crawl(NationalCouncilMeetingSpider)
-    process.crawl(SpeechesMetaDataSpider)
+    for gp in gps:
+        process.crawl(SpeechesMetaDataSpider, gp)
     process.start() # the script will block here until the crawling is finished
 
 scrape()

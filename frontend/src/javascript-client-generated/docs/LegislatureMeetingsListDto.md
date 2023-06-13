@@ -4,4 +4,5 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **legislature** | **String** |  | [optional] 
+**legislatureAsInt** | **Number** |  | [optional] 
 **meetings** | **[Number]** |  | [optional] 

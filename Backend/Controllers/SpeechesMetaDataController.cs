@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebApi.DTOs;
 using WebApi.Models;
 using WebApi.Services;
+using WebApi.Mappings;
 
 namespace WebApi.Controllers
 {
@@ -11,10 +12,14 @@ namespace WebApi.Controllers
     public class SpeechesMetaDataController : ControllerBase
     {
         private readonly SpeechesMetaDataService _speechesMetaDataService;
+        private readonly AustrianParliamentAbbreviationMappings _austrianParliamentAbbreviationMappings;
 
-        public SpeechesMetaDataController(SpeechesMetaDataService speechesMetaDataService) =>
+        public SpeechesMetaDataController(SpeechesMetaDataService speechesMetaDataService, AustrianParliamentAbbreviationMappings austrianParliamentAbbreviationMappings)
+        {
             _speechesMetaDataService = speechesMetaDataService;
-        
+            _austrianParliamentAbbreviationMappings = austrianParliamentAbbreviationMappings;
+        }
+
         [HttpGet]
         [Route("getTypeOfSpeechesCountList")]
         public async Task<List<TypeOfSpeechCountDto>> GetTypeOfSpeechesCountList([FromQuery] TypeOfSpeechFilterDto typeOfSpeechFilterDto)
@@ -23,12 +28,11 @@ namespace WebApi.Controllers
             // use automapper in the future
             var result = speechesCountList.Select(x => new TypeOfSpeechCountDto()
                 {
-                    TypeOfSpeech = x.TypeOfSpeech,
+                    TypeOfSpeech = _austrianParliamentAbbreviationMappings.GetLongNameSpeechType(x.TypeOfSpeech),
                     Count = x.Count
                 })
                 .OrderBy(x => x.TypeOfSpeech)
                 .ToList();
-
             return result;
         }
         
