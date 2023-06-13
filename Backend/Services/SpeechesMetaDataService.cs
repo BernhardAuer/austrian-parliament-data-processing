@@ -39,9 +39,9 @@ public class SpeechesMetaDataService
             query = query.Match(x => x.meetingNr == typeOfSpeechFilterDto.MeetingNumber);
         }
         
-        if (typeOfSpeechFilterDto.TopNumber != null)
+        if (typeOfSpeechFilterDto.Topic != null)
         {
-            query = query.Match(x => x.topNr == typeOfSpeechFilterDto.TopNumber);
+            query = query.Match(x => x.topic == typeOfSpeechFilterDto.Topic);
         }
 
         return await query

@@ -100,7 +100,7 @@ let opts = {
   'politicalParty': ["politicalParty_example"], // [String] | 
   'legislature': "legislature_example", // String | 
   'meetingNumber': 56, // Number | 
-  'topNumber': "topNumber_example" // String | 
+  'topic': "topic_example" // String | 
 };
 apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(opts, (error, data, response) => {
   if (error) {
@@ -118,7 +118,7 @@ Name | Type | Description  | Notes
  **politicalParty** | [**[String]**](String.md)|  | [optional] 
  **legislature** | **String**|  | [optional] 
  **meetingNumber** | **Number**|  | [optional] 
- **topNumber** | **String**|  | [optional] 
+ **topic** | **String**|  | [optional] 
 
 ### Return type
 
