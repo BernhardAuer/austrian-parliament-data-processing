@@ -86,11 +86,28 @@
 	function mapLabelsToBackgroundColor(labelName) {
 		labelName = labelName.toLowerCase();
 		let colorDict = {
-			"pro": "#46BFBD",
 			"contra": "#F7464A",
+			"pro": "#68e08c",
 			"erste lesung": "#949FB1",
 			"regierungsbank": "#4D5360",
 			"tatsächliche berichtigung": "#FDB45C",
+			"ap" : "#46BFBD", 
+			"aktuelle stunde" : "#68bce0",
+			"begründung" : "#e068bc",
+			"berichterstattung ausschuss" : "#e08c68", 
+			"dringliche anfrage" : "#e894c3",
+			"dringlicher (entschließungs-)antrag" : "#b994e8",
+			"erklärung" : "#94e8b9", 
+			"erwiderung" : "#c3e894",
+			"europäische union" : "#df6a71",
+			"wortmeldung zur geschäftsbehandlung": "#e89499",
+			"kurze debatte" : "#f6d3d5",
+			"rf" : "#7f85e3",  
+			"regierungsbank staatssekretär:in" : "#d3d5f6",
+			"regierungsvorlage" : "#6adfd8",
+			"unterzeichner:in" : "#d3f6f3",
+			"wahldebatte" : "#df6a71",
+			"wortmeldung" : "#f1bec1",
 		}
 		return colorDict[labelName];
 	}
@@ -98,11 +115,28 @@
 	function mapLabelsToHoverColor(labelName) {
 		labelName = labelName.toLowerCase();
 		let colorDict = {
-			"pro": "#5AD3D1",
-			"contra": "#FF5A5E",
-			"erste lesung": "#A8B3C5",
-			"regierungsbank": "#616774",
-			"tatsächliche berichtigung": "#FFC870",
+			"contra": "#F7464A",
+			"pro": "#68e08c",
+			"erste lesung": "#949FB1",
+			"regierungsbank": "#4D5360",
+			"tatsächliche berichtigung": "#FDB45C",
+			"ap" : "#46BFBD", 
+			"aktuelle stunde" : "#68bce0",
+			"begründung" : "#e068bc",
+			"berichterstattung ausschuss" : "#e08c68", 
+			"dringliche anfrage" : "#e894c3",
+			"dringlicher (entschließungs-)antrag" : "#b994e8",
+			"erklärung" : "#94e8b9", 
+			"erwiderung" : "#c3e894",
+			"europäische union" : "#df6a71",
+			"wortmeldung zur geschäftsbehandlung": "#e89499",
+			"kurze debatte" : "#f6d3d5",
+			"rf" : "#7f85e3",  
+			"regierungsbank staatssekretär:in" : "#d3d5f6",
+			"regierungsvorlage" : "#6adfd8",
+			"unterzeichner:in" : "#d3f6f3",
+			"wahldebatte" : "#df6a71",
+			"wortmeldung" : "#f1bec1",
 		}
 		return colorDict[labelName];
 	}
