@@ -33,10 +33,20 @@ public class SpeechesMetaDataService
         {
             query = query.Match(x => x.legislature == typeOfSpeechFilterDto.Legislature);
         }
+        else
+        {
+            query = query.Match(x => x.legislature == "XXVII"); // hardcoded for now, pls fix this
+        }
         
         if (typeOfSpeechFilterDto.MeetingNumber != null)
         {
             query = query.Match(x => x.meetingNr == typeOfSpeechFilterDto.MeetingNumber);
+        }
+        else
+        {
+            var maxMeetingNumber = await _speechesMetaDataCollection.Aggregate().Match(x => x.legislature == "XXVII")
+                .SortByDescending(x => x.meetingNr).Project(x => x.meetingNr).FirstOrDefaultAsync();
+            query = query.Match(x => x.meetingNr == maxMeetingNumber);
         }
         
         if (typeOfSpeechFilterDto.Topic != null)
