@@ -52,7 +52,7 @@
 		service.fetchSpeechTypes(
 			selectedLegislatur,
 			selectedMeetingNumber,
-			selectedTopic?.topNr ?? '',
+			selectedTopic?.topic ?? '',
 			selectedPoliticalParties,
 			(response) => {
 				console.log(response);
@@ -121,7 +121,7 @@
 		}).join(", ");
 	}
 	const scrollAutoCompleteToTop = () => {
-		scrollIntoView(document.getElementById('topNumber'), { behavior: "smooth", block: "start", inline: "nearest" });
+		scrollIntoView(document.getElementById('topic'), { behavior: "smooth", block: "start", inline: "nearest" });
 	}
 
 	const scrollToTypeOfSpeechDiagram = () => {
@@ -208,8 +208,8 @@
 					</select>
 				</div>
 				<div class="testparent w-full relative">
-					<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">TOP:</label>
-					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Die Suche nach TOPs berücksichtigt die ausgewählte Gesetzgebungsperiode und Sitzung.">
+					<label class="block text-gray-700 text-sm font-bold mb-2" for="topic">Thema:</label>
+					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Die Suche nach Themen berücksichtigt die ausgewählte Gesetzgebungsperiode und Sitzung.">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
 							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
 						</svg>	
@@ -218,7 +218,7 @@
 						<AutoComplete
 							onFocus={() => scrollAutoCompleteToTop()}
 							minCharactersToSearch="0"
-							placeholder="Suche TOPs"
+							placeholder="Suche Themen"
 							hideArrow="true"
 							inputClassName="w-full text-base"
 							className="input input-bordered w-full text-base"
@@ -230,14 +230,21 @@
 							searchFunction={(keyword) =>
 								service.searchTopics(keyword, selectedLegislatur, selectedMeetingNumber)}
 							bind:selectedItem={selectedTopic}
-							labelFunction={(selected) => selected.topNr + ': ' + selected.topic}
-							inputId="topNumber"
-							name="TOP"
+							labelFunction={(selected) => {
+								let labelText = '';
+								if (selected?.topNr != null) {
+									labelText = labelText + selected.topNr + ': ';
+								}
+								labelText = labelText + selected.topic
+								return labelText;
+								}}
+							inputId="topic"
+							name="Themensuche"
 						/>
 					{/key}
 				</div>
 				<div class="relative">
-					<label class="block text-gray-700 text-sm font-bold mb-2" for="topNumber">Fraktion:</label>
+					<label class="block text-gray-700 text-sm font-bold mb-2" for="politicalParty">Fraktion:</label>
 					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Vorläufig sind nur derzeit im Parlament aktive Fraktionen verfügbar.">
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
 							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
