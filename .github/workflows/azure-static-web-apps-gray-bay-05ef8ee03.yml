@@ -1,4 +1,4 @@
-name: Frontend Azure Static Web App
+name: Frontend Azure Static Web App [${{ github.event.inputs.deploy-env }}]
 
 on:
   push:
