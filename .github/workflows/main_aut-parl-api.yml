@@ -53,7 +53,7 @@ jobs:
     runs-on: windows-latest
     needs: build
     environment:
-      name: 'int'
+      name: 'int-backend'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -76,8 +76,8 @@ jobs:
     runs-on: windows-latest
     needs: build
     environment:
-      name: 'prod'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      name: 'prod-backend'
+      url: 'https://api.parli-info.org/'
 
     steps:
       - name: Download artifact from build job
