@@ -65,9 +65,9 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'aut-parl-api'
+          app-name: 'aut-parl-api(int)'
           slot-name: 'int'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AF57F820C01B4BFF971FB02D8AEB0F67 }}
+          publish-profile:  ${{ secrets.AzureAppService_PublishProfile_4247abcd7dbc4c798a48ce9ee6265352 }}
           package: .
   
   deploy-prod:
