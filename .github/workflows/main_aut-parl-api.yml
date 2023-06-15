@@ -49,6 +49,7 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy-int:
+    if: github.event.inputs.deploy-env == 'int'
     runs-on: windows-latest
     needs: build
     environment:
@@ -65,12 +66,13 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'aut-parl-api(int)'
+          app-name: 'aut-parl-api'
           slot-name: 'int'
           publish-profile:  ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AF57F820C01B4BFF971FB02D8AEB0F67 }}
           package: .
   
   deploy-prod:
+    if: github.event.inputs.deploy-env == 'prod'
     runs-on: windows-latest
     needs: build
     environment:
