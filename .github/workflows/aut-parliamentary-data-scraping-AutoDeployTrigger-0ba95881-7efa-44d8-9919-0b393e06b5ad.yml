@@ -1,4 +1,4 @@
-name: dataScraper build + deploy (Azure Container Registry + App)
+name: DataScraper Azure Container Registry
 
 # When this action will be executed
 on:
