@@ -45,20 +45,7 @@
 			selectedFilterOptions.politicalParties);
 		shownFilterOptions = selectedFilterOptions;		
 	}
-	
-	function mapPoliticalPartyAbbreviationToLongName(abbr) {
-		let mapDict = {
-			"v": "ÖVP",
-			"s": "SPÖ",
-			"f": "FPÖ",
-			"g": "GRÜNE",
-			"n": "NEOS"
-		}
-		return Array.from(abbr, (element) => {
-			let abbrToLower = element.toLowerCase();
-			return mapDict[abbrToLower];
-		}).join(", ");
-	}
+		
 	const scrollAutoCompleteToTop = () => {
 		scrollIntoView(document.getElementById('topic'), { behavior: "smooth", block: "start", inline: "nearest" });
 	}
@@ -273,7 +260,7 @@
 						{#if shownFilterOptions.topic?.topNr != null}
 							{shownFilterOptions.topic?.topNr} /
 						{/if}
-						{mapPoliticalPartyAbbreviationToLongName(shownFilterOptions.politicalParties)}
+						{shownFilterOptions.longNamesOfPoliticalParties}
 					</div>
 					<div class="relative {getHeightForDoughnut(data?.labels?.length)}">
 						<Doughnut bind:chart {data} options={{responsive: true,maintainAspectRatio: false}} />
