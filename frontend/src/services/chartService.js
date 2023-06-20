@@ -15,34 +15,9 @@ export default class ChartService {
             topic: inputTopic,
             politicalParty: selectedPoliticalParties
         }
-        console.log("wenigstens die scheisse soll funktionierne")
-        this.#apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(options, (error, data, response) => {
-            console.log("??")
-            if (error) {
-                console.error("api call failed.")
-                console.error(error);
-                return null;
-            } else {
-                console.log("api call sucess.")
-                let parsedData = JSON.stringify(data)
-                console.log('API called successfully. Returned data: ' + parsedData);
-                callback(data);
-            }
-        });
-    }
-
-
-    async fetchSpeechMetaData(callback) {
-        this.#apiInstance.apiSpeechesMetaDataGet((error, data, response) => {
-            if (error) {
-                console.error(error);
-                return null;
-            } else {
-                let parsedData = JSON.stringify(data)
-                console.log('API called successfully. Returned data: ' + parsedData);
-                callback(parsedData);
-            }
-        });
+        
+        let response = this.#apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(options);
+        response.then(x => callback(x));
     }
 
     searchTopics = (searchTerm, legislature, meetingNumber) => {
@@ -51,42 +26,12 @@ export default class ChartService {
             legislature: legislature,
             meetingNumber: meetingNumber
         }
-        return new Promise((resolve, reject) => {
-            this.#apiInstance.apiSpeechesMetaDataSearchTopicsGet(options, (error, data, response) => {
-            
-                if (error) {
-                    console.error("search topic api call failed.")
-                    console.error(error);
-                    reject(error);
-                } else {
-                    console.log("search topic api call success.")
-                    let parsedData = JSON.stringify(data)
-                    console.log('API called successfully. Returned data: ' + parsedData);
-                    resolve(data);
-                }
-            });
-        })
+        return this.#apiInstance.apiSpeechesMetaDataSearchTopicsGet(options);      
         
     }
 
     getLegislaturesAndMeetings = () => {
-      
-        return new Promise((resolve, reject) => {
-            this.#apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet((error, data, response) => {
-            
-                if (error) {
-                    console.error("get legislatures and meetings api call failed.")
-                    console.error(error);
-                    reject(error);
-                } else {
-                    console.log("get legislatures and meetings api call success.")
-                    let parsedData = JSON.stringify(data)
-                    console.log('API called successfully. Returned data: ' + parsedData);
-                    resolve(data);
-                }
-            });
-        })
-        
+      return this.#apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet();        
     }
 }
 

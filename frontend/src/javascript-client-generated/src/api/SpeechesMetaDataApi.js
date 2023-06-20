@@ -37,19 +37,11 @@ export default class SpeechesMetaDataApi {
     }
 
 
-    /**
-     * Callback function to receive the result of the apiSpeechesMetaDataGet operation.
-     * @callback module:api/SpeechesMetaDataApi~apiSpeechesMetaDataGetCallback
-     * @param {String} error Error message, if any.
-     * @param {Array.<module:model/SpeechesMetaData>} data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
 
     /**
-     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataGetCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Array.<module:model/SpeechesMetaData>}
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/SpeechesMetaData>} and HTTP response
      */
-    apiSpeechesMetaDataGet(callback) {
+    apiSpeechesMetaDataGetWithHttpInfo() {
       let postBody = null;
 
       let pathParams = {
@@ -68,23 +60,25 @@ export default class SpeechesMetaDataApi {
       return this.apiClient.callApi(
         '/api/SpeechesMetaData', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
+        authNames, contentTypes, accepts, returnType, null
       );
     }
 
     /**
-     * Callback function to receive the result of the apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet operation.
-     * @callback module:api/SpeechesMetaDataApi~apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGetCallback
-     * @param {String} error Error message, if any.
-     * @param {Array.<module:model/LegislatureMeetingsListDto>} data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/SpeechesMetaData>}
      */
+    apiSpeechesMetaDataGet() {
+      return this.apiSpeechesMetaDataGetWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
 
     /**
-     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGetCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Array.<module:model/LegislatureMeetingsListDto>}
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/LegislatureMeetingsListDto>} and HTTP response
      */
-    apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet(callback) {
+    apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGetWithHttpInfo() {
       let postBody = null;
 
       let pathParams = {
@@ -103,17 +97,20 @@ export default class SpeechesMetaDataApi {
       return this.apiClient.callApi(
         '/api/SpeechesMetaData/getLegislaturesAndMeetingNumbers', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
+        authNames, contentTypes, accepts, returnType, null
       );
     }
 
     /**
-     * Callback function to receive the result of the apiSpeechesMetaDataGetTypeOfSpeechesCountListGet operation.
-     * @callback module:api/SpeechesMetaDataApi~apiSpeechesMetaDataGetTypeOfSpeechesCountListGetCallback
-     * @param {String} error Error message, if any.
-     * @param {Array.<module:model/TypeOfSpeechCountDto>} data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/LegislatureMeetingsListDto>}
      */
+    apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet() {
+      return this.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGetWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
 
     /**
      * @param {Object} opts Optional parameters
@@ -121,10 +118,9 @@ export default class SpeechesMetaDataApi {
      * @param {String} [legislature] 
      * @param {Number} [meetingNumber] 
      * @param {String} [topic] 
-     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataGetTypeOfSpeechesCountListGetCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Array.<module:model/TypeOfSpeechCountDto>}
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/TypeOfSpeechCountDto>} and HTTP response
      */
-    apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(opts, callback) {
+    apiSpeechesMetaDataGetTypeOfSpeechesCountListGetWithHttpInfo(opts) {
       opts = opts || {};
       let postBody = null;
 
@@ -148,23 +144,31 @@ export default class SpeechesMetaDataApi {
       return this.apiClient.callApi(
         '/api/SpeechesMetaData/getTypeOfSpeechesCountList', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
+        authNames, contentTypes, accepts, returnType, null
       );
     }
 
     /**
-     * Callback function to receive the result of the apiSpeechesMetaDataIdDelete operation.
-     * @callback module:api/SpeechesMetaDataApi~apiSpeechesMetaDataIdDeleteCallback
-     * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
-     * @param {String} response The complete HTTP response.
+     * @param {Object} opts Optional parameters
+     * @param {Array.<String>} opts.politicalParty 
+     * @param {String} opts.legislature 
+     * @param {Number} opts.meetingNumber 
+     * @param {String} opts.topic 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/TypeOfSpeechCountDto>}
      */
+    apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(opts) {
+      return this.apiSpeechesMetaDataGetTypeOfSpeechesCountListGetWithHttpInfo(opts)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
 
     /**
      * @param {String} id 
-     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataIdDeleteCallback} callback The callback function, accepting three arguments: error, data, response
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
      */
-    apiSpeechesMetaDataIdDelete(id, callback) {
+    apiSpeechesMetaDataIdDeleteWithHttpInfo(id) {
       let postBody = null;
       // verify the required parameter 'id' is set
       if (id === undefined || id === null) {
@@ -188,24 +192,27 @@ export default class SpeechesMetaDataApi {
       return this.apiClient.callApi(
         '/api/SpeechesMetaData/{id}', 'DELETE',
         pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
+        authNames, contentTypes, accepts, returnType, null
       );
     }
 
     /**
-     * Callback function to receive the result of the apiSpeechesMetaDataIdGet operation.
-     * @callback module:api/SpeechesMetaDataApi~apiSpeechesMetaDataIdGetCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/SpeechesMetaData} data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
+     * @param {String} id 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}
      */
+    apiSpeechesMetaDataIdDelete(id) {
+      return this.apiSpeechesMetaDataIdDeleteWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
 
     /**
      * @param {String} id 
-     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataIdGetCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/SpeechesMetaData}
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/SpeechesMetaData} and HTTP response
      */
-    apiSpeechesMetaDataIdGet(id, callback) {
+    apiSpeechesMetaDataIdGetWithHttpInfo(id) {
       let postBody = null;
       // verify the required parameter 'id' is set
       if (id === undefined || id === null) {
@@ -229,25 +236,29 @@ export default class SpeechesMetaDataApi {
       return this.apiClient.callApi(
         '/api/SpeechesMetaData/{id}', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
+        authNames, contentTypes, accepts, returnType, null
       );
     }
 
     /**
-     * Callback function to receive the result of the apiSpeechesMetaDataIdPut operation.
-     * @callback module:api/SpeechesMetaDataApi~apiSpeechesMetaDataIdPutCallback
-     * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
-     * @param {String} response The complete HTTP response.
+     * @param {String} id 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/SpeechesMetaData}
      */
+    apiSpeechesMetaDataIdGet(id) {
+      return this.apiSpeechesMetaDataIdGetWithHttpInfo(id)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
 
     /**
      * @param {String} id 
      * @param {Object} opts Optional parameters
      * @param {module:model/SpeechesMetaData} [speechesMetaData] 
-     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataIdPutCallback} callback The callback function, accepting three arguments: error, data, response
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
      */
-    apiSpeechesMetaDataIdPut(id, opts, callback) {
+    apiSpeechesMetaDataIdPutWithHttpInfo(id, opts) {
       opts = opts || {};
       let postBody = opts['speechesMetaData'];
       // verify the required parameter 'id' is set
@@ -272,24 +283,30 @@ export default class SpeechesMetaDataApi {
       return this.apiClient.callApi(
         '/api/SpeechesMetaData/{id}', 'PUT',
         pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
+        authNames, contentTypes, accepts, returnType, null
       );
     }
 
     /**
-     * Callback function to receive the result of the apiSpeechesMetaDataPost operation.
-     * @callback module:api/SpeechesMetaDataApi~apiSpeechesMetaDataPostCallback
-     * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
-     * @param {String} response The complete HTTP response.
+     * @param {String} id 
+     * @param {Object} opts Optional parameters
+     * @param {module:model/SpeechesMetaData} opts.speechesMetaData 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}
      */
+    apiSpeechesMetaDataIdPut(id, opts) {
+      return this.apiSpeechesMetaDataIdPutWithHttpInfo(id, opts)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
 
     /**
      * @param {Object} opts Optional parameters
      * @param {module:model/SpeechesMetaData} [speechesMetaData] 
-     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataPostCallback} callback The callback function, accepting three arguments: error, data, response
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing HTTP response
      */
-    apiSpeechesMetaDataPost(opts, callback) {
+    apiSpeechesMetaDataPostWithHttpInfo(opts) {
       opts = opts || {};
       let postBody = opts['speechesMetaData'];
 
@@ -309,27 +326,31 @@ export default class SpeechesMetaDataApi {
       return this.apiClient.callApi(
         '/api/SpeechesMetaData', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
+        authNames, contentTypes, accepts, returnType, null
       );
     }
 
     /**
-     * Callback function to receive the result of the apiSpeechesMetaDataSearchTopicsGet operation.
-     * @callback module:api/SpeechesMetaDataApi~apiSpeechesMetaDataSearchTopicsGetCallback
-     * @param {String} error Error message, if any.
-     * @param {Array.<module:model/TopicSearchResultDto>} data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
+     * @param {Object} opts Optional parameters
+     * @param {module:model/SpeechesMetaData} opts.speechesMetaData 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}
      */
+    apiSpeechesMetaDataPost(opts) {
+      return this.apiSpeechesMetaDataPostWithHttpInfo(opts)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
 
     /**
      * @param {Object} opts Optional parameters
      * @param {String} [searchTerm] 
      * @param {String} [legislature] 
      * @param {Number} [meetingNumber] 
-     * @param {module:api/SpeechesMetaDataApi~apiSpeechesMetaDataSearchTopicsGetCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Array.<module:model/TopicSearchResultDto>}
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/TopicSearchResultDto>} and HTTP response
      */
-    apiSpeechesMetaDataSearchTopicsGet(opts, callback) {
+    apiSpeechesMetaDataSearchTopicsGetWithHttpInfo(opts) {
       opts = opts || {};
       let postBody = null;
 
@@ -352,8 +373,22 @@ export default class SpeechesMetaDataApi {
       return this.apiClient.callApi(
         '/api/SpeechesMetaData/searchTopics', 'GET',
         pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
+        authNames, contentTypes, accepts, returnType, null
       );
+    }
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.searchTerm 
+     * @param {String} opts.legislature 
+     * @param {Number} opts.meetingNumber 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/TopicSearchResultDto>}
+     */
+    apiSpeechesMetaDataSearchTopicsGet(opts) {
+      return this.apiSpeechesMetaDataSearchTopicsGetWithHttpInfo(opts)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
     }
 
 

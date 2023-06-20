@@ -27,13 +27,12 @@ Method | HTTP request | Description
 import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
 
 let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
-apiInstance.apiSpeechesMetaDataGet((error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
+apiInstance.apiSpeechesMetaDataGet().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
 });
+
 ```
 
 ### Parameters
@@ -66,13 +65,12 @@ No authorization required
 import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
 
 let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
-apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet((error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
+apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet().then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
 });
+
 ```
 
 ### Parameters
@@ -111,13 +109,12 @@ let opts = {
   'meetingNumber': 56, // Number | 
   'topic': "topic_example" // String | 
 };
-apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(opts, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
+apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(opts).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
 });
+
 ```
 
 ### Parameters
@@ -157,13 +154,12 @@ import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_
 
 let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
 let id = "id_example"; // String | 
-apiInstance.apiSpeechesMetaDataIdDelete(id, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
+apiInstance.apiSpeechesMetaDataIdDelete(id).then(() => {
+  console.log('API called successfully.');
+}, (error) => {
+  console.error(error);
 });
+
 ```
 
 ### Parameters
@@ -200,13 +196,12 @@ import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_
 
 let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
 let id = "id_example"; // String | 
-apiInstance.apiSpeechesMetaDataIdGet(id, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
+apiInstance.apiSpeechesMetaDataIdGet(id).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
 });
+
 ```
 
 ### Parameters
@@ -246,13 +241,12 @@ let id = "id_example"; // String |
 let opts = {
   'speechesMetaData': new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaData() // SpeechesMetaData | 
 };
-apiInstance.apiSpeechesMetaDataIdPut(id, opts, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
+apiInstance.apiSpeechesMetaDataIdPut(id, opts).then(() => {
+  console.log('API called successfully.');
+}, (error) => {
+  console.error(error);
 });
+
 ```
 
 ### Parameters
@@ -292,13 +286,12 @@ let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.Speeches
 let opts = {
   'speechesMetaData': new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaData() // SpeechesMetaData | 
 };
-apiInstance.apiSpeechesMetaDataPost(opts, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully.');
-  }
+apiInstance.apiSpeechesMetaDataPost(opts).then(() => {
+  console.log('API called successfully.');
+}, (error) => {
+  console.error(error);
 });
+
 ```
 
 ### Parameters
@@ -339,13 +332,12 @@ let opts = {
   'legislature': "legislature_example", // String | 
   'meetingNumber': 56 // Number | 
 };
-apiInstance.apiSpeechesMetaDataSearchTopicsGet(opts, (error, data, response) => {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
+apiInstance.apiSpeechesMetaDataSearchTopicsGet(opts).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
 });
+
 ```
 
 ### Parameters

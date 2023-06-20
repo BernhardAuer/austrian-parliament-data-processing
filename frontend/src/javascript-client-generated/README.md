@@ -102,14 +102,12 @@ var WebApiVersion1000CultureneutralPublicKeyTokennull = require('web_api_version
 
 
 var api = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi()
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-api.apiSpeechesMetaDataGet(callback);
+api.apiSpeechesMetaDataGet().then(function(data) {
+  console.log('API called successfully. Returned data: ' + data);
+}, function(error) {
+  console.error(error);
+});
+
 
 ```
 
