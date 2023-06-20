@@ -13,7 +13,7 @@ export default class ChartService {
         let options = {
             legislature: selectedFilterOptions.legislature,
             meetingNumber: selectedFilterOptions.meetingNumber,
-            topic: selectedFilterOptions.topic,
+            topic: selectedFilterOptions.topic?.topic,
             politicalParty: selectedFilterOptions.politicalParties
         }
         
