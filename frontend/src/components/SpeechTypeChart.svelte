@@ -12,6 +12,7 @@
 	let service = new ChartService();
 
 	let selectedFilterOptions = new FilterOptions();
+	selectedFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
 	let shownFilterOptions = new FilterOptions();
 
 	let rerenderTrigger = 0;
@@ -39,7 +40,7 @@
 	const populateData = async () => {
 		data = null;
 		data = await service.fetchSpeechTypes(selectedFilterOptions);
-		shownFilterOptions = selectedFilterOptions;		
+		Object.assign(shownFilterOptions, selectedFilterOptions);
 	}
 		
 	const scrollAutoCompleteToTop = () => {
