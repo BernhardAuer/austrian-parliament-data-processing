@@ -1,6 +1,7 @@
-# WebApi.SpeechesMetaData
+# WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaData
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
@@ -20,3 +21,5 @@ Name | Type | Description | Notes
 **meetingNr** | **Number** |  | [optional] 
 **legislature** | **String** |  | [optional] 
 **textMatchScore** | **Number** |  | [optional] 
+
+

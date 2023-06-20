@@ -1,6 +1,6 @@
-# WebApi.SpeechesMetaDataApi
+# WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi
 
-All URIs are relative to */*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -13,17 +13,20 @@ Method | HTTP request | Description
 [**apiSpeechesMetaDataPost**](SpeechesMetaDataApi.md#apiSpeechesMetaDataPost) | **POST** /api/SpeechesMetaData | 
 [**apiSpeechesMetaDataSearchTopicsGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataSearchTopicsGet) | **GET** /api/SpeechesMetaData/searchTopics | 
 
-<a name="apiSpeechesMetaDataGet"></a>
-# **apiSpeechesMetaDataGet**
+
+
+## apiSpeechesMetaDataGet
+
 > [SpeechesMetaData] apiSpeechesMetaDataGet()
 
 
 
 ### Example
-```javascript
-import {WebApi} from 'web_api';
 
-let apiInstance = new WebApi.SpeechesMetaDataApi();
+```javascript
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
+
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
 apiInstance.apiSpeechesMetaDataGet((error, data, response) => {
   if (error) {
     console.error(error);
@@ -34,6 +37,7 @@ apiInstance.apiSpeechesMetaDataGet((error, data, response) => {
 ```
 
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -46,20 +50,22 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: text/plain, application/json, text/json
+- **Content-Type**: Not defined
+- **Accept**: text/plain, application/json, text/json
 
-<a name="apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet"></a>
-# **apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet**
+
+## apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet
+
 > [LegislatureMeetingsListDto] apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet()
 
 
 
 ### Example
-```javascript
-import {WebApi} from 'web_api';
 
-let apiInstance = new WebApi.SpeechesMetaDataApi();
+```javascript
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
+
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
 apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet((error, data, response) => {
   if (error) {
     console.error(error);
@@ -70,6 +76,7 @@ apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet((error, data,
 ```
 
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -82,22 +89,24 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: text/plain, application/json, text/json
+- **Content-Type**: Not defined
+- **Accept**: text/plain, application/json, text/json
 
-<a name="apiSpeechesMetaDataGetTypeOfSpeechesCountListGet"></a>
-# **apiSpeechesMetaDataGetTypeOfSpeechesCountListGet**
+
+## apiSpeechesMetaDataGetTypeOfSpeechesCountListGet
+
 > [TypeOfSpeechCountDto] apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(opts)
 
 
 
 ### Example
-```javascript
-import {WebApi} from 'web_api';
 
-let apiInstance = new WebApi.SpeechesMetaDataApi();
-let opts = { 
-  'politicalParty': ["politicalParty_example"], // [String] | 
+```javascript
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
+
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
+let opts = {
+  'politicalParty': ["null"], // [String] | 
   'legislature': "legislature_example", // String | 
   'meetingNumber': 56, // Number | 
   'topic': "topic_example" // String | 
@@ -112,6 +121,7 @@ apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(opts, (error, data,
 ```
 
 ### Parameters
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -130,22 +140,23 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: text/plain, application/json, text/json
+- **Content-Type**: Not defined
+- **Accept**: text/plain, application/json, text/json
 
-<a name="apiSpeechesMetaDataIdDelete"></a>
-# **apiSpeechesMetaDataIdDelete**
+
+## apiSpeechesMetaDataIdDelete
+
 > apiSpeechesMetaDataIdDelete(id)
 
 
 
 ### Example
+
 ```javascript
-import {WebApi} from 'web_api';
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
 
-let apiInstance = new WebApi.SpeechesMetaDataApi();
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
 let id = "id_example"; // String | 
-
 apiInstance.apiSpeechesMetaDataIdDelete(id, (error, data, response) => {
   if (error) {
     console.error(error);
@@ -156,6 +167,7 @@ apiInstance.apiSpeechesMetaDataIdDelete(id, (error, data, response) => {
 ```
 
 ### Parameters
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -171,22 +183,23 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: Not defined
+- **Content-Type**: Not defined
+- **Accept**: Not defined
 
-<a name="apiSpeechesMetaDataIdGet"></a>
-# **apiSpeechesMetaDataIdGet**
+
+## apiSpeechesMetaDataIdGet
+
 > SpeechesMetaData apiSpeechesMetaDataIdGet(id)
 
 
 
 ### Example
+
 ```javascript
-import {WebApi} from 'web_api';
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
 
-let apiInstance = new WebApi.SpeechesMetaDataApi();
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
 let id = "id_example"; // String | 
-
 apiInstance.apiSpeechesMetaDataIdGet(id, (error, data, response) => {
   if (error) {
     console.error(error);
@@ -197,6 +210,7 @@ apiInstance.apiSpeechesMetaDataIdGet(id, (error, data, response) => {
 ```
 
 ### Parameters
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -212,23 +226,25 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: text/plain, application/json, text/json
+- **Content-Type**: Not defined
+- **Accept**: text/plain, application/json, text/json
 
-<a name="apiSpeechesMetaDataIdPut"></a>
-# **apiSpeechesMetaDataIdPut**
+
+## apiSpeechesMetaDataIdPut
+
 > apiSpeechesMetaDataIdPut(id, opts)
 
 
 
 ### Example
-```javascript
-import {WebApi} from 'web_api';
 
-let apiInstance = new WebApi.SpeechesMetaDataApi();
+```javascript
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
+
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
 let id = "id_example"; // String | 
-let opts = { 
-  'body': new WebApi.SpeechesMetaData() // SpeechesMetaData | 
+let opts = {
+  'speechesMetaData': new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaData() // SpeechesMetaData | 
 };
 apiInstance.apiSpeechesMetaDataIdPut(id, opts, (error, data, response) => {
   if (error) {
@@ -241,10 +257,11 @@ apiInstance.apiSpeechesMetaDataIdPut(id, opts, (error, data, response) => {
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **body** | [**SpeechesMetaData**](SpeechesMetaData.md)|  | [optional] 
+ **speechesMetaData** | [**SpeechesMetaData**](SpeechesMetaData.md)|  | [optional] 
 
 ### Return type
 
@@ -256,22 +273,24 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/json, application/_*+json
- - **Accept**: Not defined
+- **Content-Type**: application/json, text/json, application/*+json
+- **Accept**: Not defined
 
-<a name="apiSpeechesMetaDataPost"></a>
-# **apiSpeechesMetaDataPost**
+
+## apiSpeechesMetaDataPost
+
 > apiSpeechesMetaDataPost(opts)
 
 
 
 ### Example
-```javascript
-import {WebApi} from 'web_api';
 
-let apiInstance = new WebApi.SpeechesMetaDataApi();
-let opts = { 
-  'body': new WebApi.SpeechesMetaData() // SpeechesMetaData | 
+```javascript
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
+
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
+let opts = {
+  'speechesMetaData': new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaData() // SpeechesMetaData | 
 };
 apiInstance.apiSpeechesMetaDataPost(opts, (error, data, response) => {
   if (error) {
@@ -284,9 +303,10 @@ apiInstance.apiSpeechesMetaDataPost(opts, (error, data, response) => {
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**SpeechesMetaData**](SpeechesMetaData.md)|  | [optional] 
+ **speechesMetaData** | [**SpeechesMetaData**](SpeechesMetaData.md)|  | [optional] 
 
 ### Return type
 
@@ -298,21 +318,23 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/json, application/_*+json
- - **Accept**: Not defined
+- **Content-Type**: application/json, text/json, application/*+json
+- **Accept**: Not defined
 
-<a name="apiSpeechesMetaDataSearchTopicsGet"></a>
-# **apiSpeechesMetaDataSearchTopicsGet**
+
+## apiSpeechesMetaDataSearchTopicsGet
+
 > [TopicSearchResultDto] apiSpeechesMetaDataSearchTopicsGet(opts)
 
 
 
 ### Example
-```javascript
-import {WebApi} from 'web_api';
 
-let apiInstance = new WebApi.SpeechesMetaDataApi();
-let opts = { 
+```javascript
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
+
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
+let opts = {
   'searchTerm': "searchTerm_example", // String | 
   'legislature': "legislature_example", // String | 
   'meetingNumber': 56 // Number | 
@@ -327,6 +349,7 @@ apiInstance.apiSpeechesMetaDataSearchTopicsGet(opts, (error, data, response) => 
 ```
 
 ### Parameters
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -344,6 +367,6 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: text/plain, application/json, text/json
+- **Content-Type**: Not defined
+- **Accept**: text/plain, application/json, text/json
 
