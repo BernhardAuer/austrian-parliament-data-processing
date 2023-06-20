@@ -1,5 +1,4 @@
-import { ApiClient } from './../javascript-client-generated/src/ApiClient.js';
-import { SpeechesMetaDataApi } from './../javascript-client-generated/src/api/SpeechesMetaDataApi.js';
+import { ApiClient, SpeechesMetaDataApi } from './../javascript-client-generated/src/index.js';
 import { env } from '$env/dynamic/public'
 
 export default class ChartService {

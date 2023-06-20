@@ -1,5 +1,5 @@
 <script>
-	import { TypeOfSpeechCountDto } from './../javascript-client-generated/src/model/TypeOfSpeechCountDto.js';
+	import { TypeOfSpeechCountDto } from './../javascript-client-generated/src/index.js';
 	import { Doughnut } from 'svelte-chartjs';
 	import { onMount } from 'svelte';
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
