@@ -8,7 +8,8 @@ export default class ChartService {
         client.basePath = env.PUBLIC_API_URL;
         this.#apiInstance = new SpeechesMetaDataApi(client);
     }
-    fetchSpeechTypes(selectedLegislatur, selectedMeetingNumber, inputTopic, selectedPoliticalParties, callback) {
+    
+    fetchSpeechTypes = (selectedLegislatur, selectedMeetingNumber, inputTopic, selectedPoliticalParties) => {
         let options = {
             legislature:selectedLegislatur,
             meetingNumber: selectedMeetingNumber,
@@ -16,8 +17,7 @@ export default class ChartService {
             politicalParty: selectedPoliticalParties
         }
         
-        let response = this.#apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(options);
-        response.then(x => callback(x));
+        return this.#apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(options);
     }
 
     searchTopics = (searchTerm, legislature, meetingNumber) => {
@@ -26,8 +26,7 @@ export default class ChartService {
             legislature: legislature,
             meetingNumber: meetingNumber
         }
-        return this.#apiInstance.apiSpeechesMetaDataSearchTopicsGet(options);      
-        
+        return this.#apiInstance.apiSpeechesMetaDataSearchTopicsGet(options);
     }
 
     getLegislaturesAndMeetings = () => {

@@ -47,40 +47,35 @@
 			}
 		]
 	};
-	function populateData() {
+	const populateData = async () => {
 		data = null;
-		service.fetchSpeechTypes(
+		let speechData = await service.fetchSpeechTypes(
 			selectedLegislatur,
 			selectedMeetingNumber,
 			selectedTopic?.topic ?? '',
-			selectedPoliticalParties,
-			(response) => {
-				console.log(response);
-				if (!Array.isArray(response) && !response.length) {
-					data = dataTemplate;
-					console.log("nix da.")
-					return;
-				}
+			selectedPoliticalParties);
+		
+		if (!Array.isArray(speechData) && !speechData.length) {
+			data = dataTemplate;
+			return;
+		}
 
-				let typeOfSpeechCountList = Array.from(response, (element) => {
-					console.log('element:' + JSON.stringify(element));
-					return TypeOfSpeechCountDto.constructFromObject(element);
-				});
+		let typeOfSpeechCountList = Array.from(speechData, (element) => {
+			return TypeOfSpeechCountDto.constructFromObject(element);
+		});
 
-				dataTemplate.datasets[0].data = Array.from(
-					typeOfSpeechCountList,
-					(element) => element.count
-				);
-				dataTemplate.labels = Array.from(typeOfSpeechCountList, (element) => element.typeOfSpeech);
-				dataTemplate.datasets[0].backgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToBackgroundColor(element.typeOfSpeech));
-				dataTemplate.datasets[0].hoverBackgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToHoverColor(element.typeOfSpeech));
-				data = dataTemplate;
-				currentShownMeetingNumber = selectedMeetingNumber;
-				currentShownPoliticalParties = selectedPoliticalParties;
-				currentShownLegislatur = selectedLegislatur;
-				currentTopic = selectedTopic;
-			}
+		dataTemplate.datasets[0].data = Array.from(
+			typeOfSpeechCountList,
+			(element) => element.count
 		);
+		dataTemplate.labels = Array.from(typeOfSpeechCountList, (element) => element.typeOfSpeech);
+		dataTemplate.datasets[0].backgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToBackgroundColor(element.typeOfSpeech));
+		dataTemplate.datasets[0].hoverBackgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToHoverColor(element.typeOfSpeech));
+		data = dataTemplate;
+		currentShownMeetingNumber = selectedMeetingNumber;
+		currentShownPoliticalParties = selectedPoliticalParties;
+		currentShownLegislatur = selectedLegislatur;
+		currentTopic = selectedTopic;			
 	}
 	
 	function mapLabelsToBackgroundColor(labelName) {
@@ -177,7 +172,7 @@
 	}	
 	
 	onMount(async () => {
-		populateData();
+		await populateData();
 		legislatureAndMeetings = await service.getLegislaturesAndMeetings();
 		selectedLegislatur = legislatureAndMeetings.slice(-1)[0].legislature;
 		selectedMeetingNumber = legislatureAndMeetings.slice(-1)[0].meetings.slice(-1)[0];
