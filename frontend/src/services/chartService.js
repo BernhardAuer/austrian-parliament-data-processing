@@ -9,12 +9,12 @@ export default class ChartService {
         this.#apiInstance = new SpeechesMetaDataApi(client);
     }
 
-    fetchSpeechTypes = async (selectedLegislatur, selectedMeetingNumber, inputTopic, selectedPoliticalParties) => {
+    fetchSpeechTypes = async (selectedFilterOptions) => {
         let options = {
-            legislature:selectedLegislatur,
-            meetingNumber: selectedMeetingNumber,
-            topic: inputTopic,
-            politicalParty: selectedPoliticalParties
+            legislature: selectedFilterOptions.legislature,
+            meetingNumber: selectedFilterOptions.meetingNumber,
+            topic: selectedFilterOptions.topic,
+            politicalParty: selectedFilterOptions.politicalParties
         }
         
         let typeOfSpeechCountList = await this.#apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(options);

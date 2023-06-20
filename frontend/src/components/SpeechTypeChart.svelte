@@ -38,11 +38,7 @@
 
 	const populateData = async () => {
 		data = null;
-		data = await service.fetchSpeechTypes(
-			selectedFilterOptions.legislature,
-			selectedFilterOptions.meetingNumber,
-			selectedFilterOptions.topic ?? '',
-			selectedFilterOptions.politicalParties);
+		data = await service.fetchSpeechTypes(selectedFilterOptions);
 		shownFilterOptions = selectedFilterOptions;		
 	}
 		
