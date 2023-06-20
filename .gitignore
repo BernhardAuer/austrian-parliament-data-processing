@@ -45,3 +45,7 @@ vite.config.js.timestamp-*
 .vercel
 .test-tmp
 symlink-from
+
+# openApi files
+swagger.json
+swagger.yaml

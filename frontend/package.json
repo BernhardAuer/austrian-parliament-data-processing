@@ -9,7 +9,8 @@
 		"test": "playwright test",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"codegen": "cd ../Backend && dotnet build Backend.sln && npx @openapitools/openapi-generator-cli generate -i ../Backend/swagger.yaml -g javascript -o ../frontend/src/javascript-client-generated"  
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
