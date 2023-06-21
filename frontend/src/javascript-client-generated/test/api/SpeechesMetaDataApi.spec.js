@@ -48,16 +48,6 @@
   }
 
   describe('SpeechesMetaDataApi', function() {
-    describe('apiSpeechesMetaDataGet', function() {
-      it('should call apiSpeechesMetaDataGet successfully', function(done) {
-        //uncomment below and update the code to test apiSpeechesMetaDataGet
-        //instance.apiSpeechesMetaDataGet(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
     describe('apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet', function() {
       it('should call apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet successfully', function(done) {
         //uncomment below and update the code to test apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet
@@ -72,46 +62,6 @@
       it('should call apiSpeechesMetaDataGetTypeOfSpeechesCountListGet successfully', function(done) {
         //uncomment below and update the code to test apiSpeechesMetaDataGetTypeOfSpeechesCountListGet
         //instance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('apiSpeechesMetaDataIdDelete', function() {
-      it('should call apiSpeechesMetaDataIdDelete successfully', function(done) {
-        //uncomment below and update the code to test apiSpeechesMetaDataIdDelete
-        //instance.apiSpeechesMetaDataIdDelete(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('apiSpeechesMetaDataIdGet', function() {
-      it('should call apiSpeechesMetaDataIdGet successfully', function(done) {
-        //uncomment below and update the code to test apiSpeechesMetaDataIdGet
-        //instance.apiSpeechesMetaDataIdGet(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('apiSpeechesMetaDataIdPut', function() {
-      it('should call apiSpeechesMetaDataIdPut successfully', function(done) {
-        //uncomment below and update the code to test apiSpeechesMetaDataIdPut
-        //instance.apiSpeechesMetaDataIdPut(function(error) {
-        //  if (error) throw error;
-        //expect().to.be();
-        //});
-        done();
-      });
-    });
-    describe('apiSpeechesMetaDataPost', function() {
-      it('should call apiSpeechesMetaDataPost successfully', function(done) {
-        //uncomment below and update the code to test apiSpeechesMetaDataPost
-        //instance.apiSpeechesMetaDataPost(function(error) {
         //  if (error) throw error;
         //expect().to.be();
         //});
