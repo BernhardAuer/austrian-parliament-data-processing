@@ -1,4 +1,7 @@
 
+<svelte:head>
+	<title>Datenschutz | parli-info.org</title>
+</svelte:head>
 <script>
     import { env } from '$env/dynamic/public'
     const name = env.PUBLIC_IMPRINT_NAME || '';

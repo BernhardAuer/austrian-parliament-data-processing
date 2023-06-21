@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Lizenzierung | parli-info.org</title>
+</svelte:head>
+
 <div class="md:2xl:mx-96">
     <h1 class="text-4xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">Lizenzierung</h1>
     <p class="font-bold">Die Inhalte auf dieser Seite sind vom Parlament Österreich mittels 

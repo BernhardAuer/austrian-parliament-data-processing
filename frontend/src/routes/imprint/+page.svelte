@@ -1,3 +1,6 @@
+<svelte:head>
+	<title>Impressum | parli-info.org</title>
+</svelte:head>
 <script>
     import { env } from '$env/dynamic/public'
     const name = env.PUBLIC_IMPRINT_NAME || '';
