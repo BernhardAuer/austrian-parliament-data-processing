@@ -1,275 +1,77 @@
 <script>
 	import { Doughnut } from 'svelte-chartjs';
-	import { onMount } from 'svelte';
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
 	import ChartService from './../services/chartService.js';
-	import AutoComplete from 'simple-svelte-autocomplete';
 	import LoadingSpinner from './LoadingSpinner.svelte';
-	import { scrollIntoView } from "seamless-scroll-polyfill";
-	import FilterOptions from './../models/filterOptions.js'
+	import { scrollIntoView } from 'seamless-scroll-polyfill';
+	import FilterOptions from './../models/filterOptions.js';
+	import { onMount } from 'svelte';
 
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 	let service = new ChartService();
 
-	let selectedFilterOptions = new FilterOptions();
-	selectedFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
 	let shownFilterOptions = new FilterOptions();
 
-	let rerenderTrigger = 0;
-	let data = null;
+	let chartData = null;
 	let chart;
-	let legislatureAndMeetings = null;
-	
-	const resetAutoCompleter = () => {
-		selectedFilterOptions.topic = null;
-		rerenderTrigger = rerenderTrigger + 1;
-	};
-
-	const resetMeetingFilter = () => {
-		if (Array.isArray(legislatureAndMeetings) && legislatureAndMeetings.length) {
-			selectedFilterOptions.meetingNumber = legislatureAndMeetings.filter((x) => x.legislature == selectedFilterOptions.legislature)[0].meetings.slice(-1)[0];
-		}
-	};
-
-	// subscribing ONLY to properties is not possible, so we use this workaround
-	$: selectedLegislature = selectedFilterOptions.legislature;	
-	$: selectedMeetingNumber = selectedFilterOptions.meetingNumber;
-	$: selectedLegislature, selectedMeetingNumber, resetAutoCompleter();
-	$: selectedLegislature, resetMeetingFilter();
-
-	const populateData = async () => {
-		data = null;
-		data = await service.fetchSpeechTypes(selectedFilterOptions);
-		Object.assign(shownFilterOptions, selectedFilterOptions);
-	}
-		
-	const scrollAutoCompleteToTop = () => {
-		scrollIntoView(document.getElementById('topic'), { behavior: "smooth", block: "start", inline: "nearest" });
-	}
-
-	const scrollToTypeOfSpeechDiagram = () => {
-		scrollIntoView(document.getElementById('typeOfSpeechDiagram'), { behavior: "smooth", block: "start", inline: "nearest" });
-	}
 
 	const getHeightForDoughnut = (labelCount) => {
-		if (labelCount < 5){			
-			return "h-[15rem]";
+		if (labelCount < 5) {
+			return 'h-[15rem]';
 		}
-		if (labelCount < 10){			
-			return "h-[25rem]";
+		if (labelCount < 10) {
+			return 'h-[25rem]';
 		}
-		if (labelCount < 15){			
-			return "h-[35rem]";
-		}			
-		return "h-[45rem]";
-		
-	}	
-	
+		if (labelCount < 15) {
+			return 'h-[35rem]';
+		}
+		return 'h-[45rem]';
+	};
+	const scrollToTypeOfSpeechDiagram = () => {
+		scrollIntoView(document.getElementById('typeOfSpeechDiagram'), {
+			behavior: 'smooth',
+			block: 'start',
+			inline: 'nearest'
+		});
+	};
+
+	export const populateChartData = async (event) => {
+		chartData = null;
+		Object.assign(shownFilterOptions, event.detail); // shallow copy selectedFilterOptions object
+		chartData = await service.fetchSpeechTypes(shownFilterOptions);
+		scrollToTypeOfSpeechDiagram();
+	};
 	onMount(async () => {
-		await populateData();
-		legislatureAndMeetings = await service.getLegislaturesAndMeetings();
-		selectedFilterOptions.legislature = legislatureAndMeetings.slice(-1)[0].legislature;
-		selectedFilterOptions.meetingNumber = legislatureAndMeetings.slice(-1)[0].meetings.slice(-1)[0];
+		shownFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
+		await populateChartData(shownFilterOptions);
 	});
 </script>
-<div class="md:2xl:mx-96">
-	<h1 class="text-4xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
-		Übersicht aller Wortmeldungsarten im Nationalrat
-	</h1>
-	<p class="text-1xl  leading-tight mt-0 mb-2">
-		Redebeiträge in den Plenarsitzungen des Nationalrats werden in Wortmeldungsarten kategoriersiert. Um einen Überblick über 
-		die Verteilung der Wortmeldungsarten im Nationalrat zu erhalten, werden diese hier grafisch dargestellt.
-		
-		Benützen Sie den Filter, um die Datengrundlage nach Ihrem Interesse anzupassen.
-	</p>
-</div>
-<div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
-	<div class="card w-full sm:w-96 bg-base-100 shadow-xl">
-		<div class="card-body">
-			<h2 class="card-title">Datenfilter</h2>	
-			{#if legislatureAndMeetings == null}
-					<LoadingSpinner />
-			{:else}
-				<div class="relative">
-					<label class="block text-gray-700 text-sm font-bold mb-2 basis-2/3" for="legislatur">Gesetzgebungsperiode:</label>				
-					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Nur vollständig digitalisierte Gesetzgebungsperioden sind verfügbar.">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
-						</svg>	
-					</div>		  
-					<select
-						class="select select-bordered w-full  basis-1"
-						bind:value={selectedFilterOptions.legislature}
-						name="Gesetzgebungsperiode"
-						id="legislatur"
-					>
-						{#if legislatureAndMeetings !== null}
-							{#each legislatureAndMeetings as item}
-								<option value={item.legislature}>{item.legislature}</option>
-							{/each}
-						{/if}
-					</select>
-				</div>
-				<div class="relative">
-					<label class="block text-gray-700 text-sm font-bold mb-2" for="meetingNumber">Sitzung:</label>
-					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Nur Sitzungen mit mind. einer kategorisierten Wortmeldungsart sind verfügbar.">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
-						</svg>	
-					</div>	
-					<select
-						class="select select-bordered w-full"
-						bind:value={selectedFilterOptions.meetingNumber}
-						name="Sitzung"
-						id="meetingNumber"
-					>
-						{#if legislatureAndMeetings !== null && selectedFilterOptions.legislature !== null}
-							{#each legislatureAndMeetings.find(x => x.legislature === selectedFilterOptions.legislature)?.meetings as meeting}
-								<option value="{meeting}">{meeting}</option>
-							{/each}
-						{/if}
-					</select>
-				</div>
-				<div class="testparent w-full relative">
-					<label class="block text-gray-700 text-sm font-bold mb-2" for="topic">Thema:</label>
-					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Die Suche nach Themen berücksichtigt die ausgewählte Gesetzgebungsperiode und Sitzung.">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
-						</svg>	
-					</div>	
-					{#key rerenderTrigger}
-						<AutoComplete
-							onFocus={() => scrollAutoCompleteToTop()}
-							minCharactersToSearch="0"
-							placeholder="Suche Themen"
-							hideArrow="true"
-							inputClassName="w-full text-base"
-							className="input input-bordered w-full text-base"
-							noInputStyles="false"
-							showClear="true"
-							lock="false"
-							noResultsText="Kein Suchergebnis gefunden. Geben Sie bitte vollständige Wörter ein"
-							loadingText="Lade Ergebnisse..."
-							searchFunction={(keyword) =>
-								service.searchTopics(keyword, selectedFilterOptions.legislature, selectedFilterOptions.meetingNumber)}
-							bind:selectedItem={selectedFilterOptions.topic}
-							labelFunction={(selected) => {
-								let labelText = '';
-								if (selected?.topNr != null) {
-									labelText = labelText + selected.topNr + ': ';
-								}
-								labelText = labelText + selected.topic
-								return labelText;
-								}}
-							inputId="topic"
-							name="Themensuche"
-						/>
-					{/key}
-				</div>
-				<div class="relative">
-					<label class="block text-gray-700 text-sm font-bold mb-2" for="politicalParty">Fraktion:</label>
-					<div class="tooltip tooltip-left absolute top-0 right-0" data-tip="Vorläufig sind nur derzeit im Parlament aktive Fraktionen verfügbar.">
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-							<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd" />
-						</svg>	
-					</div>
-					<div class="grid grid-cols-3 gap-2 ">
-						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-							<input
-								type="checkbox"
-								class="checkbox"
-								id="politicalParty_oevp"
-								bind:group={selectedFilterOptions.politicalParties}
-								name="ÖVP"
-								value="V"
-							/>
-							<label for="politicalParty_oevp">ÖVP</label>
-						</div>
-						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-							<input
-								type="checkbox"
-								class="checkbox"
-								id="politicalParty_spoe"
-								bind:group={selectedFilterOptions.politicalParties}
-								name="SPÖ"
-								value="S"
-							/>
-							<label for="politicalParty_spoe">SPÖ</label>
-						</div>					
-						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-							<input
-								type="checkbox"
-								class="checkbox"
-								id="politicalParty_fpoe"
-								bind:group={selectedFilterOptions.politicalParties}
-								name="FPÖ"
-								value="F"
-							/>
-							<label for="politicalParty_fpoe">FPÖ</label>
-						</div>
-						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-							<input
-								type="checkbox"
-								class="checkbox"
-								id="politicalParty_gruene"
-								bind:group={selectedFilterOptions.politicalParties}
-								name="GRÜNE"
-								value="G"
-							/>
-							<label for="politicalParty_gruene">GRÜNE</label>
-						</div>
-						<div class="flex flex-row gap-2 border-2 rounded-full items-center">
-							<input
-								type="checkbox"
-								class="checkbox"
-								id="politicalParty_neos"
-								bind:group={selectedFilterOptions.politicalParties}
-								name="NEOS"
-								value="N"
-							/>
-							<label for="politicalParty_neos">NEOS</label>
-						</div>
-				</div>
-					
-				</div>				
-				<button class="btn " on:click={() => {populateData();scrollToTypeOfSpeechDiagram();}}>Grafik aktualisieren</button>
-			{/if}
-		</div>
-	</div>
-	<div class="card w-full sm:w-[40rem] bg-base-100 shadow-xl" id="typeOfSpeechDiagram">
-		<div class="card-body">
-			
-				<h2 class="card-title">Wortmeldungsarten</h2>			
-				{#if data == null}
-					<LoadingSpinner />
-				{:else if !data.labels.length}
-					<div class="flex flex-col items-center my-auto">
-						<p>Für den ausgewählten Filter sind keine Daten verfügbar.</p>
-					</div>
-				{:else}			
-					<div class="block text-gray-700 text-sm font-bold">
-						{#if shownFilterOptions.legislature != null}
-							{shownFilterOptions.legislature}. GP /
-						{/if}
-						{#if shownFilterOptions.meetingNumber != null}
-							{shownFilterOptions.meetingNumber}. Sitzung /
-						{/if}
-						{#if shownFilterOptions.topic?.topNr != null}
-							{shownFilterOptions.topic?.topNr} /
-						{/if}
-						{shownFilterOptions.longNamesOfPoliticalParties}
-					</div>
-					<div class="relative {getHeightForDoughnut(data?.labels?.length)}">
-						<Doughnut bind:chart {data} options={{responsive: true,maintainAspectRatio: false}} />
-					</div>
-				{/if}	
-		</div>
-	</div>
-</div>
 
-<style>
-	/* this is a hack ... please help me fixing */
-	.testparent :global(.autocomplete) {
-		padding-top: 0.7em;
-	}
-</style>
+<h2 class="card-title">Wortmeldungsarten</h2>
+{#if chartData == null}
+	<LoadingSpinner />
+{:else if !chartData.labels.length}
+	<div class="flex flex-col items-center my-auto">
+		<p>Für den ausgewählten Filter sind keine Daten verfügbar.</p>
+	</div>
+{:else}
+	<div class="block text-gray-700 text-sm font-bold">
+		{#if shownFilterOptions.legislature != null}
+			{shownFilterOptions.legislature}. GP /
+		{/if}
+		{#if shownFilterOptions.meetingNumber != null}
+			{shownFilterOptions.meetingNumber}. Sitzung /
+		{/if}
+		{#if shownFilterOptions.topic?.topNr != null}
+			{shownFilterOptions.topic?.topNr} /
+		{/if}
+		{shownFilterOptions.longNamesOfPoliticalParties}
+	</div>
+	<div class="relative {getHeightForDoughnut(chartData?.labels?.length)}">
+		<Doughnut
+			bind:chart
+			data={chartData}
+			options={{ responsive: true, maintainAspectRatio: false }}
+		/>
+	</div>
+{/if}
