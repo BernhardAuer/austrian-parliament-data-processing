@@ -10,7 +10,7 @@
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"codegen": "cd ../Backend && dotnet build Backend.sln && npx @openapitools/openapi-generator-cli generate -i ../Backend/swagger.yaml -g javascript -o ../frontend/src/javascript-client-generated --additional-properties=usePromises=true"  
+		"codegen": "cd ../Backend && dotnet build Backend.sln && dotnet tool run swagger tofile --output ./swagger.yaml --yaml ./bin/Debug/net6.0/WebApi.dll v1 && npx @openapitools/openapi-generator-cli generate -i ../Backend/swagger.yaml -g javascript -o ../frontend/src/javascript-client-generated --additional-properties=usePromises=true"  
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
