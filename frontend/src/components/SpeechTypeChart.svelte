@@ -1,5 +1,4 @@
 <script>
-	import { TypeOfSpeechCountDto } from './../javascript-client-generated/src/model/TypeOfSpeechCountDto.js';
 	import { Doughnut } from 'svelte-chartjs';
 	import { onMount } from 'svelte';
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
@@ -7,153 +6,43 @@
 	import AutoComplete from 'simple-svelte-autocomplete';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 	import { scrollIntoView } from "seamless-scroll-polyfill";
+	import FilterOptions from './../models/filterOptions.js'
 
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 	let service = new ChartService();
 
+	let selectedFilterOptions = new FilterOptions();
+	selectedFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
+	let shownFilterOptions = new FilterOptions();
+
 	let rerenderTrigger = 0;
 	let data = null;
-	let selectedTopic = null;
 	let chart;
-	let selectedLegislatur = null;
-	let selectedMeetingNumber = null;
-	let selectedPoliticalParties = ['V', 'S', 'F', 'G', 'N'];
 	let legislatureAndMeetings = null;
-	let currentShownMeetingNumber = null;
-	let currentShownPoliticalParties = null;
-	let currentShownLegislatur = null;
-	let currentTopic = null;
-
+	
 	const resetAutoCompleter = () => {
-		selectedTopic = null;
+		selectedFilterOptions.topic = null;
 		rerenderTrigger = rerenderTrigger + 1;
 	};
 
 	const resetMeetingFilter = () => {
 		if (Array.isArray(legislatureAndMeetings) && legislatureAndMeetings.length) {
-			selectedMeetingNumber = legislatureAndMeetings.filter((x) => x.legislature == selectedLegislatur)[0].meetings.slice(-1)[0];
+			selectedFilterOptions.meetingNumber = legislatureAndMeetings.filter((x) => x.legislature == selectedFilterOptions.legislature)[0].meetings.slice(-1)[0];
 		}
 	};
 
-	$: selectedLegislatur, selectedMeetingNumber, resetAutoCompleter();
-	$: selectedLegislatur, resetMeetingFilter();
-	let dataTemplate = {
-		labels: [],
-		datasets: [
-			{
-				data: [],
-				backgroundColor: [],
-				hoverBackgroundColor: []
-			}
-		]
-	};
-	function populateData() {
+	// subscribing ONLY to properties is not possible, so we use this workaround
+	$: selectedLegislature = selectedFilterOptions.legislature;	
+	$: selectedMeetingNumber = selectedFilterOptions.meetingNumber;
+	$: selectedLegislature, selectedMeetingNumber, resetAutoCompleter();
+	$: selectedLegislature, resetMeetingFilter();
+
+	const populateData = async () => {
 		data = null;
-		service.fetchSpeechTypes(
-			selectedLegislatur,
-			selectedMeetingNumber,
-			selectedTopic?.topic ?? '',
-			selectedPoliticalParties,
-			(response) => {
-				console.log(response);
-				if (!Array.isArray(response) && !response.length) {
-					data = dataTemplate;
-					console.log("nix da.")
-					return;
-				}
-
-				let typeOfSpeechCountList = Array.from(response, (element) => {
-					console.log('element:' + JSON.stringify(element));
-					return TypeOfSpeechCountDto.constructFromObject(element);
-				});
-
-				dataTemplate.datasets[0].data = Array.from(
-					typeOfSpeechCountList,
-					(element) => element.count
-				);
-				dataTemplate.labels = Array.from(typeOfSpeechCountList, (element) => element.typeOfSpeech);
-				dataTemplate.datasets[0].backgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToBackgroundColor(element.typeOfSpeech));
-				dataTemplate.datasets[0].hoverBackgroundColor = Array.from(typeOfSpeechCountList, (element) => mapLabelsToHoverColor(element.typeOfSpeech));
-				data = dataTemplate;
-				currentShownMeetingNumber = selectedMeetingNumber;
-				currentShownPoliticalParties = selectedPoliticalParties;
-				currentShownLegislatur = selectedLegislatur;
-				currentTopic = selectedTopic;
-			}
-		);
+		data = await service.fetchSpeechTypes(selectedFilterOptions);
+		Object.assign(shownFilterOptions, selectedFilterOptions);
 	}
-	
-	function mapLabelsToBackgroundColor(labelName) {
-		labelName = labelName.toLowerCase();
-		let colorDict = {
-			"contra": "#F7464A",
-			"pro": "#68e08c",
-			"erste lesung": "#949FB1",
-			"regierungsbank": "#4D5360",
-			"tatsächliche berichtigung": "#FDB45C",
-			"ap" : "#46BFBD", 
-			"aktuelle stunde" : "#68bce0",
-			"begründung" : "#e068bc",
-			"berichterstattung ausschuss" : "#e08c68", 
-			"dringliche anfrage" : "#e894c3",
-			"dringlicher (entschließungs-)antrag" : "#b994e8",
-			"erklärung" : "#94e8b9", 
-			"erwiderung" : "#c3e894",
-			"europäische union" : "#df6a71",
-			"wortmeldung zur geschäftsbehandlung": "#e89499",
-			"kurze debatte" : "#f6d3d5",
-			"rf" : "#7f85e3",  
-			"regierungsbank staatssekretär:in" : "#d3d5f6",
-			"regierungsvorlage" : "#6adfd8",
-			"unterzeichner:in" : "#d3f6f3",
-			"wahldebatte" : "#df6a71",
-			"wortmeldung" : "#f1bec1",
-		}
-		return colorDict[labelName];
-	}
-	
-	function mapLabelsToHoverColor(labelName) {
-		labelName = labelName.toLowerCase();
-		let colorDict = {
-			"contra": "#F7464A",
-			"pro": "#68e08c",
-			"erste lesung": "#949FB1",
-			"regierungsbank": "#4D5360",
-			"tatsächliche berichtigung": "#FDB45C",
-			"ap" : "#46BFBD", 
-			"aktuelle stunde" : "#68bce0",
-			"begründung" : "#e068bc",
-			"berichterstattung ausschuss" : "#e08c68", 
-			"dringliche anfrage" : "#e894c3",
-			"dringlicher (entschließungs-)antrag" : "#b994e8",
-			"erklärung" : "#94e8b9", 
-			"erwiderung" : "#c3e894",
-			"europäische union" : "#df6a71",
-			"wortmeldung zur geschäftsbehandlung": "#e89499",
-			"kurze debatte" : "#f6d3d5",
-			"rf" : "#7f85e3",  
-			"regierungsbank staatssekretär:in" : "#d3d5f6",
-			"regierungsvorlage" : "#6adfd8",
-			"unterzeichner:in" : "#d3f6f3",
-			"wahldebatte" : "#df6a71",
-			"wortmeldung" : "#f1bec1",
-		}
-		return colorDict[labelName];
-	}
-
-	function mapPoliticalPartyAbbreviationToLongName(abbr) {
-		let mapDict = {
-			"v": "ÖVP",
-			"s": "SPÖ",
-			"f": "FPÖ",
-			"g": "GRÜNE",
-			"n": "NEOS"
-		}
-		return Array.from(abbr, (element) => {
-			let abbrToLower = element.toLowerCase();
-			return mapDict[abbrToLower];
-		}).join(", ");
-	}
+		
 	const scrollAutoCompleteToTop = () => {
 		scrollIntoView(document.getElementById('topic'), { behavior: "smooth", block: "start", inline: "nearest" });
 	}
@@ -177,10 +66,10 @@
 	}	
 	
 	onMount(async () => {
-		populateData();
+		await populateData();
 		legislatureAndMeetings = await service.getLegislaturesAndMeetings();
-		selectedLegislatur = legislatureAndMeetings.slice(-1)[0].legislature;
-		selectedMeetingNumber = legislatureAndMeetings.slice(-1)[0].meetings.slice(-1)[0];
+		selectedFilterOptions.legislature = legislatureAndMeetings.slice(-1)[0].legislature;
+		selectedFilterOptions.meetingNumber = legislatureAndMeetings.slice(-1)[0].meetings.slice(-1)[0];
 	});
 </script>
 <div class="md:2xl:mx-96">
@@ -210,7 +99,7 @@
 					</div>		  
 					<select
 						class="select select-bordered w-full  basis-1"
-						bind:value={selectedLegislatur}
+						bind:value={selectedFilterOptions.legislature}
 						name="Gesetzgebungsperiode"
 						id="legislatur"
 					>
@@ -230,12 +119,12 @@
 					</div>	
 					<select
 						class="select select-bordered w-full"
-						bind:value={selectedMeetingNumber}
+						bind:value={selectedFilterOptions.meetingNumber}
 						name="Sitzung"
 						id="meetingNumber"
 					>
-						{#if legislatureAndMeetings !== null && selectedLegislatur !== null}
-							{#each legislatureAndMeetings.find(x => x.legislature === selectedLegislatur)?.meetings as meeting}
+						{#if legislatureAndMeetings !== null && selectedFilterOptions.legislature !== null}
+							{#each legislatureAndMeetings.find(x => x.legislature === selectedFilterOptions.legislature)?.meetings as meeting}
 								<option value="{meeting}">{meeting}</option>
 							{/each}
 						{/if}
@@ -262,8 +151,8 @@
 							noResultsText="Kein Suchergebnis gefunden. Geben Sie bitte vollständige Wörter ein"
 							loadingText="Lade Ergebnisse..."
 							searchFunction={(keyword) =>
-								service.searchTopics(keyword, selectedLegislatur, selectedMeetingNumber)}
-							bind:selectedItem={selectedTopic}
+								service.searchTopics(keyword, selectedFilterOptions.legislature, selectedFilterOptions.meetingNumber)}
+							bind:selectedItem={selectedFilterOptions.topic}
 							labelFunction={(selected) => {
 								let labelText = '';
 								if (selected?.topNr != null) {
@@ -290,7 +179,7 @@
 								type="checkbox"
 								class="checkbox"
 								id="politicalParty_oevp"
-								bind:group={selectedPoliticalParties}
+								bind:group={selectedFilterOptions.politicalParties}
 								name="ÖVP"
 								value="V"
 							/>
@@ -301,7 +190,7 @@
 								type="checkbox"
 								class="checkbox"
 								id="politicalParty_spoe"
-								bind:group={selectedPoliticalParties}
+								bind:group={selectedFilterOptions.politicalParties}
 								name="SPÖ"
 								value="S"
 							/>
@@ -312,7 +201,7 @@
 								type="checkbox"
 								class="checkbox"
 								id="politicalParty_fpoe"
-								bind:group={selectedPoliticalParties}
+								bind:group={selectedFilterOptions.politicalParties}
 								name="FPÖ"
 								value="F"
 							/>
@@ -323,7 +212,7 @@
 								type="checkbox"
 								class="checkbox"
 								id="politicalParty_gruene"
-								bind:group={selectedPoliticalParties}
+								bind:group={selectedFilterOptions.politicalParties}
 								name="GRÜNE"
 								value="G"
 							/>
@@ -334,7 +223,7 @@
 								type="checkbox"
 								class="checkbox"
 								id="politicalParty_neos"
-								bind:group={selectedPoliticalParties}
+								bind:group={selectedFilterOptions.politicalParties}
 								name="NEOS"
 								value="N"
 							/>
@@ -359,16 +248,16 @@
 					</div>
 				{:else}			
 					<div class="block text-gray-700 text-sm font-bold">
-						{#if currentShownLegislatur != null}
-							{currentShownLegislatur}. GP /
+						{#if shownFilterOptions.legislature != null}
+							{shownFilterOptions.legislature}. GP /
 						{/if}
-						{#if currentShownMeetingNumber != null}
-							{currentShownMeetingNumber}. Sitzung /
+						{#if shownFilterOptions.meetingNumber != null}
+							{shownFilterOptions.meetingNumber}. Sitzung /
 						{/if}
-						{#if currentTopic?.topNr != null}
-							{currentTopic?.topNr} /
+						{#if shownFilterOptions.topic?.topNr != null}
+							{shownFilterOptions.topic?.topNr} /
 						{/if}
-						{mapPoliticalPartyAbbreviationToLongName(currentShownPoliticalParties)}
+						{shownFilterOptions.longNamesOfPoliticalParties}
 					</div>
 					<div class="relative {getHeightForDoughnut(data?.labels?.length)}">
 						<Doughnut bind:chart {data} options={{responsive: true,maintainAspectRatio: false}} />

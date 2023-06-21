@@ -1,5 +1,4 @@
-import { ApiClient } from './../javascript-client-generated/src/ApiClient.js';
-import { SpeechesMetaDataApi } from './../javascript-client-generated/src/api/SpeechesMetaDataApi.js';
+import { ApiClient, SpeechesMetaDataApi } from './../javascript-client-generated/src/index.js';
 import { env } from '$env/dynamic/public'
 
 export default class ChartService {
@@ -9,42 +8,97 @@ export default class ChartService {
         client.basePath = env.PUBLIC_API_URL;
         this.#apiInstance = new SpeechesMetaDataApi(client);
     }
-    fetchSpeechTypes(selectedLegislatur, selectedMeetingNumber, inputTopic, selectedPoliticalParties, callback) {
+
+    fetchSpeechTypes = async (selectedFilterOptions) => {
         let options = {
-            legislature:selectedLegislatur,
-            meetingNumber: selectedMeetingNumber,
-            topic: inputTopic,
-            politicalParty: selectedPoliticalParties
+            legislature: selectedFilterOptions.legislature,
+            meetingNumber: selectedFilterOptions.meetingNumber,
+            topic: selectedFilterOptions.topic?.topic,
+            politicalParty: selectedFilterOptions.politicalParties
         }
-        console.log("wenigstens die scheisse soll funktionierne")
-        this.#apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(options, (error, data, response) => {
-            console.log("??")
-            if (error) {
-                console.error("api call failed.")
-                console.error(error);
-                return null;
-            } else {
-                console.log("api call sucess.")
-                let parsedData = JSON.stringify(data)
-                console.log('API called successfully. Returned data: ' + parsedData);
-                callback(data);
-            }
-        });
+        
+        let typeOfSpeechCountList = await this.#apiInstance.apiSpeechesMetaDataGetTypeOfSpeechesCountListGet(options);
+
+        let dataTemplate = {
+            labels: [],
+            datasets: [
+                {
+                    data: [],
+                    backgroundColor: [],
+                    hoverBackgroundColor: []
+                }
+            ]
+        };
+
+        if (!Array.isArray(typeOfSpeechCountList) && !typeOfSpeechCountList.length) {
+			return dataTemplate;
+		}
+
+		dataTemplate.labels = Array.from(typeOfSpeechCountList, (element) => element.typeOfSpeech);
+		dataTemplate.datasets[0].backgroundColor = Array.from(typeOfSpeechCountList, (element) => this.mapLabelsToBackgroundColor(element.typeOfSpeech));
+		dataTemplate.datasets[0].hoverBackgroundColor = Array.from(typeOfSpeechCountList, (element) => this.mapLabelsToHoverColor(element.typeOfSpeech));
+		dataTemplate.datasets[0].data = Array.from(typeOfSpeechCountList, (element) => element.count);
+
+        return dataTemplate;
     }
 
-
-    async fetchSpeechMetaData(callback) {
-        this.#apiInstance.apiSpeechesMetaDataGet((error, data, response) => {
-            if (error) {
-                console.error(error);
-                return null;
-            } else {
-                let parsedData = JSON.stringify(data)
-                console.log('API called successfully. Returned data: ' + parsedData);
-                callback(parsedData);
-            }
-        });
-    }
+	mapLabelsToBackgroundColor(labelName) {
+		labelName = labelName.toLowerCase();
+		let colorDict = {
+			"contra": "#F7464A",
+			"pro": "#68e08c",
+			"erste lesung": "#949FB1",
+			"regierungsbank": "#4D5360",
+			"tatsächliche berichtigung": "#FDB45C",
+			"ap" : "#46BFBD", 
+			"aktuelle stunde" : "#68bce0",
+			"begründung" : "#e068bc",
+			"berichterstattung ausschuss" : "#e08c68", 
+			"dringliche anfrage" : "#e894c3",
+			"dringlicher (entschließungs-)antrag" : "#b994e8",
+			"erklärung" : "#94e8b9", 
+			"erwiderung" : "#c3e894",
+			"europäische union" : "#df6a71",
+			"wortmeldung zur geschäftsbehandlung": "#e89499",
+			"kurze debatte" : "#f6d3d5",
+			"rf" : "#7f85e3",  
+			"regierungsbank staatssekretär:in" : "#d3d5f6",
+			"regierungsvorlage" : "#6adfd8",
+			"unterzeichner:in" : "#d3f6f3",
+			"wahldebatte" : "#df6a71",
+			"wortmeldung" : "#f1bec1",
+		}
+		return colorDict[labelName];
+	}
+	
+	mapLabelsToHoverColor(labelName) {
+		labelName = labelName.toLowerCase();
+		let colorDict = {
+			"contra": "#F7464A",
+			"pro": "#68e08c",
+			"erste lesung": "#949FB1",
+			"regierungsbank": "#4D5360",
+			"tatsächliche berichtigung": "#FDB45C",
+			"ap" : "#46BFBD", 
+			"aktuelle stunde" : "#68bce0",
+			"begründung" : "#e068bc",
+			"berichterstattung ausschuss" : "#e08c68", 
+			"dringliche anfrage" : "#e894c3",
+			"dringlicher (entschließungs-)antrag" : "#b994e8",
+			"erklärung" : "#94e8b9", 
+			"erwiderung" : "#c3e894",
+			"europäische union" : "#df6a71",
+			"wortmeldung zur geschäftsbehandlung": "#e89499",
+			"kurze debatte" : "#f6d3d5",
+			"rf" : "#7f85e3",  
+			"regierungsbank staatssekretär:in" : "#d3d5f6",
+			"regierungsvorlage" : "#6adfd8",
+			"unterzeichner:in" : "#d3f6f3",
+			"wahldebatte" : "#df6a71",
+			"wortmeldung" : "#f1bec1",
+		}
+		return colorDict[labelName];
+	}
 
     searchTopics = (searchTerm, legislature, meetingNumber) => {
         let options = {
@@ -52,42 +106,11 @@ export default class ChartService {
             legislature: legislature,
             meetingNumber: meetingNumber
         }
-        return new Promise((resolve, reject) => {
-            this.#apiInstance.apiSpeechesMetaDataSearchTopicsGet(options, (error, data, response) => {
-            
-                if (error) {
-                    console.error("search topic api call failed.")
-                    console.error(error);
-                    reject(error);
-                } else {
-                    console.log("search topic api call success.")
-                    let parsedData = JSON.stringify(data)
-                    console.log('API called successfully. Returned data: ' + parsedData);
-                    resolve(data);
-                }
-            });
-        })
-        
+        return this.#apiInstance.apiSpeechesMetaDataSearchTopicsGet(options);
     }
 
     getLegislaturesAndMeetings = () => {
-      
-        return new Promise((resolve, reject) => {
-            this.#apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet((error, data, response) => {
-            
-                if (error) {
-                    console.error("get legislatures and meetings api call failed.")
-                    console.error(error);
-                    reject(error);
-                } else {
-                    console.log("get legislatures and meetings api call success.")
-                    let parsedData = JSON.stringify(data)
-                    console.log('API called successfully. Returned data: ' + parsedData);
-                    resolve(data);
-                }
-            });
-        })
-        
+      return this.#apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet();        
     }
 }
 

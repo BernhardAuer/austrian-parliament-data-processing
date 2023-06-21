@@ -1,6 +1,7 @@
-# WebApi.TopicSearchResultDto
+# WebApiVersion1000CultureneutralPublicKeyTokennull.TopicSearchResultDto
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **topic** | **String** |  | [optional] 
@@ -8,3 +9,5 @@ Name | Type | Description | Notes
 **meetingNr** | **Number** |  | [optional] 
 **legislature** | **String** |  | [optional] 
 **textMatchScore** | **Number** |  | [optional] 
+
+
