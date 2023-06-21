@@ -1,5 +1,5 @@
 <script>
-	import DataFilter from './DataFilter.svelte';
+	import DataFilter from './dataFilter/DataFilter.svelte';
 	import { Doughnut } from 'svelte-chartjs';
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
 	import ChartService from './../services/chartService.js';

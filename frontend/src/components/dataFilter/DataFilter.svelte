@@ -1,8 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
-	import ChartService from './../services/chartService.js';
-	import LoadingSpinner from './LoadingSpinner.svelte';
-	import FilterOptions from './../models/filterOptions.js';
+	import ChartService from './../../services/chartService';
+	import LoadingSpinner from './../LoadingSpinner.svelte';
+	import FilterOptions from './../../models/filterOptions';
 	import { createEventDispatcher } from 'svelte';
 	import DataFilterSelect from './DataFilterSelect.svelte';
 	import DataFilterSearch from './DataFilterSearch.svelte';

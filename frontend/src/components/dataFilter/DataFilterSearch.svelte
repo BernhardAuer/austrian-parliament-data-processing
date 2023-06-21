@@ -1,6 +1,6 @@
 <script>
 	import AutoComplete from 'simple-svelte-autocomplete';
-	import ChartService from './../services/chartService.js';
+	import ChartService from './../../services/chartService.js';
 	import { scrollIntoView } from 'seamless-scroll-polyfill';
 
 	export let selectedFilterOptions = null;
