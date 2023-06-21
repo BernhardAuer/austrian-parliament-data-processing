@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Wortmeldungsarten | parli-info.org</title>
+</svelte:head>
+
 <script>
 	import DataFilter from './../../components/dataFilter/DataFilter.svelte';
 	import SpeechTypeChart from '../../components/SpeechTypeChart.svelte';
