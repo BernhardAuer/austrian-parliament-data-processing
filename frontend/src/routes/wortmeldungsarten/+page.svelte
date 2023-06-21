@@ -5,8 +5,6 @@
 <script>
 	import DataFilter from './../../components/dataFilter/DataFilter.svelte';
 	import SpeechTypeChart from '../../components/SpeechTypeChart.svelte';
-	// todo: html title
-	// todo: load svelte...	
 	let speechTypeChart;
 </script>
 
