@@ -1,9 +1,9 @@
 .babelrc
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 docs/LegislatureMeetingsListDto.md
-docs/SpeechesMetaData.md
 docs/SpeechesMetaDataApi.md
 docs/TopicSearchResultDto.md
 docs/TypeOfSpeechCountDto.md
@@ -14,6 +14,9 @@ src/ApiClient.js
 src/api/SpeechesMetaDataApi.js
 src/index.js
 src/model/LegislatureMeetingsListDto.js
-src/model/SpeechesMetaData.js
 src/model/TopicSearchResultDto.js
 src/model/TypeOfSpeechCountDto.js
+test/api/SpeechesMetaDataApi.spec.js
+test/model/LegislatureMeetingsListDto.spec.js
+test/model/TopicSearchResultDto.spec.js
+test/model/TypeOfSpeechCountDto.spec.js

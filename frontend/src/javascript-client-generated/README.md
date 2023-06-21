@@ -102,7 +102,7 @@ var WebApiVersion1000CultureneutralPublicKeyTokennull = require('web_api_version
 
 
 var api = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi()
-api.apiSpeechesMetaDataGet().then(function(data) {
+api.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet().then(function(data) {
   console.log('API called successfully. Returned data: ' + data);
 }, function(error) {
   console.error(error);
@@ -117,20 +117,14 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGet) | **GET** /api/SpeechesMetaData | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet) | **GET** /api/SpeechesMetaData/getLegislaturesAndMeetingNumbers | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetTypeOfSpeechesCountListGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetTypeOfSpeechesCountListGet) | **GET** /api/SpeechesMetaData/getTypeOfSpeechesCountList | 
-*WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataIdDelete**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataIdDelete) | **DELETE** /api/SpeechesMetaData/{id} | 
-*WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataIdGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataIdGet) | **GET** /api/SpeechesMetaData/{id} | 
-*WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataIdPut**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataIdPut) | **PUT** /api/SpeechesMetaData/{id} | 
-*WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataPost**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataPost) | **POST** /api/SpeechesMetaData | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataSearchTopicsGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataSearchTopicsGet) | **GET** /api/SpeechesMetaData/searchTopics | 
 
 
 ## Documentation for Models
 
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.LegislatureMeetingsListDto](docs/LegislatureMeetingsListDto.md)
- - [WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaData](docs/SpeechesMetaData.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.TopicSearchResultDto](docs/TopicSearchResultDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.TypeOfSpeechCountDto](docs/TypeOfSpeechCountDto.md)
 
