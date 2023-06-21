@@ -1,13 +1,12 @@
 <script>
 	import DataFilter from './DataFilter.svelte';
 	import { Doughnut } from 'svelte-chartjs';
-	import { onMount } from 'svelte';
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
 	import ChartService from './../services/chartService.js';
-	import AutoComplete from 'simple-svelte-autocomplete';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 	import { scrollIntoView } from "seamless-scroll-polyfill";
-	import FilterOptions from './../models/filterOptions.js'
+	import FilterOptions from './../models/filterOptions.js';
+	import { onMount } from 'svelte';
 
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 	let service = new ChartService();
@@ -34,12 +33,16 @@
 		scrollIntoView(document.getElementById('typeOfSpeechDiagram'), { behavior: "smooth", block: "start", inline: "nearest" });
 	}
 	
-	const populatechartData = async (event) => {
+	const populateChartData = async (event) => {
 		chartData = null;		
 		Object.assign(shownFilterOptions, event.detail); // shallow copy selectedFilterOptions object
 		chartData = await service.fetchSpeechTypes(shownFilterOptions);
 		scrollToTypeOfSpeechDiagram();
 	}
+	onMount(async () => {		
+		shownFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
+		await populateChartData(shownFilterOptions);
+	});
 </script>
 <div class="md:2xl:mx-96">
 	<h1 class="text-4xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
@@ -55,7 +58,7 @@
 <div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
 	<div class="card w-full sm:w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
-			<DataFilter on:submit={populatechartData}></DataFilter>
+			<DataFilter on:submit={populateChartData}></DataFilter>
 		</div>
 	</div>
 	<div class="card w-full sm:w-[40rem] bg-base-100 shadow-xl" id="typeOfSpeechDiagram">
