@@ -15,7 +15,7 @@
 
         <div class="flex flex-wrap self-center gap-2">
             <div class="badge badge-outline">{speech.typeOfSpeech}</div>
-            <div class="badge badge-outline">{speech.lengthOfSpeechInSec} sec</div>        
+            <div class="badge badge-outline">{speech.lengthOfSpeechInSec} min</div>        
           </div>
     </div>
 </div>
