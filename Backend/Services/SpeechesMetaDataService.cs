@@ -22,6 +22,29 @@ public class SpeechesMetaDataService
                 .SpeechesMetaDataCollectionName);
         _logger = logger;
     }
+    
+    public async Task<List<SpeechesMetaData>> GetSpeeches(string legislature, int meetingNumber)
+    {
+        var query = _speechesMetaDataCollection
+            .Aggregate()
+            .Match(x => x.legislature == legislature && x.meetingNr == meetingNumber);
+        
+        var result = await query
+            .SortBy(x => x.topNr)
+            .SortBy(x => x.topic)
+            .SortBy(x => x.typeOfSpeech)
+            .Project(x => new SpeechesMetaData
+            {
+                nameOfSpeaker = x.nameOfSpeaker,
+                typeOfSpeech = x.typeOfSpeech,
+                lengthOfSpeechInSec = x.lengthOfSpeechInSec,
+                topNr = x.topNr,
+                topic = x.topic,
+                politicalPartie = x.politicalPartie
+            })
+            .ToListAsync();
+        return result;
+    }
 
     public async Task<List<TypeOfSpeechCount>> GetTypeOfSpeechesCountList(TypeOfSpeechFilterDto typeOfSpeechFilterDto)
     {
@@ -63,17 +86,7 @@ public class SpeechesMetaDataService
             })
             .ToListAsync();
     }
-
-    public async Task<List<SpeechesMetaData>> GetAsync()
-    {
-        return await _speechesMetaDataCollection.Find(x => true)
-            .Project(x => new SpeechesMetaData
-        {
-            Id = x.Id,
-            nameOfSpeaker = x.nameOfSpeaker
-        }).ToListAsync();
-    }
-
+  
     public async Task<List<LegislatureMeetingsListDto>> GetLegislaturesAndMeetings()
     {
         var legislaturesAndMeetings = await _speechesMetaDataCollection.Aggregate().Group(key => key.legislature,

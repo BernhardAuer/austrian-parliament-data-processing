@@ -1,5 +1,4 @@
 <script>
-	import SpeechCard from './SpeechCard.svelte';
 	import TopicAccordion from './TopicAccordion.svelte';
 
 	let test = [1, 2, 3, 4, 5, 6, 7, 8, 9];
