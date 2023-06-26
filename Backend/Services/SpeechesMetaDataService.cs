@@ -74,18 +74,6 @@ public class SpeechesMetaDataService
         }).ToListAsync();
     }
 
-    public async Task<SpeechesMetaData?> GetAsync(string id) =>
-        await _speechesMetaDataCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-
-    public async Task CreateAsync(SpeechesMetaData newSpeechesMetaData) =>
-        await _speechesMetaDataCollection.InsertOneAsync(newSpeechesMetaData);
-
-    public async Task UpdateAsync(string id, SpeechesMetaData updatedSpeechesMetaData) =>
-        await _speechesMetaDataCollection.ReplaceOneAsync(x => x.Id == id, updatedSpeechesMetaData);
-
-    public async Task RemoveAsync(string id) =>
-        await _speechesMetaDataCollection.DeleteOneAsync(x => x.Id == id);
-
     public async Task<List<LegislatureMeetingsListDto>> GetLegislaturesAndMeetings()
     {
         var legislaturesAndMeetings = await _speechesMetaDataCollection.Aggregate().Group(key => key.legislature,
