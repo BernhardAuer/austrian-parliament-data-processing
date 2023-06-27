@@ -19,7 +19,28 @@ namespace WebApi.Controllers
             _speechesMetaDataService = speechesMetaDataService;
             _austrianParliamentAbbreviationMappings = austrianParliamentAbbreviationMappings;
         }
-
+        
+        [HttpGet]
+        [Route("getSpeeches")]
+        public async Task<List<SpeechesDto>> GetSpeeches([FromQuery] string legislature, [FromQuery] int meetingNumber)
+        {
+            var speeches = await _speechesMetaDataService.GetSpeeches(legislature, meetingNumber);
+            
+            var result = speeches.Select(x => new SpeechesDto()
+                {
+                    NameOfSpeaker = x.nameOfSpeaker,
+                    Topic = x.topic,
+                    TopNr = x.topNr,
+                    PoliticalPartie = x.politicalPartie,
+                    TypeOfSpeech = _austrianParliamentAbbreviationMappings.GetLongNameSpeechType(x.typeOfSpeech),
+                    LengthOfSpeechInSec = x.lengthOfSpeechInSec,
+                    Speech = ""
+                    
+                })
+                .ToList();
+            return result;
+        }
+        
         [HttpGet]
         [Route("getTypeOfSpeechesCountList")]
         public async Task<List<TypeOfSpeechCountDto>> GetTypeOfSpeechesCountList([FromQuery] TypeOfSpeechFilterDto typeOfSpeechFilterDto)
