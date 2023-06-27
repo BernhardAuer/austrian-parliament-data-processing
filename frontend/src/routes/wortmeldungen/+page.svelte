@@ -19,7 +19,8 @@
     };
 
     const convertLengthToReadableString = (lengthInSec) => {
-        let sec = lengthInSec % 60;
+        const zeroPad = (num, places) => String(num).padStart(places, '0')
+        let sec = zeroPad(lengthInSec % 60, 2);
         let min = Math.trunc(lengthInSec / 60);
 
         if (sec == 0) {
