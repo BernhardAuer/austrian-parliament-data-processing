@@ -14,6 +14,7 @@
 
 import ApiClient from "../ApiClient";
 import LegislatureMeetingsListDto from '../model/LegislatureMeetingsListDto';
+import SpeechesDto from '../model/SpeechesDto';
 import TopicSearchResultDto from '../model/TopicSearchResultDto';
 import TypeOfSpeechCountDto from '../model/TypeOfSpeechCountDto';
 
@@ -68,6 +69,52 @@ export default class SpeechesMetaDataApi {
      */
     apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet() {
       return this.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGetWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} [legislature] 
+     * @param {Number} [meetingNumber] 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/SpeechesDto>} and HTTP response
+     */
+    apiSpeechesMetaDataGetSpeechesGetWithHttpInfo(opts) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+      };
+      let queryParams = {
+        'legislature': opts['legislature'],
+        'meetingNumber': opts['meetingNumber']
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['text/plain', 'application/json', 'text/json'];
+      let returnType = [SpeechesDto];
+      return this.apiClient.callApi(
+        '/api/SpeechesMetaData/getSpeeches', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null
+      );
+    }
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.legislature 
+     * @param {Number} opts.meetingNumber 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/SpeechesDto>}
+     */
+    apiSpeechesMetaDataGetSpeechesGet(opts) {
+      return this.apiSpeechesMetaDataGetSpeechesGetWithHttpInfo(opts)
         .then(function(response_and_data) {
           return response_and_data.data;
         });
