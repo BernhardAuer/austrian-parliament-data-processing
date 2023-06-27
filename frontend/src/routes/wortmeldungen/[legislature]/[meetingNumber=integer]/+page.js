@@ -13,6 +13,10 @@ export async function load({ params }) {
     if (Array.isArray(speeches) && !speeches.length) {
         throw error(404, 'Not found');
     }
+
+    // sort alphanumeric (topNr can be "Top 2-4", "Top 1" or null for example)
+    speeches.sort((a,b) => new Intl.Collator('de',{numeric:true, sensitivity:'accent'}).compare(a.topNr,b.topNr));
+
     speechesByTopic = groupBy(speeches, (x) => x.topic);
     topics = Object.keys(speechesByTopic);
       
