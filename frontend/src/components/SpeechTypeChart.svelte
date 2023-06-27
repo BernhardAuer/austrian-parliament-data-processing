@@ -66,6 +66,10 @@
 			{shownFilterOptions.topic?.topNr} /
 		{/if}
 		{shownFilterOptions.longNamesOfPoliticalParties}
+		<br>
+		{#if shownFilterOptions.legislature != null && shownFilterOptions.meetingNumber != null}
+			<a class="link" href="/wortmeldungen/{shownFilterOptions.legislature}/{shownFilterOptions.meetingNumber}">Zu den Wortmeldungen</a>
+		{/if}
 	</div>
 	<div class="relative {getHeightForDoughnut(chartData?.labels?.length)}">
 		<Doughnut
