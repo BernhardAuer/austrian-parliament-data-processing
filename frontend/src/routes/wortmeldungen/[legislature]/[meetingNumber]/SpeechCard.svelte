@@ -66,7 +66,7 @@
 			<div class="flex-grow border-t border-gray-400" />
 		</div>
 
-		<p class="text-justify">[..] das ist nur ein platzhalter [..]</p>
+		<p class="text-justify"></p>
 
 		<div class="flex flex-wrap self-center gap-2">
 			<div class="badge badge-outline">{speech.typeOfSpeech}</div>
