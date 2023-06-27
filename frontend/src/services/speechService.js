@@ -18,7 +18,7 @@ export default class SpeechService {
         } catch(e) {
             console.log(e);
         }
-        return [];
+        return null;
     }
 
 }

@@ -1,6 +1,6 @@
+import { error } from '@sveltejs/kit';
 import SpeechService from './../../../../services/speechService.js';
 let service = new SpeechService();
-let speeches = [];
 let speechesByTopic = [];
 let topics = [];
 
@@ -8,10 +8,13 @@ const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b),
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
-    speeches = await service.fetchSpeeches({ legislature: params.legislature, meetingNumber: params.meetingNumber });
+    let speeches = await service.fetchSpeeches({ legislature: params.legislature, meetingNumber: params.meetingNumber });    
+    if (Array.isArray(speeches) && !speeches.length) {
+        throw error(404, 'Not found');
+    }
     speechesByTopic = groupBy(speeches, (x) => x.topic);
     topics = Object.keys(speechesByTopic);
-
+      
     return {
         topics: topics,
         speechesByTopic: speechesByTopic
