@@ -3,10 +3,9 @@
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 	import { scrollIntoView } from 'seamless-scroll-polyfill';
-	import FilterOptions from './../models/filterOptions.js';
 
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
-	let shownFilterOptions = new FilterOptions();
+	export let shownFilterOptions = null;
 	export let chartData = null;
 	let chart;
 

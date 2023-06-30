@@ -6,14 +6,16 @@
 	import DataFilter from './../../components/dataFilter/DataFilter.svelte';
 	import SpeechTypeChart from '../../components/SpeechTypeChart.svelte';	
 	import ChartService from '../../services/chartService';
+	import FilterOptions from '../../models/filterOptions';
     export let data;
 	let chartData = data.chartData;
+	let shownFilterOptions = new FilterOptions(data.selectedFilterOptions);
 	const service = new ChartService;
 
 	const fetchChartData = async (event) => {
 		chartData = null;
-		const selectedFilterOptions = structuredClone(event.detail);
-		chartData = await service.fetchSpeechTypes(selectedFilterOptions);
+		shownFilterOptions = new FilterOptions(event.detail);
+		chartData = await service.fetchSpeechTypes(shownFilterOptions);
 	}
 
 </script>
@@ -37,7 +39,7 @@
 	</div>
 	<div class="card w-full sm:w-[40rem] bg-base-100 shadow-xl" id="typeOfSpeechDiagram">
 		<div class="card-body">
-			<SpeechTypeChart chartData={chartData}/>
+			<SpeechTypeChart chartData={chartData} shownFilterOptions={shownFilterOptions}/>
 		</div>
 	</div>
 </div>
