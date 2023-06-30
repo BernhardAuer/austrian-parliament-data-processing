@@ -18,6 +18,7 @@
 		shownFilterOptions = new FilterOptions(structuredClone(event.detail));
 		chartData = await service.fetchSpeechTypes(shownFilterOptions);
 
+		// https://github.com/sveltejs/kit/issues/2673
 		goto(`/wortmeldungsarten/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}`, { replaceState: true });
 	}
 
