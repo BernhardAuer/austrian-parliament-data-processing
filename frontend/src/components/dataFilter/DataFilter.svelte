@@ -1,12 +1,11 @@
 <script>
 	import LoadingSpinner from './../LoadingSpinner.svelte';
-	import FilterOptions from './../../models/filterOptions';
 	import { createEventDispatcher } from 'svelte';
 	import DataFilterSelect from './DataFilterSelect.svelte';
 	import DataFilterSearch from './DataFilterSearch.svelte';
 	import DataFilterPoliticalParties from './DataFilterPoliticalParties.svelte';
 
-	export let selectedFilterOptions = new FilterOptions();
+	export let selectedFilterOptions = null;
 
 	export let legislatureAndMeetings = null;
 
@@ -20,13 +19,22 @@
 	$: selectedLegislature = selectedFilterOptions.legislature;
 	$: selectedLegislature, resetMeetingFilter();
 
-	const resetMeetingFilter = () => {
+	let isInitialLoad = true;
+	const resetMeetingFilter = () => {	
+		if (isInitialLoad == true) {
+			isInitialLoad = false;
+			return;
+		}
+		if (selectedFilterOptions.legislature == undefined) {
+			return;
+		}
 		if (Array.isArray(legislatureAndMeetings) && legislatureAndMeetings.length) {
 			selectedFilterOptions.meetingNumber = legislatureAndMeetings
 				.filter((x) => x.legislature == selectedFilterOptions.legislature)[0]
 				.meetings.slice(-1)[0];
 		}
 	};
+
 </script>
 
 <h2 class="card-title">Datenfilter</h2>
