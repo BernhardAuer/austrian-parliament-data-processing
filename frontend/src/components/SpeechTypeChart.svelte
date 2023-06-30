@@ -3,6 +3,7 @@
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 	import { scrollIntoView } from 'seamless-scroll-polyfill';
+	import { afterUpdate } from 'svelte';
 
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 	export let shownFilterOptions = null;
@@ -28,7 +29,10 @@
 			inline: 'nearest'
 		});
 	};
-	
+
+	afterUpdate(() => {
+		scrollToTypeOfSpeechDiagram();
+	});
 </script>
 
 <h2 class="card-title">Wortmeldungsarten</h2>
