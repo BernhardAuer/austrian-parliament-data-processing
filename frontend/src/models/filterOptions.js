@@ -5,6 +5,7 @@ export default class FilterOptions {
     politicalParties = null;
 
     get longNamesOfPoliticalParties() {
+		if (this.politicalParties == null){return [];}
         let mapDict = {
 			"v": "ÖVP",
 			"s": "SPÖ",

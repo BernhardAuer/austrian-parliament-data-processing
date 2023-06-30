@@ -5,8 +5,16 @@
 <script>
 	import DataFilter from './../../components/dataFilter/DataFilter.svelte';
 	import SpeechTypeChart from '../../components/SpeechTypeChart.svelte';	
+	import ChartService from '../../services/chartService';
     export let data;
-	let speechTypeChart;
+	let chartData = data.chartData;
+	const service = new ChartService;
+
+	const fetchChartData = async (event) => {
+		chartData = null;
+		const selectedFilterOptions = structuredClone(event.detail);
+		chartData = await service.fetchSpeechTypes(selectedFilterOptions);
+	}
 
 </script>
 
@@ -24,12 +32,12 @@
 <div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
 	<div class="card w-full sm:w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
-			<DataFilter on:submit={speechTypeChart.populateChartData} legislatureAndMeetings={data.legislatureAndMeetings} selectedFilterOptions={data.selectedFilterOptions}/>
+			<DataFilter on:submit={fetchChartData} legislatureAndMeetings={data.legislatureAndMeetings} selectedFilterOptions={data.selectedFilterOptions}/>
 		</div>
 	</div>
 	<div class="card w-full sm:w-[40rem] bg-base-100 shadow-xl" id="typeOfSpeechDiagram">
 		<div class="card-body">
-			<SpeechTypeChart bind:this={speechTypeChart} />
+			<SpeechTypeChart chartData={chartData}/>
 		</div>
 	</div>
 </div>

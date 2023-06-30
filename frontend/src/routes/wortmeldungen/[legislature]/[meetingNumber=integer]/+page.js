@@ -4,6 +4,7 @@ let service = new SpeechService();
 let speechesByTopic = [];
 let topics = [];
 export const csr = false;
+export const prerender = true;
 
 const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {}); // credit: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
 
