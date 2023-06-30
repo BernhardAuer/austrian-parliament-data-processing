@@ -4,8 +4,10 @@
 
 <script>
 	import DataFilter from './../../components/dataFilter/DataFilter.svelte';
-	import SpeechTypeChart from '../../components/SpeechTypeChart.svelte';
+	import SpeechTypeChart from '../../components/SpeechTypeChart.svelte';	
+    export let data;
 	let speechTypeChart;
+
 </script>
 
 <div class="md:2xl:mx-96">
@@ -22,7 +24,7 @@
 <div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
 	<div class="card w-full sm:w-96 bg-base-100 shadow-xl">
 		<div class="card-body">
-			<DataFilter on:submit={speechTypeChart.populateChartData} />
+			<DataFilter on:submit={speechTypeChart.populateChartData} legislatureAndMeetings={data.legislatureAndMeetings} selectedFilterOptions={data.selectedFilterOptions}/>
 		</div>
 	</div>
 	<div class="card w-full sm:w-[40rem] bg-base-100 shadow-xl" id="typeOfSpeechDiagram">

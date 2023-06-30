@@ -1,6 +1,4 @@
 <script>
-	import { onMount } from 'svelte';
-	import ChartService from './../../services/chartService';
 	import LoadingSpinner from './../LoadingSpinner.svelte';
 	import FilterOptions from './../../models/filterOptions';
 	import { createEventDispatcher } from 'svelte';
@@ -8,11 +6,9 @@
 	import DataFilterSearch from './DataFilterSearch.svelte';
 	import DataFilterPoliticalParties from './DataFilterPoliticalParties.svelte';
 
-	let selectedFilterOptions = new FilterOptions();
-	selectedFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
+	export let selectedFilterOptions = new FilterOptions();
 
-	let legislatureAndMeetings = null;
-	let service = new ChartService(); // todo: svelte DI
+	export let legislatureAndMeetings = null;
 
 	const dispatch = createEventDispatcher();
 
@@ -31,12 +27,6 @@
 				.meetings.slice(-1)[0];
 		}
 	};
-
-	onMount(async () => {
-		legislatureAndMeetings = await service.getLegislaturesAndMeetings();
-		selectedFilterOptions.legislature = legislatureAndMeetings.slice(-1)[0].legislature;
-		selectedFilterOptions.meetingNumber = legislatureAndMeetings.slice(-1)[0].meetings.slice(-1)[0];
-	});
 </script>
 
 <h2 class="card-title">Datenfilter</h2>
