@@ -18,7 +18,7 @@
 		shownFilterOptions = new FilterOptions(structuredClone(event.detail));
 		chartData = await service.fetchSpeechTypes(shownFilterOptions);
 
-		goto(`/wortmeldungsarten/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}`);
+		goto(`/wortmeldungsarten/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}`, { replaceState: true });
 	}
 
 </script>
