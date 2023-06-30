@@ -7,15 +7,18 @@
 	import SpeechTypeChart from '../../../../components/SpeechTypeChart.svelte';	
 	import ChartService from '../../../../services/chartService';
 	import FilterOptions from '../../../../models/filterOptions';
+	import { goto } from "$app/navigation";
+
     export let data;
 	let chartData = data.chartData;
 	let shownFilterOptions = new FilterOptions(structuredClone(data.selectedFilterOptions));
-	let selectedFilterOptions = new FilterOptions(structuredClone(data.selectedFilterOptions));
 	const service = new ChartService;
 	const fetchChartData = async (event) => {
 		chartData = null;
 		shownFilterOptions = new FilterOptions(structuredClone(event.detail));
 		chartData = await service.fetchSpeechTypes(shownFilterOptions);
+
+		goto(`/wortmeldungsarten/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}`);
 	}
 
 </script>
