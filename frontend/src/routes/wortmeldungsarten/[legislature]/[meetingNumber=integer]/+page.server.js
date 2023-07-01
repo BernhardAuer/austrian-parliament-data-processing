@@ -11,6 +11,10 @@ export async function load({ params }) {
     const legislatureAndMeetingsPromise = service.getLegislaturesAndMeetings();
 	const chartDataPromise = service.fetchSpeechTypes(selectedFilterOptions);
     const [legislatureAndMeetings, chartData] = await Promise.all([legislatureAndMeetingsPromise, chartDataPromise]);
+
+    if (!legislatureAndMeetings.filter(x => x.legislature == selectedFilterOptions.legislature)[0]?.meetings.includes(selectedFilterOptions.meetingNumber)) {        
+        throw error(404, 'Not found');
+    }
     return {
         legislatureAndMeetings: structuredClone(legislatureAndMeetings), // clones are needed for ssr only rendered data see https://www.okupter.com/blog/sveltekit-cannot-stringify-arbitrary-non-pojos-error 
         selectedFilterOptions: structuredClone(selectedFilterOptions),
