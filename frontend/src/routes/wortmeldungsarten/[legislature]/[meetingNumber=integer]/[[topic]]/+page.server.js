@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import ChartService from '../../../../services/chartService.js';
-import FilterOptions from '../../../../models/filterOptions.js'
+import ChartService from './../../../../../services/chartService.js';
+import FilterOptions from './../../../../../models/filterOptions.js'
 let service = new ChartService(); 
 let selectedFilterOptions = new FilterOptions();
 selectedFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
@@ -8,6 +8,7 @@ selectedFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
 export async function load({ params }) {
     selectedFilterOptions.legislature = params.legislature;
     selectedFilterOptions.meetingNumber = parseInt(params.meetingNumber); 
+    selectedFilterOptions.topic = {topic: params.topic};
     const legislatureAndMeetingsPromise = service.getLegislaturesAndMeetings();
 	const chartDataPromise = service.fetchSpeechTypes(selectedFilterOptions);
     const [legislatureAndMeetings, chartData] = await Promise.all([legislatureAndMeetingsPromise, chartDataPromise]);

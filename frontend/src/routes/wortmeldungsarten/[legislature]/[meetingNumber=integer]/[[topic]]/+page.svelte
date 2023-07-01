@@ -3,10 +3,10 @@
 </svelte:head>
 
 <script>
-	import DataFilter from '../../../../components/dataFilter/DataFilter.svelte';
-	import SpeechTypeChart from '../../../../components/SpeechTypeChart.svelte';	
-	import ChartService from '../../../../services/chartService';
-	import FilterOptions from '../../../../models/filterOptions';
+	import DataFilter from './../../../../../components/dataFilter/DataFilter.svelte';
+	import SpeechTypeChart from './../../../../../components/SpeechTypeChart.svelte';	
+	import ChartService from './../../../../../services/chartService';
+	import FilterOptions from './../../../../../models/filterOptions';
 
     export let data;
 	let chartData = data.chartData;
@@ -19,7 +19,7 @@
 
 		// shallow routing is not possible right now
 		// https://github.com/sveltejs/kit/issues/2673
-		history.replaceState(history.state, document.title, `/wortmeldungsarten/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}`)
+		history.replaceState(history.state, document.title, `/wortmeldungsarten/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}/${shownFilterOptions?.topic?.topic?.replace('/', '%2F')}`)
 	}
 
 </script>

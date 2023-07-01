@@ -54,7 +54,7 @@
 		values={legislatureAndMeetings.find((x) => x.legislature === selectedFilterOptions.legislature)?.meetings}
 		bind:selectedValue={selectedFilterOptions.meetingNumber}
 	/>
-
+	
 	<DataFilterSearch {selectedFilterOptions} />
 
 	<DataFilterPoliticalParties
