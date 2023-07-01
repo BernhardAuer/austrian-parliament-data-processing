@@ -8,7 +8,7 @@ selectedFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
 export async function load({ params }) {
     selectedFilterOptions.legislature = params.legislature;
     selectedFilterOptions.meetingNumber = parseInt(params.meetingNumber); 
-    selectedFilterOptions.topic = {topic: params.topic};
+    selectedFilterOptions.topic = params.topic != undefined ? {topic: params.topic} : null;
     const legislatureAndMeetingsPromise = service.getLegislaturesAndMeetings();
 	const chartDataPromise = service.fetchSpeechTypes(selectedFilterOptions);
     const [legislatureAndMeetings, chartData] = await Promise.all([legislatureAndMeetingsPromise, chartDataPromise]);
