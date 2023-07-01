@@ -3,12 +3,17 @@
 	import ChartService from './../../services/chartService.js';
 	import { scrollIntoView } from 'seamless-scroll-polyfill';
 
-	export let selectedFilterOptions = null;
+	export let selectedFilterOptions;
 
 	let rerenderTrigger = 0;
 	let service = new ChartService(); // todo: svelte DI
+	let isInitialLoad = true;
 
 	const resetAutoCompleter = () => {
+		if (isInitialLoad == true) {
+			isInitialLoad = false;
+			return;
+		}
 		selectedFilterOptions.topic = null;
 		rerenderTrigger = rerenderTrigger + 1;
 	};
