@@ -11,9 +11,6 @@
 	let chart;
 
 	const getHeightForDoughnut = (labelCount) => {
-		if (labelCount < 5) {
-			return 'h-[15rem]';
-		}
 		if (labelCount < 10) {
 			return 'h-[25rem]';
 		}
