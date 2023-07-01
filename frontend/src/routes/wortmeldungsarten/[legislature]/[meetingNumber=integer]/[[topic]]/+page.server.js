@@ -3,9 +3,9 @@ import ChartService from './../../../../../services/chartService.js';
 import FilterOptions from './../../../../../models/filterOptions.js'
 let service = new ChartService(); 
 let selectedFilterOptions = new FilterOptions();
-selectedFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
 
-export async function load({ params }) {
+export async function load({ params, url }) {
+    selectedFilterOptions.politicalParties = [...(url.searchParams.get('fraktion') || ['V', 'S', 'F', 'G', 'N'])];
     selectedFilterOptions.legislature = params.legislature;
     selectedFilterOptions.meetingNumber = parseInt(params.meetingNumber); 
     selectedFilterOptions.topic = params.topic != undefined ? {topic: params.topic} : null;
