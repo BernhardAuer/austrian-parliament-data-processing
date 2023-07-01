@@ -5,7 +5,7 @@ let service = new ChartService();
 let selectedFilterOptions = new FilterOptions();
 
 export async function load({ params, url }) {
-    selectedFilterOptions.politicalParties = [...(url.searchParams.get('fraktion').split(',') || ['V', 'S', 'F', 'G', 'N'])];
+    selectedFilterOptions.politicalParties = [...(url.searchParams.get('fraktion')?.split(',') || ['V', 'S', 'F', 'G', 'N'])];
     selectedFilterOptions.legislature = params.legislature;
     selectedFilterOptions.meetingNumber = parseInt(params.meetingNumber); 
     selectedFilterOptions.topic = params.topic != undefined ? {topic: params.topic} : null;
