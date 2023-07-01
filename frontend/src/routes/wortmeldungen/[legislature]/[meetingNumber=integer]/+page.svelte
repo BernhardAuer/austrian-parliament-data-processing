@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Wortmeldungen | parli-info.org</title>
+</svelte:head>
+
 <script>
 	import TopicAccordion from './TopicAccordion.svelte';
     /** @type {import('./$types').PageData} */
