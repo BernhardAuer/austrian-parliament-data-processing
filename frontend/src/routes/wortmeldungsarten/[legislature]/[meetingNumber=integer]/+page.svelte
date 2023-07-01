@@ -7,7 +7,6 @@
 	import SpeechTypeChart from '../../../../components/SpeechTypeChart.svelte';	
 	import ChartService from '../../../../services/chartService';
 	import FilterOptions from '../../../../models/filterOptions';
-	import { goto } from "$app/navigation";
 
     export let data;
 	let chartData = data.chartData;
@@ -18,8 +17,9 @@
 		shownFilterOptions = new FilterOptions(structuredClone(event.detail));
 		chartData = await service.fetchSpeechTypes(shownFilterOptions);
 
+		// shallow routing is not possible right now
 		// https://github.com/sveltejs/kit/issues/2673
-		goto(`/wortmeldungsarten/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}`, { replaceState: true });
+		history.replaceState(history.state, document.title, `/wortmeldungsarten/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}`)
 	}
 
 </script>
