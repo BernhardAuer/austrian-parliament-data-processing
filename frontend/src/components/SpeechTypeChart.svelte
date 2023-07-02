@@ -1,24 +1,16 @@
 <script>
 	import { Doughnut } from 'svelte-chartjs';
 	import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale } from 'chart.js';
-	import ChartService from './../services/chartService.js';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 	import { scrollIntoView } from 'seamless-scroll-polyfill';
-	import FilterOptions from './../models/filterOptions.js';
-	import { onMount } from 'svelte';
+	import { afterUpdate } from 'svelte';
 
 	ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
-	let service = new ChartService();
-
-	let shownFilterOptions = new FilterOptions();
-
-	let chartData = null;
+	export let shownFilterOptions = null;
+	export let chartData = null;
 	let chart;
 
 	const getHeightForDoughnut = (labelCount) => {
-		if (labelCount < 5) {
-			return 'h-[15rem]';
-		}
 		if (labelCount < 10) {
 			return 'h-[25rem]';
 		}
@@ -35,15 +27,8 @@
 		});
 	};
 
-	export const populateChartData = async (event) => {
-		chartData = null;
-		Object.assign(shownFilterOptions, event.detail); // shallow copy selectedFilterOptions object
-		chartData = await service.fetchSpeechTypes(shownFilterOptions);
+	afterUpdate(() => {
 		scrollToTypeOfSpeechDiagram();
-	};
-	onMount(async () => {
-		shownFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
-		await populateChartData(shownFilterOptions);
 	});
 </script>
 

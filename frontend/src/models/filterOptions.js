@@ -4,6 +4,16 @@ export default class FilterOptions {
     topic = null;
     politicalParties = null;
 
+	constructor(filterOptions) {
+		if (filterOptions == null) {
+			return;
+		}
+		this.legislature = filterOptions.legislature;
+		this.meetingNumber = filterOptions.meetingNumber; 
+		this.topic = filterOptions.topic;
+		this.politicalParties = filterOptions.politicalParties;
+	}
+
     get longNamesOfPoliticalParties() {
         let mapDict = {
 			"v": "ÖVP",

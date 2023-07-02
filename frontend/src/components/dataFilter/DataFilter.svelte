@@ -1,18 +1,13 @@
 <script>
-	import { onMount } from 'svelte';
-	import ChartService from './../../services/chartService';
 	import LoadingSpinner from './../LoadingSpinner.svelte';
-	import FilterOptions from './../../models/filterOptions';
 	import { createEventDispatcher } from 'svelte';
 	import DataFilterSelect from './DataFilterSelect.svelte';
 	import DataFilterSearch from './DataFilterSearch.svelte';
 	import DataFilterPoliticalParties from './DataFilterPoliticalParties.svelte';
 
-	let selectedFilterOptions = new FilterOptions();
-	selectedFilterOptions.politicalParties = ['V', 'S', 'F', 'G', 'N'];
+	export let selectedFilterOptions = null;
 
-	let legislatureAndMeetings = null;
-	let service = new ChartService(); // todo: svelte DI
+	export let legislatureAndMeetings = null;
 
 	const dispatch = createEventDispatcher();
 
@@ -24,7 +19,15 @@
 	$: selectedLegislature = selectedFilterOptions.legislature;
 	$: selectedLegislature, resetMeetingFilter();
 
-	const resetMeetingFilter = () => {
+	let isInitialLoad = true;
+	const resetMeetingFilter = () => {	
+		if (isInitialLoad == true) {
+			isInitialLoad = false;
+			return;
+		}
+		if (selectedFilterOptions.legislature == undefined) {
+			return;
+		}
 		if (Array.isArray(legislatureAndMeetings) && legislatureAndMeetings.length) {
 			selectedFilterOptions.meetingNumber = legislatureAndMeetings
 				.filter((x) => x.legislature == selectedFilterOptions.legislature)[0]
@@ -32,11 +35,6 @@
 		}
 	};
 
-	onMount(async () => {
-		legislatureAndMeetings = await service.getLegislaturesAndMeetings();
-		selectedFilterOptions.legislature = legislatureAndMeetings.slice(-1)[0].legislature;
-		selectedFilterOptions.meetingNumber = legislatureAndMeetings.slice(-1)[0].meetings.slice(-1)[0];
-	});
 </script>
 
 <h2 class="card-title">Datenfilter</h2>
@@ -56,7 +54,7 @@
 		values={legislatureAndMeetings.find((x) => x.legislature === selectedFilterOptions.legislature)?.meetings}
 		bind:selectedValue={selectedFilterOptions.meetingNumber}
 	/>
-
+	
 	<DataFilterSearch {selectedFilterOptions} />
 
 	<DataFilterPoliticalParties

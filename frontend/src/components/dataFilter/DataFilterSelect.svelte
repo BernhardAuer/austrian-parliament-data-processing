@@ -28,7 +28,11 @@
 		id="legislatur"
 	>
 		{#each values as item}
-			<option value={item}>{item}</option>
+			{#if item == selectedValue}
+				<option selected value={item}>{item}</option>
+			{:else}
+				<option value={item}>{item}</option>
+			{/if}
 		{/each}
 	</select>
 </div>
