@@ -9,13 +9,12 @@
 	import FilterOptions from './../../../../../models/filterOptions';
 
     export let data;
-	let chartData = data.chartData;
+	let chartDataPromise = data.chartData;
 	let shownFilterOptions = new FilterOptions(structuredClone(data.selectedFilterOptions));
 	const service = new ChartService;
 	const fetchChartData = async (event) => {
-		chartData = null;
 		shownFilterOptions = new FilterOptions(structuredClone(event.detail));
-		chartData = await service.fetchSpeechTypes(shownFilterOptions);
+		chartDataPromise = service.fetchSpeechTypes(shownFilterOptions);
 
 		const topicEncoded = shownFilterOptions?.topic?.topic?.replace('/', '%2F') ?? '';
 		// shallow routing is not possible right now
@@ -44,7 +43,7 @@
 	</div>
 	<div class="card w-full sm:w-[40rem] bg-base-100 shadow-xl" id="typeOfSpeechDiagram">
 		<div class="card-body">
-			<SpeechTypeChart chartData={chartData} shownFilterOptions={shownFilterOptions}/>
+			<SpeechTypeChart {chartDataPromise} {shownFilterOptions}/>
 		</div>
 	</div>
 </div>
