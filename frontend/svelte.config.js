@@ -6,8 +6,8 @@ const config = {
 	kit: {
 		adapter: azure({
 			customStaticWebAppConfig: {
-				"platform": {
-					"apiRuntime": "node:18"
+				platform: {
+					apiRuntime: "node:18"
 				}
 			}
 		})
