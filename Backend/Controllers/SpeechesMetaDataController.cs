@@ -75,5 +75,24 @@ namespace WebApi.Controllers
             
             return legislaturesAndMeetings;
         }
+        
+        [HttpGet]
+        [Route("getSpeechDurations")]
+        public async Task<List<SpeechDurationDto>> GetSpeechDurations([FromQuery] TypeOfSpeechFilterDto typeOfSpeechFilterDto)
+        {
+            var speechDurations = await _speechesMetaDataService.GetSpeechDurations(typeOfSpeechFilterDto);
+
+            var result = speechDurations.Select(x => new SpeechDurationDto()
+                {
+                    Speaker = x.Speaker,
+                    PoliticalParty = x.PoliticalParty,
+                    DurationSumInSec = x.DurationSumInSec,
+                    TotalNumberOfSpeeches = x.TotalNumberOfSpeeches
+                })
+                .OrderBy(x => x.PoliticalParty)
+                .ThenBy(x => x.Speaker)
+                .ToList();
+            return result;
+        }
     }
 }
