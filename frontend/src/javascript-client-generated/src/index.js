@@ -14,6 +14,7 @@
 
 import ApiClient from './ApiClient';
 import LegislatureMeetingsListDto from './model/LegislatureMeetingsListDto';
+import SpeechDurationDto from './model/SpeechDurationDto';
 import SpeechesDto from './model/SpeechesDto';
 import TopicSearchResultDto from './model/TopicSearchResultDto';
 import TypeOfSpeechCountDto from './model/TypeOfSpeechCountDto';
@@ -63,6 +64,12 @@ export {
      * @property {module:model/LegislatureMeetingsListDto}
      */
     LegislatureMeetingsListDto,
+
+    /**
+     * The SpeechDurationDto model constructor.
+     * @property {module:model/SpeechDurationDto}
+     */
+    SpeechDurationDto,
 
     /**
      * The SpeechesDto model constructor.

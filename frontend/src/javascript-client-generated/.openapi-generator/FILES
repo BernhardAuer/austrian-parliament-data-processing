@@ -3,6 +3,7 @@
 .travis.yml
 README.md
 docs/LegislatureMeetingsListDto.md
+docs/SpeechDurationDto.md
 docs/SpeechesDto.md
 docs/SpeechesMetaDataApi.md
 docs/TopicSearchResultDto.md
@@ -14,7 +15,8 @@ src/ApiClient.js
 src/api/SpeechesMetaDataApi.js
 src/index.js
 src/model/LegislatureMeetingsListDto.js
+src/model/SpeechDurationDto.js
 src/model/SpeechesDto.js
 src/model/TopicSearchResultDto.js
 src/model/TypeOfSpeechCountDto.js
-test/model/SpeechesDto.spec.js
+test/model/SpeechDurationDto.spec.js
