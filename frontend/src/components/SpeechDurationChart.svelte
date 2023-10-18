@@ -1,6 +1,16 @@
 <script>
 	import { Scatter } from 'svelte-chartjs';
-	import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement, LogarithmicScale } from 'chart.js';
+	import {
+		Chart as ChartJS,
+		Title,
+		Tooltip,
+		Legend,
+		LineElement,
+		CategoryScale,
+		LinearScale,
+		PointElement,
+		LogarithmicScale
+	} from 'chart.js';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 	import { scrollIntoView } from 'seamless-scroll-polyfill';
 	import { afterUpdate } from 'svelte';
@@ -54,7 +64,16 @@
 			{/if}
 		</div>
 		<div class="relative h-[25rem]">
-			<Scatter bind:chart data={chartData} options={{ responsive: true, maintainAspectRatio: false, parsing: { xAxisKey: "durationSumInSec", yAxisKey: "totalNumberOfSpeeches"}}} />
+			<Scatter
+				bind:chart
+				data={chartData}
+				options={{
+					responsive: true,
+					maintainAspectRatio: false,
+					parsing: { xAxisKey: 'durationSumInSec', yAxisKey: 'totalNumberOfSpeeches' },
+					scales: { y: { beginAtZero: true , ticks: { precision: 0 } } }
+				}}
+			/>
 		</div>
 	{/if}
 {:catch error}
