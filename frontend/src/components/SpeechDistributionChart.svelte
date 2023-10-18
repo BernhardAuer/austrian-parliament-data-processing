@@ -1,5 +1,5 @@
 <script>
-	import { Scatter } from 'svelte-chartjs';
+	import { Bar } from 'svelte-chartjs';
 	import {
 		Chart as ChartJS,
 		Title,
@@ -9,13 +9,23 @@
 		CategoryScale,
 		LinearScale,
 		PointElement,
-		LogarithmicScale
+		LogarithmicScale,
+		BarElement
 	} from 'chart.js';
 	import LoadingSpinner from './LoadingSpinner.svelte';
 	import { scrollIntoView } from 'seamless-scroll-polyfill';
 	import { afterUpdate } from 'svelte';
 
-	ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
+	ChartJS.register(
+		Title,
+		Tooltip,
+		Legend,
+		LineElement,
+		CategoryScale,
+		LinearScale,
+		PointElement,
+		BarElement
+	);
 
 	export let shownFilterOptions = null;
 	export let chartDataPromise = null;
@@ -76,39 +86,24 @@
 			{/if}
 		</div>
 		<div class="relative h-[25rem]">
-			<Scatter
+			<Bar
 				bind:chart
 				data={chartData}
 				options={{
 					responsive: true,
 					maintainAspectRatio: false,
-					parsing: { xAxisKey: 'durationSumInMin', yAxisKey: 'totalNumberOfSpeeches' },
-					scales: {
-						y: {
-							beginAtZero: true,
-							ticks: { precision: 0 },
-							title: {
-								display: true,
-								text: 'Anzahl der Reden'
+					plugins: {
+						legend: {
+							labels: {
+								boxWidth: 0
 							}
 						},
-						x: {
-							title: {
-								display: true,
-								text: 'Dauer der Reden [min]'
-							}
-						}
-					},
-					plugins: {
 						tooltip: {
 							enabled: true,
 							usePointStyle: true,
 							callbacks: {
-								title: (context) => {
-									return context[0].parsed.y + " Wortmeldung(en)";
-								},
 								label: (context) => {
-									return context.dataset.data[context.dataIndex].speaker + " " + convertLengthToReadableString(context.dataset.data[context.dataIndex].durationSumInSec) + " min"
+									return  context.parsed.y.toFixed(1) + " %";									
 								}
 							}
 						}
