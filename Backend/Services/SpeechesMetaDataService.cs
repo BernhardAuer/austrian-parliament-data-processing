@@ -203,4 +203,61 @@ public class SpeechesMetaDataService
             })
             .ToListAsync();
     }
+    
+    public async Task<List<DistributionOfSpeakingTime>> GetDistributionOfSpeakingTime(TypeOfSpeechFilterDto typeOfSpeechFilterDto)
+    {
+        var query = _speechesMetaDataCollection
+            .Aggregate()
+            .Match(x => typeOfSpeechFilterDto.PoliticalParty.Any(pp => pp == x.politicalPartie));
+        
+        if (typeOfSpeechFilterDto.Legislature != null)
+        {
+            query = query.Match(x => x.legislature == typeOfSpeechFilterDto.Legislature);
+        }
+        else
+        {
+            query = query.Match(x => x.legislature == "XXVII"); // hardcoded for now, pls fix this
+        }
+        
+        if (typeOfSpeechFilterDto.MeetingNumber != null)
+        {
+            query = query.Match(x => x.meetingNr == typeOfSpeechFilterDto.MeetingNumber);
+        }
+        else
+        {
+            var maxMeetingNumber = await _speechesMetaDataCollection.Aggregate().Match(x => x.legislature == "XXVII")
+                .SortByDescending(x => x.meetingNr).Project(x => x.meetingNr).FirstOrDefaultAsync();
+            query = query.Match(x => x.meetingNr == maxMeetingNumber);
+        }
+        
+        if (typeOfSpeechFilterDto.Topic != null)
+        {
+            query = query.Match(x => x.topic == typeOfSpeechFilterDto.Topic);
+        }
+
+        var distributionOfSpeakingTimes = await query
+            .Group(x => x.politicalPartie, g => new  DistributionOfSpeakingTime()
+            {
+                PoliticalParty = g.Key,
+                SpeechDurationByParty = g.Sum(x => x.lengthOfSpeechInSec),
+                NumberOfSpeechesByParty = g.Count()
+            })
+            .ToListAsync();
+
+        var totalNrOfSpeeches = (await query.Count().FirstOrDefaultAsync())?.Count ?? 0;
+        // it seems as you need to do a group by in order to get the sum of a single field
+        // https://stackoverflow.com/questions/63337061/how-to-sum-the-value-of-a-key-across-all-documents-in-a-mongodb-collection-with
+        var totalSpeechDuration = (await query
+            .Group(key => "", group =>  group.Sum(x => x.lengthOfSpeechInSec))
+            .ToListAsync()
+            ).FirstOrDefault();
+
+        foreach (var distributionOfSpeakingTime in distributionOfSpeakingTimes)
+        {
+            distributionOfSpeakingTime.SpeechDurationPercentage = (distributionOfSpeakingTime.SpeechDurationByParty / (double) totalSpeechDuration) * 100;
+            distributionOfSpeakingTime.NumberOfSpeechesPercentage = (distributionOfSpeakingTime.NumberOfSpeechesByParty / (double) totalNrOfSpeeches) * 100;
+        }
+
+        return distributionOfSpeakingTimes;
+    }
 }

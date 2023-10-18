@@ -94,5 +94,21 @@ namespace WebApi.Controllers
                 .ToList();
             return result;
         }
+        
+        [HttpGet]
+        [Route("getDistributionOfSpeakingTime")]
+        public async Task<List<DistributionOfSpeakingTimeDto>> GetDistributionOfSpeakingTime([FromQuery] TypeOfSpeechFilterDto typeOfSpeechFilterDto)
+        {
+            var distributionOfSpeakingTimes = await _speechesMetaDataService.GetDistributionOfSpeakingTime(typeOfSpeechFilterDto);
+
+            var result = distributionOfSpeakingTimes.Select(x => new DistributionOfSpeakingTimeDto()
+                {
+                    PoliticalParty = x.PoliticalParty,
+                    SpeechDurationPercentage = x.SpeechDurationPercentage,
+                    NumberOfSpeechesPercentage = x.NumberOfSpeechesPercentage
+                })
+                .ToList();
+            return result;
+        }
     }
 }
