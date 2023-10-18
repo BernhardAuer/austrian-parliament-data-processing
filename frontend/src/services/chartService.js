@@ -112,5 +112,41 @@ export default class ChartService {
     getLegislaturesAndMeetings = () => {
       return this.#apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet();        
     }
+
+	fetchSpeechDurations = async (selectedFilterOptions) => {
+        let options = {
+            legislature: selectedFilterOptions.legislature,
+            meetingNumber: selectedFilterOptions.meetingNumber,
+            topic: selectedFilterOptions.topic?.topic,
+            politicalParty: selectedFilterOptions.politicalParties
+        }
+        
+        let speechDurations = await this.#apiInstance.apiSpeechesMetaDataGetSpeechDurationsGet(options);
+		let dataTemplate = {
+            datasets: []
+        };
+
+        if (!Array.isArray(speechDurations) && !speechDurations.length) {
+			return dataTemplate;
+		}
+
+		const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {}); // credit: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
+		let speechDurationsGroupedByParties = groupBy(speechDurations, (x) => x.politicalParty);
+       
+		// dataTemplate.datasets[0].backgroundColor = Array.from(typeOfSpeechCountList, (element) => this.mapLabelsToBackgroundColor(element.typeOfSpeech));
+		// dataTemplate.datasets[0].hoverBackgroundColor = Array.from(typeOfSpeechCountList, (element) => this.mapLabelsToHoverColor(element.typeOfSpeech));
+
+		// dataTemplate.datasets[0].label = Object.keys(speechDurationsGroupedByParties)[0];
+		// dataTemplate.datasets[0].data = speechDurationsGroupedByParties[dataTemplate.datasets[0].label];
+
+		for (let i = 0; i < Object.keys(speechDurationsGroupedByParties).length; i++) {
+			let key = Object.keys(speechDurationsGroupedByParties)[i];
+			let group = speechDurationsGroupedByParties[key];
+
+			let chartDataGroup = { label: key, data: group};
+			dataTemplate.datasets.push(chartDataGroup)
+		}
+        return dataTemplate;
+    }
 }
 
