@@ -112,5 +112,64 @@ export default class ChartService {
     getLegislaturesAndMeetings = () => {
       return this.#apiInstance.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet();        
     }
+
+	mapPartiesToBackgroundColor(nameOfParty) {
+		nameOfParty = nameOfParty.toLowerCase();
+		let colorDict = {
+			"v": "black",
+			"s": "red",
+			"f": "blue",
+			"g": "green",
+			"n": "pink"
+		}
+		return colorDict[nameOfParty];
+	}
+
+	getLongNameOfPoliticalParty = (shortName) => {
+		let mapDict = {
+			v: 'ÖVP',
+			s: 'SPÖ',
+			f: 'FPÖ',
+			g: 'GRÜNE',
+			n: 'NEOS'
+		};
+		let abbrToLower = shortName.toLowerCase();
+		return mapDict[abbrToLower];
+	};
+
+	fetchSpeechDurations = async (selectedFilterOptions) => {
+        let options = {
+            legislature: selectedFilterOptions.legislature,
+            meetingNumber: selectedFilterOptions.meetingNumber,
+            topic: selectedFilterOptions.topic?.topic,
+            politicalParty: selectedFilterOptions.politicalParties
+        }
+        
+        let speechDurations = await this.#apiInstance.apiSpeechesMetaDataGetSpeechDurationsGet(options);
+		let dataTemplate = {
+            datasets: []
+        };
+
+        if (!Array.isArray(speechDurations) && !speechDurations.length) {
+			return dataTemplate;
+		}
+
+		const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {}); // credit: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
+		let speechDurationsGroupedByParties = groupBy(speechDurations, (x) => x.politicalParty);
+       
+		for (let i = 0; i < Object.keys(speechDurationsGroupedByParties).length; i++) {
+			let key = Object.keys(speechDurationsGroupedByParties)[i];
+			let groupWithAdditionalProps = [];
+			speechDurationsGroupedByParties[key].forEach(element => {
+				let item = element;
+				item.durationSumInMin = item.durationSumInSec / 60.0;
+				groupWithAdditionalProps.push(item);
+			});
+
+			let chartDataGroup = { label: this.getLongNameOfPoliticalParty(key), data: groupWithAdditionalProps, backgroundColor: this.mapPartiesToBackgroundColor(key)};
+			dataTemplate.datasets.push(chartDataGroup)
+		}
+        return dataTemplate;
+    }
 }
 

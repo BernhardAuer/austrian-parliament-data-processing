@@ -162,4 +162,45 @@ public class SpeechesMetaDataService
         
         return await groupedQuery.ToListAsync();
     }
+    public async Task<List<SpeechDuration>> GetSpeechDurations(TypeOfSpeechFilterDto typeOfSpeechFilterDto)
+    {
+        var query = _speechesMetaDataCollection
+            .Aggregate()
+            .Match(x => typeOfSpeechFilterDto.PoliticalParty.Any(pp => pp == x.politicalPartie));
+        
+        if (typeOfSpeechFilterDto.Legislature != null)
+        {
+            query = query.Match(x => x.legislature == typeOfSpeechFilterDto.Legislature);
+        }
+        else
+        {
+            query = query.Match(x => x.legislature == "XXVII"); // hardcoded for now, pls fix this
+        }
+        
+        if (typeOfSpeechFilterDto.MeetingNumber != null)
+        {
+            query = query.Match(x => x.meetingNr == typeOfSpeechFilterDto.MeetingNumber);
+        }
+        else
+        {
+            var maxMeetingNumber = await _speechesMetaDataCollection.Aggregate().Match(x => x.legislature == "XXVII")
+                .SortByDescending(x => x.meetingNr).Project(x => x.meetingNr).FirstOrDefaultAsync();
+            query = query.Match(x => x.meetingNr == maxMeetingNumber);
+        }
+        
+        if (typeOfSpeechFilterDto.Topic != null)
+        {
+            query = query.Match(x => x.topic == typeOfSpeechFilterDto.Topic);
+        }
+
+        return await query
+            .Group(x => x.nameOfSpeaker, g => new  SpeechDuration()
+            {
+                Speaker = g.Key,
+                PoliticalParty = g.First().politicalPartie,
+                TotalNumberOfSpeeches = g.Count(),
+                DurationSumInSec = g.Sum(x => x.lengthOfSpeechInSec)
+            })
+            .ToListAsync();
+    }
 }
