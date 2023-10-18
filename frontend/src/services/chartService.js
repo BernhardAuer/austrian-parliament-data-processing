@@ -185,7 +185,7 @@ export default class ChartService {
 			datasets: []
 		};
 
-		if (!Array.isArray(speechDistribution) && !speechDistribution.length) {
+		if (!speechDistribution.length) {
 			return dataTemplate;
 		}
 

@@ -26,10 +26,10 @@
 
 <div class="md:2xl:mx-96">
 	<h1 class="text-4xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
-		Übersicht über Anzahl und Dauer der Wortmeldungen im Nationalrat
+		Übersicht über das Verhältnis von Anzahl und Dauer der Wortmeldungen im Nationalrat
 	</h1>
 	<p class="text-1xl leading-tight mt-0 mb-2">
-		In dieser Grafik werden die Redebeiträge der Parlamentarier:innen im Nationalrat nach Häufigkeit und Dauer dargestellt.
+		Die Grafik visualisiert das Verhältnis von Sprechdauer bzw. Anzahl an Wortmeldungen pro Fraktion im Nationalrat.
 	</p>
 </div>
 <div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
