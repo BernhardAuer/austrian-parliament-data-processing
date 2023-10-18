@@ -13,6 +13,7 @@
 
 
 import ApiClient from "../ApiClient";
+import DistributionOfSpeakingTimeDto from '../model/DistributionOfSpeakingTimeDto';
 import LegislatureMeetingsListDto from '../model/LegislatureMeetingsListDto';
 import SpeechDurationDto from '../model/SpeechDurationDto';
 import SpeechesDto from '../model/SpeechesDto';
@@ -37,6 +38,58 @@ export default class SpeechesMetaDataApi {
         this.apiClient = apiClient || ApiClient.instance;
     }
 
+
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {Array.<String>} [politicalParty] 
+     * @param {String} [legislature] 
+     * @param {Number} [meetingNumber] 
+     * @param {String} [topic] 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/DistributionOfSpeakingTimeDto>} and HTTP response
+     */
+    apiSpeechesMetaDataGetDistributionOfSpeakingTimeGetWithHttpInfo(opts) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+      };
+      let queryParams = {
+        'PoliticalParty': this.apiClient.buildCollectionParam(opts['politicalParty'], 'multi'),
+        'Legislature': opts['legislature'],
+        'MeetingNumber': opts['meetingNumber'],
+        'Topic': opts['topic']
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['text/plain', 'application/json', 'text/json'];
+      let returnType = [DistributionOfSpeakingTimeDto];
+      return this.apiClient.callApi(
+        '/api/SpeechesMetaData/getDistributionOfSpeakingTime', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null
+      );
+    }
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {Array.<String>} opts.politicalParty 
+     * @param {String} opts.legislature 
+     * @param {Number} opts.meetingNumber 
+     * @param {String} opts.topic 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/DistributionOfSpeakingTimeDto>}
+     */
+    apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet(opts) {
+      return this.apiSpeechesMetaDataGetDistributionOfSpeakingTimeGetWithHttpInfo(opts)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
 
 
     /**

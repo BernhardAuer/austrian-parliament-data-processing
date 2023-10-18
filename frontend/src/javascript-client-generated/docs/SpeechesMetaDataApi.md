@@ -4,12 +4,63 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet) | **GET** /api/SpeechesMetaData/getDistributionOfSpeakingTime | 
 [**apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet) | **GET** /api/SpeechesMetaData/getLegislaturesAndMeetingNumbers | 
 [**apiSpeechesMetaDataGetSpeechDurationsGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetSpeechDurationsGet) | **GET** /api/SpeechesMetaData/getSpeechDurations | 
 [**apiSpeechesMetaDataGetSpeechesGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetSpeechesGet) | **GET** /api/SpeechesMetaData/getSpeeches | 
 [**apiSpeechesMetaDataGetTypeOfSpeechesCountListGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetTypeOfSpeechesCountListGet) | **GET** /api/SpeechesMetaData/getTypeOfSpeechesCountList | 
 [**apiSpeechesMetaDataSearchTopicsGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataSearchTopicsGet) | **GET** /api/SpeechesMetaData/searchTopics | 
 
+
+
+## apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet
+
+> [DistributionOfSpeakingTimeDto] apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet(opts)
+
+
+
+### Example
+
+```javascript
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
+
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
+let opts = {
+  'politicalParty': ["null"], // [String] | 
+  'legislature': "legislature_example", // String | 
+  'meetingNumber': 56, // Number | 
+  'topic': "topic_example" // String | 
+};
+apiInstance.apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet(opts).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **politicalParty** | [**[String]**](String.md)|  | [optional] 
+ **legislature** | **String**|  | [optional] 
+ **meetingNumber** | **Number**|  | [optional] 
+ **topic** | **String**|  | [optional] 
+
+### Return type
+
+[**[DistributionOfSpeakingTimeDto]**](DistributionOfSpeakingTimeDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: text/plain, application/json, text/json
 
 
 ## apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet

@@ -13,6 +13,7 @@
 
 
 import ApiClient from './ApiClient';
+import DistributionOfSpeakingTimeDto from './model/DistributionOfSpeakingTimeDto';
 import LegislatureMeetingsListDto from './model/LegislatureMeetingsListDto';
 import SpeechDurationDto from './model/SpeechDurationDto';
 import SpeechesDto from './model/SpeechesDto';
@@ -58,6 +59,12 @@ export {
      * @property {module:ApiClient}
      */
     ApiClient,
+
+    /**
+     * The DistributionOfSpeakingTimeDto model constructor.
+     * @property {module:model/DistributionOfSpeakingTimeDto}
+     */
+    DistributionOfSpeakingTimeDto,
 
     /**
      * The LegislatureMeetingsListDto model constructor.
