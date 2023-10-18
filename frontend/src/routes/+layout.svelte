@@ -26,7 +26,8 @@
 					tabindex="0"
 					class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
 				>
-					<li><a href="/wortmeldungsarten">Wortmeldungsarten</a></li>				
+					<li><a href="/wortmeldungsarten">Wortmeldungsarten</a></li>
+					<li><a href="/wortmeldungsdauer">Wortmeldungsdauer</a></li>				
 				</ul>
 			</div>
 			<a class="btn btn-ghost normal-case text-xl" href="/">parli-info.org</a>
@@ -34,7 +35,8 @@
 
 		<div class="navbar-center hidden lg:flex">
 			<ul class="menu menu-horizontal px-1">
-				<li><a href="/wortmeldungsarten">Wortmeldungsarten</a></li>			
+				<li><a href="/wortmeldungsarten">Wortmeldungsarten</a></li>	
+				<li><a href="/wortmeldungsdauer">Wortmeldungsdauer</a></li>			
 			</ul>
 		</div>
 		<div class="navbar-end">
