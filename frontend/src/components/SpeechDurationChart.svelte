@@ -34,7 +34,7 @@
 	});
 </script>
 
-<h2 class="card-title">Wortmeldungsarten</h2>
+<h2 class="card-title">Wortmeldungsdauer</h2>
 {#await chartDataPromise}
 	<LoadingSpinner />
 {:then chartData}
@@ -71,7 +71,22 @@
 					responsive: true,
 					maintainAspectRatio: false,
 					parsing: { xAxisKey: 'durationSumInSec', yAxisKey: 'totalNumberOfSpeeches' },
-					scales: { y: { beginAtZero: true , ticks: { precision: 0 } } }
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: { precision: 0 },
+							title: {
+								display: true,
+								text: 'Anzahl der Reden'
+							}
+						},
+						x: {
+							title: {
+								display: true,
+								text: 'Dauer der Reden in Sekunden'
+							}
+						}
+					}
 				}}
 			/>
 		</div>
