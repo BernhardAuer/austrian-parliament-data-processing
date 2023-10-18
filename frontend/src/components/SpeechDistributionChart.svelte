@@ -103,7 +103,7 @@
 							usePointStyle: true,
 							callbacks: {
 								label: (context) => {
-									return  context.parsed.y.toFixed(1) + " %";									
+									return  context.dataset.label + ": " + context.parsed.y.toFixed(1) + " %";									
 								}
 							}
 						}

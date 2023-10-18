@@ -197,7 +197,7 @@ export default class ChartService {
 		dataTemplate.datasets.push(chartDataSpeechDurationPercentage);
 
 		let chartDataNumberOfSpeechesPercentage = {
-			label: "Wortmeldungen",
+			label: "Anzahl Wortmeldungen",
 			data: speechDistribution.map(x => { return { y: x.numberOfSpeechesPercentage, x: this.getLongNameOfPoliticalParty(x.politicalParty) }; }),
 			backgroundColor: speechDistribution.map(x => this.mapPartiesToBackgroundColor(x.politicalParty))
 		};
