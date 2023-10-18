@@ -86,6 +86,21 @@
 								text: 'Dauer der Reden in Sekunden'
 							}
 						}
+					},
+					plugins: {
+						tooltip: {
+							enabled: true,
+							usePointStyle: true,
+							callbacks: {
+								title: (context) => {
+									return context[0].parsed.y + " Wortmeldung(en)";
+								},
+								label: (context) => {
+									console.log(JSON.stringify(context.dataset.data[context.dataIndex]))
+									return context.dataset.data[context.dataIndex].speaker + " (" + context.parsed.x + " Sekunden)"
+								}
+							}
+						}
 					}
 				}}
 			/>
