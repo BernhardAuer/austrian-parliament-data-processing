@@ -21,6 +21,18 @@
 	export let chartDataPromise = null;
 	let chart;
 
+	const convertLengthToReadableString = (lengthInSec) => {
+		const zeroPad = (num, places) => String(num).padStart(places, '0');
+		let sec = zeroPad(lengthInSec % 60, 2);
+		let min = Math.trunc(lengthInSec / 60);
+
+		if (sec == 0) {
+			return `${min}`;
+		} else {
+			return `${min}:${sec}`;
+		}
+	};
+
 	const scrollToTypeOfSpeechDiagram = () => {
 		scrollIntoView(document.getElementById('typeOfSpeechDiagram'), {
 			behavior: 'smooth',
@@ -70,7 +82,7 @@
 				options={{
 					responsive: true,
 					maintainAspectRatio: false,
-					parsing: { xAxisKey: 'durationSumInSec', yAxisKey: 'totalNumberOfSpeeches' },
+					parsing: { xAxisKey: 'durationSumInMin', yAxisKey: 'totalNumberOfSpeeches' },
 					scales: {
 						y: {
 							beginAtZero: true,
@@ -83,7 +95,7 @@
 						x: {
 							title: {
 								display: true,
-								text: 'Dauer der Reden in Sekunden'
+								text: 'Dauer der Reden [min]'
 							}
 						}
 					},
@@ -97,7 +109,7 @@
 								},
 								label: (context) => {
 									console.log(JSON.stringify(context.dataset.data[context.dataIndex]))
-									return context.dataset.data[context.dataIndex].speaker + " (" + context.parsed.x + " Sekunden)"
+									return context.dataset.data[context.dataIndex].speaker + " " + convertLengthToReadableString(context.dataset.data[context.dataIndex].durationSumInSec) + " min"
 								}
 							}
 						}

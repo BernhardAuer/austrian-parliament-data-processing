@@ -159,9 +159,14 @@ export default class ChartService {
        
 		for (let i = 0; i < Object.keys(speechDurationsGroupedByParties).length; i++) {
 			let key = Object.keys(speechDurationsGroupedByParties)[i];
-			let group = speechDurationsGroupedByParties[key];
+			let groupWithAdditionalProps = [];
+			speechDurationsGroupedByParties[key].forEach(element => {
+				let item = element;
+				item.durationSumInMin = item.durationSumInSec / 60.0;
+				groupWithAdditionalProps.push(item);
+			});
 
-			let chartDataGroup = { label: this.getLongNameOfPoliticalParty(key), data: group, backgroundColor: this.mapPartiesToBackgroundColor(key)};
+			let chartDataGroup = { label: this.getLongNameOfPoliticalParty(key), data: groupWithAdditionalProps, backgroundColor: this.mapPartiesToBackgroundColor(key)};
 			dataTemplate.datasets.push(chartDataGroup)
 		}
         return dataTemplate;
