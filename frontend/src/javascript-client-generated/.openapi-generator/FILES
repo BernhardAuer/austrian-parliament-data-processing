@@ -2,6 +2,7 @@
 .gitignore
 .travis.yml
 README.md
+docs/DistributionOfSpeakingTimeDto.md
 docs/LegislatureMeetingsListDto.md
 docs/SpeechDurationDto.md
 docs/SpeechesDto.md
@@ -14,9 +15,10 @@ package.json
 src/ApiClient.js
 src/api/SpeechesMetaDataApi.js
 src/index.js
+src/model/DistributionOfSpeakingTimeDto.js
 src/model/LegislatureMeetingsListDto.js
 src/model/SpeechDurationDto.js
 src/model/SpeechesDto.js
 src/model/TopicSearchResultDto.js
 src/model/TypeOfSpeechCountDto.js
-test/model/SpeechDurationDto.spec.js
+test/model/DistributionOfSpeakingTimeDto.spec.js
