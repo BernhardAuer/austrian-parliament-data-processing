@@ -11,15 +11,6 @@
 	export let chartDataPromise = null;
 	let chart;
 
-	const getHeightForDoughnut = (labelCount) => {
-		if (labelCount < 10) {
-			return 'h-[25rem]';
-		}
-		if (labelCount < 15) {
-			return 'h-[35rem]';
-		}
-		return 'h-[45rem]';
-	};
 	const scrollToTypeOfSpeechDiagram = () => {
 		scrollIntoView(document.getElementById('typeOfSpeechDiagram'), {
 			behavior: 'smooth',
@@ -62,7 +53,7 @@
 				>
 			{/if}
 		</div>
-		<div class="relative {getHeightForDoughnut(chartData?.labels?.length)}">
+		<div class="relative h-[25rem]">
 			<Scatter bind:chart data={chartData} options={{ responsive: true, maintainAspectRatio: false, parsing: { xAxisKey: "durationSumInSec", yAxisKey: "totalNumberOfSpeeches"}}} />
 		</div>
 	{/if}
