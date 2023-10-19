@@ -19,6 +19,7 @@ builder.Services.AddSwaggerGen();
 
 // register services // todo: check registrations...
 builder.Services.AddSingleton<SpeechesMetaDataService>();
+builder.Services.AddSingleton<NationalCouncilMeetingService>();
 builder.Services.AddSingleton<AustrianParliamentAbbreviationMappings>();
 
 var app = builder.Build();
