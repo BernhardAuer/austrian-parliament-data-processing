@@ -7,4 +7,5 @@ public class AustrianParliamentScrapeDatabaseSettings
     public string DatabaseName { get; set; } = null!;
 
     public string SpeechesMetaDataCollectionName { get; set; } = null!;
+    public string NationalCouncilCollectionName { get; set; } = null!;
 }
