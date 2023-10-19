@@ -28,7 +28,8 @@
 				>
 					<li><a href="/wortmeldungsarten">Wortmeldungsarten</a></li>
 					<li><a href="/wortmeldungsdauer">Wortmeldungsdauer</a></li>		
-					<li><a href="/wortmeldungsverhältnisse">Wortmeldungsverhältnis</a></li>			
+					<li><a href="/wortmeldungsverhältnisse">Wortmeldungsverhältnis</a></li>		
+					<li><a href="/sitzungsverteilung">Nationalratssitzungen</a></li>			
 				</ul>
 			</div>
 			<a class="btn btn-ghost normal-case text-xl" href="/">parli-info.org</a>
@@ -38,7 +39,8 @@
 			<ul class="menu menu-horizontal px-1">
 				<li><a href="/wortmeldungsarten">Wortmeldungsarten</a></li>	
 				<li><a href="/wortmeldungsdauer">Wortmeldungsdauer</a></li>		
-				<li><a href="/wortmeldungsverhältnisse">Wortmeldungsverhältnis</a></li>			
+				<li><a href="/wortmeldungsverhältnisse">Wortmeldungsverhältnis</a></li>		
+				<li><a href="/sitzungsverteilung">Nationalratssitzungen</a></li>				
 			</ul>
 		</div>
 		<div class="navbar-end">
