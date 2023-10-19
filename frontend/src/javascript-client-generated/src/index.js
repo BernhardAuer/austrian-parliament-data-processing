@@ -15,10 +15,12 @@
 import ApiClient from './ApiClient';
 import DistributionOfSpeakingTimeDto from './model/DistributionOfSpeakingTimeDto';
 import LegislatureMeetingsListDto from './model/LegislatureMeetingsListDto';
+import NationalCouncilMeetingsPerYearDto from './model/NationalCouncilMeetingsPerYearDto';
 import SpeechDurationDto from './model/SpeechDurationDto';
 import SpeechesDto from './model/SpeechesDto';
 import TopicSearchResultDto from './model/TopicSearchResultDto';
 import TypeOfSpeechCountDto from './model/TypeOfSpeechCountDto';
+import NationalCouncilMeetingApi from './api/NationalCouncilMeetingApi';
 import SpeechesMetaDataApi from './api/SpeechesMetaDataApi';
 
 
@@ -73,6 +75,12 @@ export {
     LegislatureMeetingsListDto,
 
     /**
+     * The NationalCouncilMeetingsPerYearDto model constructor.
+     * @property {module:model/NationalCouncilMeetingsPerYearDto}
+     */
+    NationalCouncilMeetingsPerYearDto,
+
+    /**
      * The SpeechDurationDto model constructor.
      * @property {module:model/SpeechDurationDto}
      */
@@ -95,6 +103,12 @@ export {
      * @property {module:model/TypeOfSpeechCountDto}
      */
     TypeOfSpeechCountDto,
+
+    /**
+    * The NationalCouncilMeetingApi service constructor.
+    * @property {module:api/NationalCouncilMeetingApi}
+    */
+    NationalCouncilMeetingApi,
 
     /**
     * The SpeechesMetaDataApi service constructor.

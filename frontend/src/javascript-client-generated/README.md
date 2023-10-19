@@ -101,14 +101,11 @@ Please follow the [installation](#installation) instruction and execute the foll
 var WebApiVersion1000CultureneutralPublicKeyTokennull = require('web_api_version1_0_0_0_cultureneutral_public_key_tokennull');
 
 
-var api = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi()
+var api = new WebApiVersion1000CultureneutralPublicKeyTokennull.NationalCouncilMeetingApi()
 var opts = {
-  'politicalParty': ["null"], // {[String]} 
-  'legislature': "legislature_example", // {String} 
-  'meetingNumber': 56, // {Number} 
-  'topic': "topic_example" // {String} 
+  'year': 56 // {Number} 
 };
-api.apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet(opts).then(function(data) {
+api.apiNationalCouncilMeetingGetNationalCouncilMeetingsGet(opts).then(function(data) {
   console.log('API called successfully. Returned data: ' + data);
 }, function(error) {
   console.error(error);
@@ -123,6 +120,7 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*WebApiVersion1000CultureneutralPublicKeyTokennull.NationalCouncilMeetingApi* | [**apiNationalCouncilMeetingGetNationalCouncilMeetingsGet**](docs/NationalCouncilMeetingApi.md#apiNationalCouncilMeetingGetNationalCouncilMeetingsGet) | **GET** /api/NationalCouncilMeeting/getNationalCouncilMeetings | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet) | **GET** /api/SpeechesMetaData/getDistributionOfSpeakingTime | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet) | **GET** /api/SpeechesMetaData/getLegislaturesAndMeetingNumbers | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetSpeechDurationsGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetSpeechDurationsGet) | **GET** /api/SpeechesMetaData/getSpeechDurations | 
@@ -135,6 +133,7 @@ Class | Method | HTTP request | Description
 
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.DistributionOfSpeakingTimeDto](docs/DistributionOfSpeakingTimeDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.LegislatureMeetingsListDto](docs/LegislatureMeetingsListDto.md)
+ - [WebApiVersion1000CultureneutralPublicKeyTokennull.NationalCouncilMeetingsPerYearDto](docs/NationalCouncilMeetingsPerYearDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechDurationDto](docs/SpeechDurationDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesDto](docs/SpeechesDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.TopicSearchResultDto](docs/TopicSearchResultDto.md)

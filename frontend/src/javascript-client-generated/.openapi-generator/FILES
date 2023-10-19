@@ -4,6 +4,8 @@
 README.md
 docs/DistributionOfSpeakingTimeDto.md
 docs/LegislatureMeetingsListDto.md
+docs/NationalCouncilMeetingApi.md
+docs/NationalCouncilMeetingsPerYearDto.md
 docs/SpeechDurationDto.md
 docs/SpeechesDto.md
 docs/SpeechesMetaDataApi.md
@@ -13,12 +15,15 @@ git_push.sh
 mocha.opts
 package.json
 src/ApiClient.js
+src/api/NationalCouncilMeetingApi.js
 src/api/SpeechesMetaDataApi.js
 src/index.js
 src/model/DistributionOfSpeakingTimeDto.js
 src/model/LegislatureMeetingsListDto.js
+src/model/NationalCouncilMeetingsPerYearDto.js
 src/model/SpeechDurationDto.js
 src/model/SpeechesDto.js
 src/model/TopicSearchResultDto.js
 src/model/TypeOfSpeechCountDto.js
-test/model/DistributionOfSpeakingTimeDto.spec.js
+test/api/NationalCouncilMeetingApi.spec.js
+test/model/NationalCouncilMeetingsPerYearDto.spec.js
