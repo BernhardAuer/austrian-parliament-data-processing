@@ -1,12 +1,14 @@
-import { ApiClient, SpeechesMetaDataApi } from './../javascript-client-generated/src/index.js';
+import { ApiClient, NationalCouncilMeetingApi, SpeechesMetaDataApi } from './../javascript-client-generated/src/index.js';
 import { env } from '$env/dynamic/public'
 
 export default class ChartService {
 	#apiInstance;
+	#nationalCouncilMeetingApiInstance;
 	constructor() {
 		const client = new ApiClient();
 		client.basePath = env.PUBLIC_API_URL;
 		this.#apiInstance = new SpeechesMetaDataApi(client);
+		this.#nationalCouncilMeetingApiInstance = new NationalCouncilMeetingApi(client);
 	}
 
 	fetchSpeechTypes = async (selectedFilterOptions) => {
@@ -202,6 +204,30 @@ export default class ChartService {
 			backgroundColor: speechDistribution.map(x => this.mapPartiesToBackgroundColor(x.politicalParty))
 		};
 		dataTemplate.datasets.push(chartDataNumberOfSpeechesPercentage);
+
+		return dataTemplate;
+	}
+
+	fetchNationalCouncilMeetingDistribution = async (selectedYear) => {
+		let options = {
+			year: selectedYear
+		}
+
+		let meetingDistribution = await this.#nationalCouncilMeetingApiInstance.apiNationalCouncilMeetingGetNationalCouncilMeetingsGet(options);
+		let dataTemplate = {
+			labels: [],
+			datasets: []
+		};
+
+		if (!meetingDistribution.length) {
+			return dataTemplate;
+		}
+
+		let chartData = {
+			data: meetingDistribution.map(x => x.count)
+		};
+		dataTemplate.datasets.push(chartData);
+		dataTemplate.labels = meetingDistribution.map(x => new Date(x.month.toString()).toLocaleString('de',{month:'short'}));
 
 		return dataTemplate;
 	}
