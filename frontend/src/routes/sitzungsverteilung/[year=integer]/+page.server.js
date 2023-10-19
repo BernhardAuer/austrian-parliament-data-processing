@@ -7,7 +7,7 @@ export async function load({ params, url }) {
 	const chartData = await service.fetchNationalCouncilMeetingDistribution(selectedYear);
 
     return {
-        selectedYear: selectedYear,
+        selectedYear: parseInt(selectedYear), // ATTENTION! we need to parse the value so that two-way binding works!!! event though route param is defined as int, it is no auto-cast done automatically!!!!!
         chartData: chartData
     };
 }
