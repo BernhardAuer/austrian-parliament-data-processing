@@ -33,6 +33,17 @@ public class NationalCouncilMeetingService
                 group => new Tuple<int, int>(group.Key, group.Count()))
             .SortBy(x => x.Item1)
             .ToListAsync();
+
+        if (!result.Any())
+        {
+            return result;
+        }
+        
+        // add months with zero meetings
+        var allMonths = Enumerable.Range(1, 12);
+        var missingMonths = allMonths.Except(result.Select(x => x.Item1));
+        result.AddRange(missingMonths.Select(month => new Tuple<int, int>(month, 0)));
+        result = result.OrderBy(x => x.Item1).ToList();
         return result;
     }
 
