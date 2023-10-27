@@ -5,7 +5,7 @@
 
 import scrapy
 from dateutil.parser import parse
-from itemloaders.processors import MapCompose, TakeFirst
+from itemloaders.processors import MapCompose, Compose, TakeFirst, Join
 from datetime import datetime
 from dataclasses import dataclass, field
 from validTitlesList import validTitles
@@ -163,4 +163,18 @@ class SpeechesMetaDataItem(scrapy.Item):
      videoUrl = scrapy.Field(input_processor = MapCompose(getName, stripString, parseVideoUrl), output_processor = TakeFirst())
      speechUrl= scrapy.Field(input_processor = MapCompose(getName, stripString, parseSpeechUrl), output_processor = TakeFirst())
      speechTimeProtocol = scrapy.Field(input_processor = MapCompose(getName, stripString, parseSpeechTimeFromProtocol, mergeMeetingDateWithSpeechTimeSeconds), output_processor = TakeFirst())
+     pass
+
+def stripNewline(value):
+     return value.replace("\r\n", " ") # strip() does not work for: "randomWord\r\n", only for: "randomWord \r\n"
+
+def stripDuplicateSpaces(value):
+     return value.replace("  ", " ")
+
+class SpeechItem(scrapy.Item):
+     orderId = scrapy.Field(output_processor = TakeFirst())     
+     type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = Join())
+     subType = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())     
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     speaker = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
      pass
