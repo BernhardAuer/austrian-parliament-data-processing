@@ -175,6 +175,6 @@ class SpeechItem(scrapy.Item):
      orderId = scrapy.Field(output_processor = TakeFirst())     
      type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = Join())
      subType = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())     
-     data = scrapy.Field(input_processor = Compose(MapCompose(stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
      speaker = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
      pass

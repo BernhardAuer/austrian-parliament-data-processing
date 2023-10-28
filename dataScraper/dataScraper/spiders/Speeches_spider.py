@@ -9,7 +9,7 @@ import re
 
 class SpeechesSpider(scrapy.Spider):
     name = "speeches"
-    start_urls = ['https://www.parlament.gv.at/dokument/XXVII/NRSITZ/1/A_-_12_56_19_00208775.html']
+    start_urls = ['https://www.parlament.gv.at/dokument/XXVII/NRSITZ/1/A_-_13_05_25_00208778.html']
     
     handle_httpstatus_list = [404]
     # todo: maybe log / store date of web request?
@@ -20,22 +20,44 @@ class SpeechesSpider(scrapy.Spider):
             return None
           
         try:
-            for index, paragraph in enumerate(response.css("p.MsoNormal")):            
-                l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)  
+            currentSpeaker = None
+            pureSpeech = None
+            index = 0
+            for paragraph in response.css("p"):
                 paragraphAsText = " ".join(paragraph.css("*::text").getall())
-                print(paragraphAsText)
                 extractSpeakerRegex = re.search("^(Abgeordneter|Präsident)*\s*(.*)\s*(\(.+\))*:", paragraphAsText)
                 if (extractSpeakerRegex is not None):
-                    print("reges:")
-                    print(extractSpeakerRegex.group(2)) 
-                    l.add_value('speaker', extractSpeakerRegex.group(2))
-                    speechOnly = paragraphAsText[extractSpeakerRegex.end():]
-                    l.add_value('data', speechOnly)
-                # l.add_css('type', "::text")   # important: space before ::text is needed, so that all child elements get parsed
-                l.add_value('orderId', index)
-                l.add_value('type', "speech")
-
-                yield l.load_item()
+                    currentSpeaker = extractSpeakerRegex.group(2)
+                    pureSpeech = paragraphAsText[extractSpeakerRegex.end():]
+                else:
+                    pureSpeech = paragraphAsText
+                
+                timeRegex = re.search("^\d{1,2}.\d{2}$", paragraphAsText)
+                if timeRegex:                    
+                    l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
+                    l.add_value('type', "info-time")
+                    l.add_value('orderId', index)
+                    l.add_value('data', paragraphAsText) 
+                    yield l.load_item()
+                    index += 1
+                    continue
+                
+                result = re.split(r"[()]", pureSpeech)
+                for j, item in enumerate(result):   
+                    if item == "" or item is None:
+                        continue                
+                    l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
+                    l.add_value('data', item) 
+                    if j % 2:                           
+                        l.add_value('type', "info")
+                        l.add_value('orderId', index)
+                    else:                                              
+                        l.add_value('type', "speech")
+                        l.add_value('orderId', index) 
+                        if currentSpeaker is not None:
+                            l.add_value('speaker', currentSpeaker)                                    
+                    yield l.load_item()                    
+                    index += 1  
         except Exception as e:
             print("an error occured while parsing data:")
             print(e) 
