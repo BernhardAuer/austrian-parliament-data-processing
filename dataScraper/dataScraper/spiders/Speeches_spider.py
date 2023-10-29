@@ -1,7 +1,7 @@
 import scrapy
 import json
 from pathlib import Path
-from items import SpeechItem
+from items import SpeechItem, SpeechInfoItem
 from scrapy.loader import ItemLoader
 from jmespath import search
 from datetime import datetime
@@ -46,12 +46,16 @@ class SpeechesSpider(scrapy.Spider):
                 for j, item in enumerate(result):   
                     if item == "" or item is None:
                         continue                
-                    l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
-                    l.add_value('data', item) 
-                    if j % 2:                           
+                    
+                    if j % 2: 
+                        l = ItemLoader(item=SpeechInfoItem(), response=response, selector=paragraph)
+                        l.add_value('data', item) # this is original data for "info" objects.                          
                         l.add_value('type', "info")
                         l.add_value('orderId', index)
-                    else:                                              
+                        l.add_value('applause', item)
+                    else:
+                        l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)                           
+                        l.add_value('data', item) # this is original data for "info" objects.                                
                         l.add_value('type', "speech")
                         l.add_value('orderId', index) 
                         if currentSpeaker is not None:

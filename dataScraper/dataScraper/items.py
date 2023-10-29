@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from validTitlesList import validTitles
 from austrianParliamentSpecificTitlesList import austrianParliamentTitles
 from jmespath import search
+import re
 
 def parseDate(dateString):
      dateTime = parse(dateString).replace(microsecond=0) # this replace shitty thing is needed for mongodb (js dates only, huh)
@@ -171,10 +172,36 @@ def stripNewline(value):
 def stripDuplicateSpaces(value):
      return value.replace("  ", " ")
 
+def parseInfoObject(value):
+     applauseRegex = re.search("Allgemeiner Beifall.", value)
+     if applauseRegex:
+          return "general applause"
+     applauseRegex = re.search("Beifall bei (?:der )?(.*).", value) # specific applause, needs further matching
+     if applauseRegex:
+          result = re.split(", | und | sowie bei Abgeordneten von | sowie bei Abgeordneten der | und bei Abgeordneten der ", applauseRegex.group(1))
+          return result
+          # l = ItemLoader(item=ApplauseItem(), response=response, selector=paragraph)
+          # l.add_value('data', item)
+          # return dict(l.load_item())
+     return value
+
 class SpeechItem(scrapy.Item):
      orderId = scrapy.Field(output_processor = TakeFirst())     
      type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = Join())
      subType = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())     
      data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
      speaker = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
+     pass
+
+class SpeechInfoItem(scrapy.Item):
+     orderId = scrapy.Field(output_processor = TakeFirst()) 
+     type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     applause = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces, parseInfoObject))
+     pass
+
+class ApplauseItem(scrapy.Item):
+     applauseByEntireParties = scrapy.Field(input_processor = MapCompose(stripString))
+     applauseByPartsOfParties = scrapy.Field(input_processor = MapCompose(stripString))
+     applauseByPerson = scrapy.Field(input_processor = MapCompose(stripString))
      pass
