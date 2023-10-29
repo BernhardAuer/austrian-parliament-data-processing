@@ -29,4 +29,8 @@ public class SpeechesMetaData
     [BsonIgnoreIfNull]
     public double? textMatchScore { get; set; }
     
+    public int? speechNrInDebate { get; set; }
+    
+    public Speech[]? speeches { get; set; }
+    
 }

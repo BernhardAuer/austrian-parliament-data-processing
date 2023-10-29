@@ -34,8 +34,27 @@ namespace WebApi.Controllers
                     PoliticalPartie = x.politicalPartie,
                     TypeOfSpeech = _austrianParliamentAbbreviationMappings.GetLongNameSpeechType(x.typeOfSpeech),
                     LengthOfSpeechInSec = x.lengthOfSpeechInSec,
-                    Speech = ""
+                    Speech = "" // todo: convert this to speech summary
                     
+                })
+                .ToList();
+            return result;
+        }
+        
+        [HttpGet]
+        [Route("getPureSpeeches")]
+        public async Task<List<SpeechDto>> GetPureSpeeches([FromQuery] string legislature, [FromQuery] int meetingNumber, 
+            [FromQuery] int speechNrInDebate, [FromQuery] string topic)
+        {
+            var speeches =
+                await _speechesMetaDataService.GetPureSpeeches(legislature, meetingNumber, topic, speechNrInDebate);
+
+            var result = speeches.Select(x => new SpeechDto()
+                {
+                    NameOfSpeaker = x.speaker,
+                    OrderId = x.orderId,
+                    Data = x.data,
+                    Type = x.type
                 })
                 .ToList();
             return result;

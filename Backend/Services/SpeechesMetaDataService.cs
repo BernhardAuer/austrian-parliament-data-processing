@@ -46,6 +46,20 @@ public class SpeechesMetaDataService
         return result;
     }
 
+    public async Task<List<Speech>> GetPureSpeeches(string legislature, int meetingNumber, string topic, int speechNrInDebate)
+    {
+        var query = _speechesMetaDataCollection
+            .Aggregate()
+            .Match(x => x.legislature == legislature && x.meetingNr == meetingNumber 
+                                                     && x.topic == topic
+                                                     && x.speechNrInDebate == speechNrInDebate);
+        
+        var result = await query.Limit(1)
+            .Project(x => x.speeches)
+            .FirstOrDefaultAsync();
+        return result.ToList();
+    }
+
     public async Task<List<TypeOfSpeechCount>> GetTypeOfSpeechesCountList(TypeOfSpeechFilterDto typeOfSpeechFilterDto)
     {
         var query = _speechesMetaDataCollection
