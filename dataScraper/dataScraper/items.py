@@ -185,16 +185,15 @@ class SpeechInfoItem(scrapy.Item):
      orderId = scrapy.Field(output_processor = TakeFirst()) 
      type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
      data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
-     applause = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces))
      pass
 
 class ApplauseItem(scrapy.Item):
-     # def __init__(self, applauseByEntireParties):
-     #      self.applauseByEntireParties = applauseByEntireParties
      applauseByEntireParties = scrapy.Field()
+     applauseByPartsOfParties = scrapy.Field()
+     # applauseByPerson = scrapy.Field()
+     orderId = scrapy.Field(output_processor = TakeFirst()) 
+     type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
      data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
-     # applauseByPartsOfParties = scrapy.Field(input_processor = MapCompose(stripString))
-     # applauseByPerson = scrapy.Field(input_processor = MapCompose(stripString))
      pass
 
 class InputCleaner(scrapy.Item):
