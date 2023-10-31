@@ -1,5 +1,6 @@
 from spiders.NationalCouncilMeeting_spider import NationalCouncilMeetingSpider
 from spiders.SpeechesMetaData_spider import SpeechesMetaDataSpider
+from spiders.Speeches_spider import SpeechesSpider
 import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
@@ -42,6 +43,7 @@ def scrape():
     process.crawl(NationalCouncilMeetingSpider)
     for gp in gps:
         process.crawl(SpeechesMetaDataSpider, gp)
+    process.crawl(SpeechesSpider)
     process.start() # the script will block here until the crawling is finished
 
 scrape()

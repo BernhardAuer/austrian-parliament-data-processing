@@ -6,13 +6,42 @@ from scrapy.loader import ItemLoader
 from jmespath import search
 from datetime import datetime
 import re
+import pymongo
 
 class SpeechesSpider(scrapy.Spider):
     name = "speeches"
-    start_urls = ['https://www.parlament.gv.at/dokument/XXVII/NRSITZ/1/A_-_13_05_25_00208778.html']
+    start_urls = []
     
     handle_httpstatus_list = [404]
     # todo: maybe log / store date of web request?
+        
+    def __init__(self, mongodb_uri, mongodb_db):
+        self.mongodb_uri = mongodb_uri
+        self.mongodb_db = mongodb_db
+        if not self.mongodb_uri: sys.exit("You need to provide a Connection String.")
+        self.baseUrl = 'https://www.parlament.gv.at'
+        self.start_urls = self.get_urls_from_db()
+    
+    @classmethod
+    def from_crawler(cls, crawler):    
+
+        spider = cls(
+            mongodb_uri=crawler.settings.get('MONGODB_URI'),
+            mongodb_db=crawler.settings.get('MONGODB_DATABASE')
+        )
+        spider._set_crawler(crawler)
+        return spider  
+
+    def get_urls_from_db(self,):
+        client = pymongo.MongoClient(self.mongodb_uri)
+        db = client[self.mongodb_db]        
+        collection = db["speechesMetaData"]
+        urls = []
+        for item in collection.find({'speechUrl': { "$exists": True }}).limit(5):
+            url = self.baseUrl + item["speechUrl"]
+            urls.append(url)
+        client.close()
+        return urls
     
     def cleanInput(self, value):
         sanitizedInput = ItemLoader(item=InputCleaner())
