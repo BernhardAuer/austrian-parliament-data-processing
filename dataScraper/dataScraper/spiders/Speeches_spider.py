@@ -14,7 +14,13 @@ class SpeechesSpider(scrapy.Spider):
     
     handle_httpstatus_list = [404]
     # todo: maybe log / store date of web request?
-        
+    
+    custom_settings = {
+        'ITEM_PIPELINES': {
+            'dataScraper.pipelines.InsertToSpeechCollectionPipeline': 400
+        }
+    }
+    
     def __init__(self, mongodb_uri, mongodb_db):
         self.mongodb_uri = mongodb_uri
         self.mongodb_db = mongodb_db
@@ -32,12 +38,12 @@ class SpeechesSpider(scrapy.Spider):
         spider._set_crawler(crawler)
         return spider  
 
-    def get_urls_from_db(self,):
+    def get_urls_from_db(self):
         client = pymongo.MongoClient(self.mongodb_uri)
         db = client[self.mongodb_db]        
         collection = db["speechesMetaData"]
         urls = []
-        for item in collection.find({'speechUrl': { "$exists": True }}).limit(5):
+        for item in collection.find({'speechUrl': { "$exists": True }}).limit(30):
             url = self.baseUrl + item["speechUrl"]
             urls.append(url)
         client.close()
@@ -83,6 +89,12 @@ class SpeechesSpider(scrapy.Spider):
         l.add_value('data', value)
         return l
 
+    def getOriginalRequestUrl(self, response, itemLoader):
+        url = response.url
+        url = url.replace(self.baseUrl, '')
+        itemLoader.add_value('requestUrl', url)
+        return itemLoader
+
     def parse(self, response):
         
         if response.status == 404:
@@ -107,6 +119,7 @@ class SpeechesSpider(scrapy.Spider):
                     l.add_value('type', "info-time")
                     l.add_value('orderId', index)
                     l.add_value('data', paragraphAsText) 
+                    l = self.getOriginalRequestUrl(response, l)
                     yield l.load_item()
                     index += 1
                     continue
@@ -128,7 +141,9 @@ class SpeechesSpider(scrapy.Spider):
                         l.add_value('type', "speech")
                         l.add_value('orderId', index) 
                         if currentSpeaker is not None:
-                            l.add_value('speaker', currentSpeaker)                                    
+                            l.add_value('speaker', currentSpeaker)  
+                    
+                    l = self.getOriginalRequestUrl(response, l)                                  
                     yield l.load_item()                    
                     index += 1  
         except Exception as e:

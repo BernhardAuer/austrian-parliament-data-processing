@@ -179,12 +179,14 @@ class SpeechItem(scrapy.Item):
      subType = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())     
      data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
      speaker = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
+     requestUrl = scrapy.Field(output_processor = TakeFirst()) 
      pass
 
 class SpeechInfoItem(scrapy.Item):
      orderId = scrapy.Field(output_processor = TakeFirst()) 
      type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
      data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     requestUrl = scrapy.Field(output_processor = TakeFirst()) 
      pass
 
 class ApplauseItem(scrapy.Item):
@@ -194,6 +196,7 @@ class ApplauseItem(scrapy.Item):
      orderId = scrapy.Field(output_processor = TakeFirst()) 
      type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
      data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     requestUrl = scrapy.Field(output_processor = TakeFirst()) 
      pass
 
 class InputCleaner(scrapy.Item):
