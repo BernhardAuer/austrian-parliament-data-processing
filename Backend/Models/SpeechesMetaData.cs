@@ -31,6 +31,6 @@ public class SpeechesMetaData
     
     public int? speechNrInDebate { get; set; }
     
-    public Speech[]? speeches { get; set; }
+    public Speech[]? speech { get; set; }
     
 }

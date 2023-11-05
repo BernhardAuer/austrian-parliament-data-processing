@@ -4,6 +4,7 @@ using WebApi.Enums;
 
 namespace WebApi.Models;
 
+[BsonIgnoreExtraElements]
 public class Speech
 {
     public SpeechObjectTypeEnum type { get; set; } // todo: does current C# version support string enums?

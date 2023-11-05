@@ -15,6 +15,7 @@
 import ApiClient from "../ApiClient";
 import DistributionOfSpeakingTimeDto from '../model/DistributionOfSpeakingTimeDto';
 import LegislatureMeetingsListDto from '../model/LegislatureMeetingsListDto';
+import SpeechDto from '../model/SpeechDto';
 import SpeechDurationDto from '../model/SpeechDurationDto';
 import SpeechesDto from '../model/SpeechesDto';
 import TopicSearchResultDto from '../model/TopicSearchResultDto';
@@ -123,6 +124,58 @@ export default class SpeechesMetaDataApi {
      */
     apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet() {
       return this.apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGetWithHttpInfo()
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
+
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} [legislature] 
+     * @param {Number} [meetingNumber] 
+     * @param {Number} [speechNrInDebate] 
+     * @param {String} [topic] 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/SpeechDto>} and HTTP response
+     */
+    apiSpeechesMetaDataGetPureSpeechesGetWithHttpInfo(opts) {
+      opts = opts || {};
+      let postBody = null;
+
+      let pathParams = {
+      };
+      let queryParams = {
+        'legislature': opts['legislature'],
+        'meetingNumber': opts['meetingNumber'],
+        'speechNrInDebate': opts['speechNrInDebate'],
+        'topic': opts['topic']
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = [];
+      let accepts = ['text/plain', 'application/json', 'text/json'];
+      let returnType = [SpeechDto];
+      return this.apiClient.callApi(
+        '/api/SpeechesMetaData/getPureSpeeches', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType, null
+      );
+    }
+
+    /**
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.legislature 
+     * @param {Number} opts.meetingNumber 
+     * @param {Number} opts.speechNrInDebate 
+     * @param {String} opts.topic 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/SpeechDto>}
+     */
+    apiSpeechesMetaDataGetPureSpeechesGet(opts) {
+      return this.apiSpeechesMetaDataGetPureSpeechesGetWithHttpInfo(opts)
         .then(function(response_and_data) {
           return response_and_data.data;
         });

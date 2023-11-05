@@ -55,7 +55,7 @@ public class SpeechesMetaDataService
                                                      && x.speechNrInDebate == speechNrInDebate);
         
         var result = await query.Limit(1)
-            .Project(x => x.speeches)
+            .Project(x => x.speech)
             .FirstOrDefaultAsync();
         return result.ToList();
     }
