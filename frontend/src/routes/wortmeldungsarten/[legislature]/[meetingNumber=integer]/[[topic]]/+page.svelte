@@ -16,7 +16,7 @@
 		shownFilterOptions = new FilterOptions(structuredClone(event.detail));
 		chartDataPromise = service.fetchSpeechTypes(shownFilterOptions);
 
-		const topicEncoded = shownFilterOptions?.topic?.topic?.replace('/', '%2F') ?? '';
+		const topicEncoded = encodeURIComponent(shownFilterOptions?.topic?.topic) ?? '';
 		// shallow routing is not possible right now
 		// https://github.com/sveltejs/kit/issues/2673
 		history.replaceState(history.state, document.title, `/wortmeldungsarten/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}/${topicEncoded}?fraktion=${shownFilterOptions.politicalParties}`)

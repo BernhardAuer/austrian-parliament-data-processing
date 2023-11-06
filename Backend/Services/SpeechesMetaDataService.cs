@@ -40,7 +40,8 @@ public class SpeechesMetaDataService
                 lengthOfSpeechInSec = x.lengthOfSpeechInSec,
                 topNr = x.topNr,
                 topic = x.topic,
-                politicalPartie = x.politicalPartie
+                politicalPartie = x.politicalPartie,
+                speechNrInDebate = x.speechNrInDebate
             })
             .ToListAsync();
         return result;

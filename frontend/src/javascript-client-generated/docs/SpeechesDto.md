@@ -11,5 +11,6 @@ Name | Type | Description | Notes
 **topic** | **String** |  | [optional] 
 **politicalPartie** | **String** |  | [optional] 
 **speech** | **String** |  | [optional] 
+**speechNrInDebate** | **Number** |  | [optional] 
 
 

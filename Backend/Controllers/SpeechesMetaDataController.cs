@@ -34,8 +34,8 @@ namespace WebApi.Controllers
                     PoliticalPartie = x.politicalPartie,
                     TypeOfSpeech = _austrianParliamentAbbreviationMappings.GetLongNameSpeechType(x.typeOfSpeech),
                     LengthOfSpeechInSec = x.lengthOfSpeechInSec,
-                    Speech = "" // todo: convert this to speech summary
-                    
+                    Speech = "", // todo: convert this to speech summary
+                    SpeechNrInDebate = x.speechNrInDebate ?? 0
                 })
                 .ToList();
             return result;

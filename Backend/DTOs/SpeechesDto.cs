@@ -9,5 +9,7 @@ public class SpeechesDto
     public string Topic { get; set; }
     public string PoliticalPartie { get; set; }
     public string Speech { get; set; }
+    
+    public int SpeechNrInDebate { get; set; }
 
 }

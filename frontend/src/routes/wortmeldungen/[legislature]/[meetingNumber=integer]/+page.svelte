@@ -10,6 +10,6 @@
 
 <div class="py-4 space-y-2">
 	{#each data.topics as topic, i}
-		<TopicAccordion {topic} topNr={data.speechesByTopic[topic][0]?.topNr} speeches={data.speechesByTopic[topic]} checked={i==0} />	
+		<TopicAccordion legislature={data.legislature} meetingNr={data.meetingNr} topic={topic} topNr={data.speechesByTopic[topic][0]?.topNr} speeches={data.speechesByTopic[topic]} checked={i==0} />	
 	{/each}
 </div>

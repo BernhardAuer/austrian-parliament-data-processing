@@ -68,6 +68,9 @@ class SpeechesDto {
             if (data.hasOwnProperty('speech')) {
                 obj['speech'] = ApiClient.convertToType(data['speech'], 'String');
             }
+            if (data.hasOwnProperty('speechNrInDebate')) {
+                obj['speechNrInDebate'] = ApiClient.convertToType(data['speechNrInDebate'], 'Number');
+            }
         }
         return obj;
     }
@@ -145,6 +148,11 @@ SpeechesDto.prototype['politicalPartie'] = undefined;
  * @member {String} speech
  */
 SpeechesDto.prototype['speech'] = undefined;
+
+/**
+ * @member {Number} speechNrInDebate
+ */
+SpeechesDto.prototype['speechNrInDebate'] = undefined;
 
 
 

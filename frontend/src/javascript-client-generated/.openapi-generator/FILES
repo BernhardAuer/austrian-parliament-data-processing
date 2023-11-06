@@ -31,6 +31,3 @@ src/model/SpeechObjectTypeEnum.js
 src/model/SpeechesDto.js
 src/model/TopicSearchResultDto.js
 src/model/TypeOfSpeechCountDto.js
-test/api/SpeechesApi.spec.js
-test/model/SpeechDto.spec.js
-test/model/SpeechObjectTypeEnum.spec.js

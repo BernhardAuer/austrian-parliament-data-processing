@@ -22,6 +22,8 @@ export async function load({ params }) {
       
     return {
         topics: topics,
-        speechesByTopic: speechesByTopic
+        speechesByTopic: speechesByTopic,
+        legislature: params.legislature,
+        meetingNr: params.meetingNumber
     };
 }
