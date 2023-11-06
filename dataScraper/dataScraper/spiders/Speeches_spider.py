@@ -126,7 +126,7 @@ class SpeechesSpider(scrapy.Spider):
                 
                 result = re.split(r"[()]", pureSpeech)
                 for j, item in enumerate(result):   
-                    if item == "" or item is None:
+                    if item is None or item.strip() == "":
                         continue                
                     
                     if j % 2:                         
