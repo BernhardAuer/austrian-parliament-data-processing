@@ -54,6 +54,7 @@ class InsertToSpeechCollectionPipeline:
     def open_spider(self, spider):
         self.client = pymongo.MongoClient(self.mongodb_uri)
         self.db = self.client[self.mongodb_db]
+        self.db["speechesMetaData"].update_many({}, {"$unset": {"speech": []}})
 
     def close_spider(self, spider):
         self.client.close()
