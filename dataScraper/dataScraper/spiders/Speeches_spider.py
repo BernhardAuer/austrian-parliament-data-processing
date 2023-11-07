@@ -54,7 +54,7 @@ class SpeechesSpider(scrapy.Spider):
         sanitizedInput.add_value('data', value)
         item = sanitizedInput.load_item() 
         
-        return item["data"]
+        return item.get("data", "")
     
     def parseInfoObject(self, value, paragraph):
         value = self.cleanInput(value)
@@ -105,11 +105,18 @@ class SpeechesSpider(scrapy.Spider):
             pureSpeech = None
             index = 0
             for paragraph in response.css("p"):
-                paragraphAsText = " ".join(paragraph.css("*::text").getall())
-                extractSpeakerRegex = re.search("^(Abgeordneter|Präsident)*\s*(.*)\s*(\(.+\))*:", paragraphAsText)
-                if (extractSpeakerRegex is not None):
-                    currentSpeaker = extractSpeakerRegex.group(2)
-                    pureSpeech = paragraphAsText[extractSpeakerRegex.end():]
+                potentialSpeaker = paragraph.css("b a *::text").get() # first entry should be the speaker...
+                
+                paragraphAsText = "".join(paragraph.css("*::text").getall())  # todo: check if parsing results are better with or without whitespace
+                paragraphAsText = self.cleanInput(paragraphAsText)              
+                extractSpeakerRegex = re.search("^(Abgeordneter|Präsident)*\s*([^:]*)\s*(\(.+\))*:", paragraphAsText)  
+                print(paragraphAsText)              
+                if potentialSpeaker is not None:
+                    currentSpeaker = potentialSpeaker
+                    if (extractSpeakerRegex is not None):
+                        pureSpeech = paragraphAsText[extractSpeakerRegex.end():]
+                    else:
+                        pureSpeech = paragraphAsText
                 else:
                     pureSpeech = paragraphAsText
                 
@@ -136,7 +143,7 @@ class SpeechesSpider(scrapy.Spider):
                         l.add_value('orderId', index)
                         # l.add_value('applause', item)
                     else:
-                        l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)                           
+                        l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)               
                         l.add_value('data', item) # this is original data for "info" objects.                                
                         l.add_value('type', "speech")
                         l.add_value('orderId', index) 
