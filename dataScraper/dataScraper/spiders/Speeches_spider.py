@@ -109,11 +109,18 @@ class SpeechesSpider(scrapy.Spider):
                 
                 paragraphAsText = "".join(paragraph.css("*::text").getall())  # todo: check if parsing results are better with or without whitespace
                 paragraphAsText = self.cleanInput(paragraphAsText)              
-                extractSpeakerRegex = re.search("^(Abgeordneter|Präsident)*\s*([^:]*)\s*(\(.+\))*:", paragraphAsText)  
-                print(paragraphAsText)              
+                extractSpeakerRegex = re.search("^[^:]*:", paragraphAsText)         
                 if potentialSpeaker is not None:
+                    potentialSpeaker = self.cleanInput(potentialSpeaker)
                     currentSpeaker = potentialSpeaker
                     if (extractSpeakerRegex is not None):
+                        fullNameWithTitles = paragraphAsText[:extractSpeakerRegex.end() - 1] # -1 because of the ":" at the end of the string ...
+                        splitNameList = fullNameWithTitles.split(potentialSpeaker)
+                        titlesBeforeName = splitNameList[0]
+                        if (len(splitNameList) > 1):
+                            titlesAfterName = fullNameWithTitles.split(potentialSpeaker)[1]
+                        # print("title1:" + titlesBeforeName)
+                        # print("title2:" + titlesAfterName)
                         pureSpeech = paragraphAsText[extractSpeakerRegex.end():]
                     else:
                         pureSpeech = paragraphAsText
