@@ -1,4 +1,4 @@
-
+import copy
 import re
 
 class Wordtype:
@@ -12,7 +12,7 @@ class StateMachineAction:
     DetectEntityName = "DetectEntityName"
     ForceDetectEntityName = "ForceDetectEntityName"
     DetectActivityImplicit = "DetectActivityImplicit"
-    DetectEnding = "DetectActivityImplicit"
+    DetectEnding = "DetectEnding"
     
 class Entity:
     def __init__(self, type, name):
@@ -47,6 +47,7 @@ class SpeechInfoParserStateMachine(object):
         self.Speech = None
         self.PersonNameWithDash = False
         self.InfoItem = InfoItem()
+        self.ResultList = []
     
     def isWordOfType(self, type, word):        
         connectingWordsList = ["und", ",", "sowie"]
@@ -85,7 +86,7 @@ class SpeechInfoParserStateMachine(object):
     def removeFillerWords(self, input):
         fillerWords = ["bei", "den", "der", "die", "das", "von", "des", "dem"]
         for fillerWord in fillerWords:
-            input = input.replace(fillerWord, "")
+            input = re.sub(r'\s*\b' + fillerWord + r'\b\s*', " ", input)
         return input
     
     def getRestrictionOfEntityName(self, word):
@@ -129,7 +130,7 @@ class SpeechInfoParserStateMachine(object):
                       
             case StateMachineAction.DetectEntityName:
                 if word == "–": # attention: gedankenstrich
-                    nextState = "EndeImGelände"
+                    nextState = StateMachineAction.DetectEnding
                     return nextState
             
                 if word == ":":
@@ -192,7 +193,10 @@ class SpeechInfoParserStateMachine(object):
                 else:
                     nextState = StateMachineAction.DetectEnding
                 
-            case "ParseSpeech":                 
+            case "ParseSpeech":  
+                if word == "–": # attention: gedankenstrich
+                    nextState = StateMachineAction.DetectEnding
+                    return nextState               
                 print(word )
                 quote = self.InfoItem.quote
                 if quote == "" or re.match("[^\w\s]", word):
@@ -201,25 +205,30 @@ class SpeechInfoParserStateMachine(object):
                     quote += " " + word # whitespace before word
                     
                 self.InfoItem.quote = quote
-                if word == "–": # attention: gedankenstrich
-                    nextState = "EndeImGelände"
-                    return nextState
+                
                 nextState = "ParseSpeech"
                 
                 
-            # case StateMachineAction.DetectEnding:            
-            #     if word == "." or word == "–":
-            #         nextState = "EndeImGelände"
+            case StateMachineAction.DetectEnding:            
+                self.ResultList.append(copy.deepcopy(self.InfoItem))
+                print(self.InfoItem)
+                self.InfoItem = InfoItem()
+                self.currentState =  StateMachineAction.DetectActivity
+                # todo: maybe just re-instanciate this StateMachineObject? so no wrong states could be persisted
+                self.PersonOrPartsOfPartyAsEntityFollowing = False
+                self.PersonNameSplitByWhitespace = False
+                self.Speech = None
+                self.PersonNameWithDash = False
                     
             case _:
-                print("nix da!!!!!!!!")
-                nextState = "Finished!!"
+                print("nix da error!!!!!!!!")
+                nextState = "error!!"
         return nextState
     
     def doParsing(self, input):
         # 1 todo clean and 3) füllwörter entfernen
-        inputWithoutFillerWords = self.removeFillerWords(input)
-        print(inputWithoutFillerWords)
+        inputWithoutFillerWords = self.removeFillerWords(input) # todo: do in loop for text accuracy
+        # print(inputWithoutFillerWords)
         listOfWordsAndPunctuation = re.findall(r"\w+|[^\w\s]", inputWithoutFillerWords, re.UNICODE) # see https://stackoverflow.com/questions/367155/splitting-a-string-into-words-and-punctuation
         print(*listOfWordsAndPunctuation, sep='"\n"')     
         for word in listOfWordsAndPunctuation:
@@ -227,26 +236,30 @@ class SpeechInfoParserStateMachine(object):
             while nextState is None:
                 nextState = self.doMatching(self.currentState, word)
             self.currentState = nextState
+        # add last item? duplicate edge case?
+        self.ResultList.append(copy.deepcopy(self.InfoItem))
             
             
-        print("geparste Aktivität:")
-        print(self.activityList)
-        print("geparste entitäten:")
-        print(self.entityList)
-        print("geparste rede:")
-        print(self.Speech)
+        # print("geparste Aktivität:")
+        # print(self.activityList)
+        # print("geparste entitäten:")
+        # print(self.entityList)
+        # print("geparste rede:")
+        # print(self.Speech)
         print("-----------------")
-        print(self.InfoItem)
+        for result in self.ResultList:
+            print("\nITEM:")
+            print(result)
                  
        
        
        
        
 test = SpeechInfoParserStateMachine()
-#test.doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker. – Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
+test.doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker. – Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
 #test.doParsing("Beifall bei den Grünen sowie der Abg. Cornelia Julia Ecker.")
 #test.doParsing("Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
 #test.doParsing("Abg. Meinl-Reisinger: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
-test.doParsing("Zwischenrufe der Abgeordneten Heinisch-Hosek und Kucharowits.")
-
-
+#test.doParsing("Zwischenrufe der Abgeordneten Heinisch-Hosek und Kucharowits.")
+# test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
+# test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Weitere Rufe bei der ÖVP: Streng!")
