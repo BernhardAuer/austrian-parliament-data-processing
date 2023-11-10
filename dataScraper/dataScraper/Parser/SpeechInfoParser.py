@@ -22,6 +22,8 @@ class SpeechInfoParserStateMachine(object):
         self.entityList = []
         self.PersonOrPartsOfPartyAsEntityFollowing = False
         self.PersonNameSplitByWhitespace = False
+        self.Speech = None
+        self.PersonNameWithDash = False
     
     def isWordOfType(self, type, word):        
         connectingWordsList = ["und", ",", "sowie"]
@@ -89,7 +91,6 @@ class SpeechInfoParserStateMachine(object):
                     nextState =  StateMachineAction.DetectActivity
                     self.PersonNameSplitByWhitespace = False # ensure that flag is reset, before parsing any further entities
                 else:
-                    # self.PersonOrPartsOfPartyAsEntityFollowing = False # ensure that flag is reset, before parsing any further words
                     self.currentState =  StateMachineAction.DetectRestrictionOfEntity    
                                         
             case StateMachineAction.DetectRestrictionOfEntity:  
@@ -101,23 +102,18 @@ class SpeechInfoParserStateMachine(object):
                     nextState =  StateMachineAction.DetectEntityName
                 else:
                     self.currentState =  StateMachineAction.DetectEntityName
-                                     
-            # case StateMachineAction.ForceDetectEntityName: 
-            #     # must be either parts of a known party or a person (name unknown...)           
-            #     entity = self.getEntity(word)
-            #     print(word + ": " + str(entity))
-            #     if entity is not None:  
-            #         entity = "partsOf_" + str(entity)                   
-            #         self.entityList.append(entity)
-            #         nextState =  StateMachineAction.DetectConnectingWord
-            #     else:
-            #         self.currentState =  StateMachineAction.DetectActivityImplicit                 
-                         
+                      
             case StateMachineAction.DetectEntityName:
                 if word == "–": # attention: gedankenstrich
                     nextState = "EndeImGelände"
                     return nextState
-                            
+            
+                if word == ":":
+                    self.activityList.append("speech")
+                    self.Speech = ""
+                    nextState = "ParseSpeech"
+                    return nextState
+                    
                 entity = self.getEntity(word)
                 print(word + ": " + str(entity))
                 if self.PersonOrPartsOfPartyAsEntityFollowing and entity is not None:
@@ -127,8 +123,19 @@ class SpeechInfoParserStateMachine(object):
                     # -> person ATTENTION: there is this edge case: Abg. Brandstätter -> so we need to ignore the dot and parse person name in next iteration
                     nextState =  StateMachineAction.DetectEntityName
                 elif self.PersonOrPartsOfPartyAsEntityFollowing and entity is None and self.PersonNameSplitByWhitespace:
-                    self.entityList[-1] = self.entityList[-1] + " " + str(word) # -> person surname
-                    nextState =  StateMachineAction.DetectConnectingWord
+                    if word == "-": # doppelname, zb, meinl-reisinger 
+                        self.entityList[-1] = self.entityList[-1] + str(word) # -> person surname
+                        self.PersonNameSplitByWhitespace = False
+                        self.PersonNameWithDash = True
+                    else:
+                        self.entityList[-1] = self.entityList[-1] + " " + str(word) # -> person surname
+                    nextState =  StateMachineAction.DetectConnectingWord                
+                elif self.PersonOrPartsOfPartyAsEntityFollowing and entity is None and self.PersonNameWithDash:
+                    if word == "-": # doppelname, zb, meinl-reisinger                         
+                        self.PersonNameWithDash = True
+                    self.PersonNameWithDash = False       
+                    self.entityList[-1] = self.entityList[-1] + str(word) # -> person name with dash                                  
+                    nextState =  StateMachineAction.DetectConnectingWord   
                 elif self.PersonOrPartsOfPartyAsEntityFollowing and entity is None:
                     self.entityList.append("person_" + str(word)) # -> person
                     self.PersonNameSplitByWhitespace = True
@@ -137,8 +144,26 @@ class SpeechInfoParserStateMachine(object):
                     self.entityList.append(entity) # -> whole party
                     nextState =  StateMachineAction.DetectConnectingWord
                 else:
-                    self.currentState =  StateMachineAction.DetectActivityImplicit      
-                               
+                    self.currentState =  StateMachineAction.DetectActivityImplicit # no entity detected     
+                
+            case StateMachineAction.DetectActivityImplicit: 
+                if word == ":":
+                    self.activityList.append("speech")
+                    self.Speech = ""
+                    nextState = "ParseSpeech"
+                
+            case "ParseSpeech":                 
+                print(word )
+                if self.Speech == "" or re.match("[^\w\s]", word):
+                    self.Speech += word # punctuation or first word of sentence ...
+                else:
+                    self.Speech += " " + word # whitespace before word
+                if word == "–": # attention: gedankenstrich
+                    nextState = "EndeImGelände"
+                    return nextState
+                nextState = "ParseSpeech"
+                
+                
             # case StateMachineAction.DetectEnding:            
             #     if word == "." or word == "–":
             #         nextState = "EndeImGelände"
@@ -146,7 +171,6 @@ class SpeechInfoParserStateMachine(object):
             case _:
                 print("nix da!!!!!!!!")
                 nextState = "Finished!!"
-        #self.currentState = self.nextState
         return nextState
     
     def doParsing(self, input):
@@ -166,15 +190,17 @@ class SpeechInfoParserStateMachine(object):
         print(self.activityList)
         print("geparste entitäten:")
         print(self.entityList)
+        print("geparste rede:")
+        print(self.Speech)
                  
        
        
        
        
 test = SpeechInfoParserStateMachine()
-# test.doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker. – Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
+test.doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker. – Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
 # test.doParsing("Beifall bei den Grünen sowie der Abg. Cornelia Julia Ecker.")
 # test.doParsing("Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
-test.doParsing("Abg. Cornelia Julia Ecker: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
+# test.doParsing("Abg. Meinl-Reisinger: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
 
 
