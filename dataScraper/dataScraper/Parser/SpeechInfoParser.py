@@ -95,7 +95,7 @@ class SpeechInfoParserStateMachine(object):
             "abgeordneten"
         ]
     
-    def doMatching(self, state, word, precedingWord, isLastWord):
+    def doMatching(self, state, word, precedingWord, isLastWord, fullWordsList, index):
         print("***currentState:" + str(self.currentState) + " CurrentWord: " + word + " isLastWord?: " + str(isLastWord))
           
         nextState = None
@@ -130,6 +130,18 @@ class SpeechInfoParserStateMachine(object):
                       
             case StateMachineAction.DetectEntityName:
                 if word == "–": # attention: gedankenstrich
+                    print("gedankenstrich...")
+                    # edge case: description before speech e.g.:Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!
+                    remainingWords = fullWordsList[index + 1:]
+                    print(remainingWords)
+                    for j,w in enumerate(remainingWords):
+                        if w == "–":
+                            if remainingWords[j + 1] == ":": 
+                                # parse description before speech
+                                nextState = "ParseBehaviourOfSpeaker"
+                                return nextState
+                            else:
+                                break 
                     self.currentState = StateMachineAction.DetectEnding
                     return
             
@@ -190,12 +202,11 @@ class SpeechInfoParserStateMachine(object):
                     nextState = "ParseSpeech"
                 else:
                     self.currentState = StateMachineAction.DetectEnding
-                
-            case "ParseSpeech":  
+                   
+            case "ParseSpeech":                             
                 if word == "–": # attention: gedankenstrich
                     self.currentState = StateMachineAction.DetectEnding
-                    return               
-                print(word )
+                    return 
                 quote = self.InfoItem.quote
                 if quote == "" or re.match("[^\w\s]", word):
                     quote += word # punctuation or first word of sentence ...
@@ -206,7 +217,18 @@ class SpeechInfoParserStateMachine(object):
                 
                 nextState = "ParseSpeech"
                 
-                
+                                
+            case "ParseBehaviourOfSpeaker":
+                if word == "–" and fullWordsList[index + 1] == ":":
+                    print("next: ParseSpeech")
+                    nextState = StateMachineAction.DetectActivityImplicit
+                    return nextState
+                if self.InfoItem.description == "":
+                    self.InfoItem.description = word
+                else: 
+                    self.InfoItem.description += " " + word
+                nextState="ParseBehaviourOfSpeaker"
+                        
             case StateMachineAction.DetectEnding:  
                 print(word)
                                 
@@ -257,12 +279,12 @@ class SpeechInfoParserStateMachine(object):
             
             self.addWordToRawSourceText(word) 
             if self.isFillerWord(word):
-                print("skip, weil fillerWord!" + word)
+                print("skip, weil fillerWord!" + word) # todo: fix this.... " Abg. Leichtfried: Also die Rede war jetzt in Ordnung!"
                 continue 
             precedingWord = listOfWordsAndPunctuation[index - 1]
             nextState = None
             while nextState is None:
-                nextState = self.doMatching(self.currentState, word, precedingWord, isLastWord)
+                nextState = self.doMatching(self.currentState, word, precedingWord, isLastWord, listOfWordsAndPunctuation, index)
             self.currentState = nextState    
                 
         # add last item? duplicate edge case?
@@ -299,4 +321,5 @@ test = SpeechInfoParserStateMachine()
 # test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
 # test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Weitere Rufe bei der ÖVP: Streng!")
 # test.doParsing("in die rechte Ecke zeigend")
-test.doParsing("Allgemeiner Beifall. –  hallo, das ist ein test –  und noch ein test")
+# test.doParsing("Allgemeiner Beifall. –  hallo, das ist ein test –  und noch ein test")
+test.doParsing("Abg. Leichtfried – in Richtung des das Rednerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!")
