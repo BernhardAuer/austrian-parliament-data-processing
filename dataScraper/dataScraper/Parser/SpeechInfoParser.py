@@ -190,7 +190,7 @@ class SpeechInfoParserStateMachine(object):
                     self.Speech = ""
                     nextState = "ParseSpeech"
                 else:
-                    nextState = StateMachineAction.DetectEnding
+                    self.currentState = StateMachineAction.DetectEnding
                 
             case "ParseSpeech":  
                 if word == "–": # attention: gedankenstrich
@@ -290,6 +290,7 @@ test = SpeechInfoParserStateMachine()
 # test.doParsing("Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
 # test.doParsing("Abg. Meinl-Reisinger: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
 #test.doParsing("Zwischenrufe der Abgeordneten Heinisch-Hosek und Kucharowits.")
-test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
+# test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
 # test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Weitere Rufe bei der ÖVP: Streng!")
 # test.doParsing("in die rechte Ecke zeigend")
+# test.doParsing("Allgemeiner Beifall. –  hallo, das ist ein test –  und noch ein test")
