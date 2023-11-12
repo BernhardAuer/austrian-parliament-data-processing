@@ -83,11 +83,9 @@ class SpeechInfoParserStateMachine(object):
         }
         return entityDict.get(word.lower()) 
     
-    def removeFillerWords(self, input):
-        fillerWords = ["bei", "den", "der", "die", "das", "von", "des", "dem"]
-        for fillerWord in fillerWords:
-            input = re.sub(r'\s*\b' + fillerWord + r'\b\s*', " ", input)
-        return input
+    def isFillerWord(self, word):
+        fillerWords = ["bei", "den", "der", "die", "das", "von", "des", "dem"]        
+        return word in fillerWords
     
     def getRestrictionOfEntityName(self, word):
         keywordDict = [
@@ -98,6 +96,7 @@ class SpeechInfoParserStateMachine(object):
     
     def doMatching(self, state, word):
         print("currentState:" + str(self.currentState))
+          
         nextState = None
         match state:
             case StateMachineAction.DetectActivity:                    
@@ -226,16 +225,21 @@ class SpeechInfoParserStateMachine(object):
         return nextState
     
     def doParsing(self, input):
-        # 1 todo clean and 3) füllwörter entfernen
-        inputWithoutFillerWords = self.removeFillerWords(input) # todo: do in loop for text accuracy
+        # 1 todo clean 
         # print(inputWithoutFillerWords)
-        listOfWordsAndPunctuation = re.findall(r"\w+|[^\w\s]", inputWithoutFillerWords, re.UNICODE) # see https://stackoverflow.com/questions/367155/splitting-a-string-into-words-and-punctuation
+        listOfWordsAndPunctuation = re.findall(r"\w+|[^\w\s]", input, re.UNICODE) # see https://stackoverflow.com/questions/367155/splitting-a-string-into-words-and-punctuation
         print(*listOfWordsAndPunctuation, sep='"\n"')     
         for word in listOfWordsAndPunctuation:
+            if self.isFillerWord(word):
+                print("skip, weil fillerWord!" + word)
+                self.addWordToRawSourceText(word) 
+                continue 
             nextState = None
             while nextState is None:
                 nextState = self.doMatching(self.currentState, word)
-            self.currentState = nextState
+            self.currentState = nextState    
+            self.addWordToRawSourceText(word) 
+                
         # add last item? duplicate edge case?
         self.ResultList.append(copy.deepcopy(self.InfoItem))
             
@@ -250,6 +254,12 @@ class SpeechInfoParserStateMachine(object):
         for result in self.ResultList:
             print("\nITEM:")
             print(result)
+
+    def addWordToRawSourceText(self, word):
+        if self.InfoItem.rawSourceText == "" or re.match("[^\w\s]", word):
+            self.InfoItem.rawSourceText += word
+        else:
+            self.InfoItem.rawSourceText += " " + word
                  
        
        
