@@ -72,6 +72,7 @@ class SpeechInfoParserStateMachine(object):
             "heiterkeit": "cheerfulness"
         }
         return activityDict.get(word.lower()) 
+        
     def getEntity(self, word):
         entityDict = {
             "övp": "övp",
@@ -79,7 +80,8 @@ class SpeechInfoParserStateMachine(object):
             "spö": "spö",
             "grünen": "grüne",
             "grüne": "grüne",
-            "neos": "neos"
+            "neos": "neos",
+            "allgemeiner": "everyParty" # todo: make this dynamic...
         }
         return entityDict.get(word.lower()) 
     
@@ -142,7 +144,6 @@ class SpeechInfoParserStateMachine(object):
                 entity = self.getEntity(word)
                 print(word + ": " + str(entity))
                 if self.PersonOrPartsOfPartyAsEntityFollowing and entity is not None:
-                    self.entityList.append("partsOf_" + str(entity)) # -> part of party
                     entityInstance = Entity("somePersonsOfPoliticalParty", entity)
                     self.InfoItem.entityList.append(entityInstance)
                     nextState =  StateMachineAction.DetectConnectingWord
@@ -175,9 +176,12 @@ class SpeechInfoParserStateMachine(object):
                     self.PersonNameSplitByWhitespace = True
                     nextState =  StateMachineAction.DetectConnectingWord
                 elif entity is not None:     
-                    entityInstance = Entity("politicalParty", entity)
-                    self.InfoItem.entityList.append(entityInstance)               
-                    self.entityList.append(entity) # -> whole party
+                    if entity == "everyParty":
+                        for partyName in ["övp", "spö", "fpö", "grüne", "neos"]: # todo make this dynamically
+                            self.InfoItem.entityList.append(Entity("politicalParty", partyName)) 
+                    else:
+                        entityInstance = Entity("politicalParty", entity)
+                        self.InfoItem.entityList.append(entityInstance) 
                     nextState =  StateMachineAction.DetectConnectingWord
                 else:
                     self.currentState =  StateMachineAction.DetectActivityImplicit # no entity detected     
@@ -293,4 +297,4 @@ test = SpeechInfoParserStateMachine()
 # test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
 # test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Weitere Rufe bei der ÖVP: Streng!")
 # test.doParsing("in die rechte Ecke zeigend")
-# test.doParsing("Allgemeiner Beifall. –  hallo, das ist ein test –  und noch ein test")
+test.doParsing("Allgemeiner Beifall. –  hallo, das ist ein test –  und noch ein test")
