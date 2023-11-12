@@ -80,8 +80,7 @@ class SpeechInfoParserStateMachine(object):
             "spö": "spö",
             "grünen": "grüne",
             "grüne": "grüne",
-            "neos": "neos",
-            "allgemeiner": "everyParty" # todo: make this dynamic...
+            "neos": "neos"
         }
         return entityDict.get(word.lower()) 
     
@@ -176,12 +175,8 @@ class SpeechInfoParserStateMachine(object):
                     self.PersonNameSplitByWhitespace = True
                     nextState =  StateMachineAction.DetectConnectingWord
                 elif entity is not None:     
-                    if entity == "everyParty":
-                        for partyName in ["övp", "spö", "fpö", "grüne", "neos"]: # todo make this dynamically
-                            self.InfoItem.entityList.append(Entity("politicalParty", partyName)) 
-                    else:
-                        entityInstance = Entity("politicalParty", entity)
-                        self.InfoItem.entityList.append(entityInstance) 
+                    entityInstance = Entity("politicalParty", entity)
+                    self.InfoItem.entityList.append(entityInstance) 
                     nextState =  StateMachineAction.DetectConnectingWord
                 else:
                     self.currentState =  StateMachineAction.DetectActivityImplicit # no entity detected     
@@ -214,10 +209,17 @@ class SpeechInfoParserStateMachine(object):
                 
             case StateMachineAction.DetectEnding:  
                 print(word)
+                                
                 endingWords = ["–"] 
                 # detect ending
                 if isLastWord or word in endingWords:
                     print("ending of current Item")
+                    
+                    # detect edge cases ...
+                    if "allgemeiner beifall" in self.InfoItem.rawSourceText.lower():
+                        print("applause by every party edge case ....")
+                        for partyName in ["övp", "spö", "fpö", "grüne", "neos"]: # todo make this dynamically
+                            self.InfoItem.entityList.append(Entity("politicalParty", partyName)) 
                 else:
                     nextState = StateMachineAction.DetectActivity
                     return nextState
