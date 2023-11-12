@@ -94,8 +94,8 @@ class SpeechInfoParserStateMachine(object):
             "abgeordneten"
         ]
     
-    def doMatching(self, state, word):
-        print("currentState:" + str(self.currentState))
+    def doMatching(self, state, word, precedingWord, isLastWord):
+        print("***currentState:" + str(self.currentState) + " CurrentWord: " + word + " isLastWord?: " + str(isLastWord))
           
         nextState = None
         match state:
@@ -129,8 +129,8 @@ class SpeechInfoParserStateMachine(object):
                       
             case StateMachineAction.DetectEntityName:
                 if word == "–": # attention: gedankenstrich
-                    nextState = StateMachineAction.DetectEnding
-                    return nextState
+                    self.currentState = StateMachineAction.DetectEnding
+                    return
             
                 if word == ":":
                     self.InfoItem.activityList.append("shouting")
@@ -194,8 +194,8 @@ class SpeechInfoParserStateMachine(object):
                 
             case "ParseSpeech":  
                 if word == "–": # attention: gedankenstrich
-                    nextState = StateMachineAction.DetectEnding
-                    return nextState               
+                    self.currentState = StateMachineAction.DetectEnding
+                    return               
                 print(word )
                 quote = self.InfoItem.quote
                 if quote == "" or re.match("[^\w\s]", word):
@@ -208,7 +208,20 @@ class SpeechInfoParserStateMachine(object):
                 nextState = "ParseSpeech"
                 
                 
-            case StateMachineAction.DetectEnding:            
+            case StateMachineAction.DetectEnding:  
+                print(word)
+                endingWords = ["–"] 
+                # detect ending
+                if isLastWord or word in endingWords:
+                    print("ending of current Item")
+                else:
+                    nextState = StateMachineAction.DetectActivity
+                    return nextState
+                
+                # ending detected 
+                if not self.InfoItem.activityList: # list is empty -> no valid activity could be parsed
+                    self.InfoItem.activityList.append("unknown")
+                
                 self.ResultList.append(copy.deepcopy(self.InfoItem))
                 print(self.InfoItem)
                 self.InfoItem = InfoItem()
@@ -218,6 +231,7 @@ class SpeechInfoParserStateMachine(object):
                 self.PersonNameSplitByWhitespace = False
                 self.Speech = None
                 self.PersonNameWithDash = False
+                nextState = StateMachineAction.DetectActivity # start from beginning?
                     
             case _:
                 print("nix da error!!!!!!!!")
@@ -228,17 +242,22 @@ class SpeechInfoParserStateMachine(object):
         # 1 todo clean 
         # print(inputWithoutFillerWords)
         listOfWordsAndPunctuation = re.findall(r"\w+|[^\w\s]", input, re.UNICODE) # see https://stackoverflow.com/questions/367155/splitting-a-string-into-words-and-punctuation
-        print(*listOfWordsAndPunctuation, sep='"\n"')     
-        for word in listOfWordsAndPunctuation:
+        print(*listOfWordsAndPunctuation, sep='"\n"')   
+        endingIndex = len(listOfWordsAndPunctuation) - 1  
+        for index, word in enumerate(listOfWordsAndPunctuation):
+            isLastWord = False
+            if index == endingIndex:
+                isLastWord = True
+            
+            self.addWordToRawSourceText(word) 
             if self.isFillerWord(word):
                 print("skip, weil fillerWord!" + word)
-                self.addWordToRawSourceText(word) 
                 continue 
+            precedingWord = listOfWordsAndPunctuation[index - 1]
             nextState = None
             while nextState is None:
-                nextState = self.doMatching(self.currentState, word)
+                nextState = self.doMatching(self.currentState, word, precedingWord, isLastWord)
             self.currentState = nextState    
-            self.addWordToRawSourceText(word) 
                 
         # add last item? duplicate edge case?
         self.ResultList.append(copy.deepcopy(self.InfoItem))
@@ -266,10 +285,11 @@ class SpeechInfoParserStateMachine(object):
        
        
 test = SpeechInfoParserStateMachine()
-test.doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker. – Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
-#test.doParsing("Beifall bei den Grünen sowie der Abg. Cornelia Julia Ecker.")
-#test.doParsing("Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
-#test.doParsing("Abg. Meinl-Reisinger: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
+# test.doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker. – Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
+# test.doParsing("Beifall bei den Grünen sowie der Abg. Cornelia Julia Ecker.")
+# test.doParsing("Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
+# test.doParsing("Abg. Meinl-Reisinger: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
 #test.doParsing("Zwischenrufe der Abgeordneten Heinisch-Hosek und Kucharowits.")
-# test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
+test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
 # test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Weitere Rufe bei der ÖVP: Streng!")
+# test.doParsing("in die rechte Ecke zeigend")
