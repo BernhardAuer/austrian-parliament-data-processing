@@ -20,6 +20,8 @@ class Entity:
         self.name = name    
     def __str__(self):
         return "Entity-type: " + self.type + "; name: " + self.name 
+    def asdict(self):
+        return {'type': self.type, 'name': self.name}
 
 class InfoItem:
     def __init__(self):
@@ -156,7 +158,7 @@ class SpeechInfoParserStateMachine(object):
                 print(word + ": " + str(entity))
                 if self.PersonOrPartsOfPartyAsEntityFollowing and entity is not None:
                     entityInstance = Entity("somePersonsOfPoliticalParty", entity)
-                    self.InfoItem.entityList.append(entityInstance)
+                    self.InfoItem.entityList.append(entityInstance.asdict())
                     nextState =  StateMachineAction.DetectConnectingWord
                 elif self.PersonOrPartsOfPartyAsEntityFollowing and entity is None and word == ".": # todo: better check if preceding word is abg
                     # -> person ATTENTION: there is this edge case: Abg. Brandstätter -> so we need to ignore the dot and parse person name in next iteration
@@ -183,12 +185,12 @@ class SpeechInfoParserStateMachine(object):
                 elif self.PersonOrPartsOfPartyAsEntityFollowing and entity is None:
                     self.entityList.append("person_" + str(word)) # -> person
                     entityInstance = Entity("person", word)
-                    self.InfoItem.entityList.append(entityInstance)
+                    self.InfoItem.entityList.append(entityInstance.asdict())
                     self.PersonNameSplitByWhitespace = True
                     nextState =  StateMachineAction.DetectConnectingWord
                 elif entity is not None:     
                     entityInstance = Entity("politicalParty", entity)
-                    self.InfoItem.entityList.append(entityInstance) 
+                    self.InfoItem.entityList.append(entityInstance.asdict()) 
                     nextState =  StateMachineAction.DetectConnectingWord
                 else:
                     self.currentState =  StateMachineAction.DetectActivityImplicit # no entity detected     
@@ -241,7 +243,7 @@ class SpeechInfoParserStateMachine(object):
                     if "allgemeiner beifall" in self.InfoItem.rawSourceText.lower():
                         print("applause by every party edge case ....")
                         for partyName in ["övp", "spö", "fpö", "grüne", "neos"]: # todo make this dynamically
-                            self.InfoItem.entityList.append(Entity("politicalParty", partyName)) 
+                            self.InfoItem.entityList.append(Entity("politicalParty", partyName).asdict()) 
                 else:
                     nextState = StateMachineAction.DetectActivity
                     return nextState
@@ -290,7 +292,7 @@ class SpeechInfoParserStateMachine(object):
         # add last item? duplicate edge case?
         self.ResultList.append(copy.deepcopy(self.InfoItem))
             
-            
+        return self.ResultList                
         # print("geparste Aktivität:")
         # print(self.activityList)
         # print("geparste entitäten:")
@@ -312,7 +314,7 @@ class SpeechInfoParserStateMachine(object):
        
        
        
-test = SpeechInfoParserStateMachine()
+# test = SpeechInfoParserStateMachine()
 # test.doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker. – Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
 # test.doParsing("Beifall bei den Grünen sowie der Abg. Cornelia Julia Ecker.")
 # test.doParsing("Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
@@ -322,4 +324,5 @@ test = SpeechInfoParserStateMachine()
 # test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Weitere Rufe bei der ÖVP: Streng!")
 # test.doParsing("in die rechte Ecke zeigend")
 # test.doParsing("Allgemeiner Beifall. –  hallo, das ist ein test –  und noch ein test")
-test.doParsing("Abg. Leichtfried – in Richtung des das Rednerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!")
+# test.doParsing("Abg. Leichtfried – in Richtung des das Rednerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!")
+# test.doParsing("Zwischenruf des Abg. Hafenecker. – Abg. Stögmüller – in Richtung Abg. Hafenecker –: Für die Bevölkerung ist die Polizei zuständig, Herr Kollege! – Präsident Sobotka gibt das Glockenzeichen.")

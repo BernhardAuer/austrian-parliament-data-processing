@@ -199,6 +199,23 @@ class ApplauseItem(scrapy.Item):
      requestUrl = scrapy.Field(output_processor = TakeFirst()) 
      pass
 
+
+class ParsedInfoItem(scrapy.Item):
+     activityList = scrapy.Field()
+     entityList = scrapy.Field()
+     description = scrapy.Field(output_processor = TakeFirst()) 
+     quote = scrapy.Field(output_processor = TakeFirst()) 
+     rawSourceText = scrapy.Field(output_processor = TakeFirst()) 
+     pass
+
+class GeneralInfoItem(scrapy.Item):
+     parsedInfoItems = scrapy.Field()
+     orderId = scrapy.Field(output_processor = TakeFirst()) 
+     type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     requestUrl = scrapy.Field(output_processor = TakeFirst())
+     pass
+
 class InputCleaner(scrapy.Item):
      data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
      pass

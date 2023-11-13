@@ -1,7 +1,8 @@
 import scrapy
 import json
 from pathlib import Path
-from items import SpeechItem, SpeechInfoItem, ApplauseItem, InputCleaner
+from Parser.SpeechInfoParser import SpeechInfoParserStateMachine
+from items import GeneralInfoItem, ParsedInfoItem, SpeechItem, SpeechInfoItem, ApplauseItem, InputCleaner
 from scrapy.loader import ItemLoader
 from jmespath import search
 from datetime import datetime
@@ -56,38 +57,21 @@ class SpeechesSpider(scrapy.Spider):
         
         return item.get("data", "")
     
-    def parseInfoObject(self, value, paragraph):
+    def parseInfoObject(self, value, paragraph, parentItemLoader):
         value = self.cleanInput(value)
-        applauseRegex = re.search("Allgemeiner Beifall.", value)
-        if applauseRegex:
-            l = ItemLoader(item=ApplauseItem(), selector=paragraph)
-            l.add_value('applauseByEntireParties', ["ÖVP", "SPÖ", "FPÖ", "GRÜNE", "NEOS"])
-            l.add_value('data', value)
-            l.add_value('type', "info")     
-            return l
-        applauseRegex = re.search("Beifall bei (?:der )?(.*).", value) # specific applause, needs further matching
-        if applauseRegex:            
-            partialApplause = re.split(" sowie bei Abgeordneten von | sowie bei Abgeordneten der | und bei Abgeordneten der | bei Abgeordneten von | bei Abgeordneten der ", applauseRegex.group(1))
-            l = ItemLoader(item=ApplauseItem(), selector=paragraph)
-            if len(partialApplause) > 1:
-                # this means that partial applause by at least one party/parlamentarian happened
-                partialApplauseByParties = re.split(", | und ", partialApplause[1])   
-                l.add_value('applauseByPartsOfParties', partialApplauseByParties)                                 
-            applauseByEntireParties = re.split(", | und ", partialApplause[0])
-                        
-            l.add_value('applauseByEntireParties', applauseByEntireParties)
-            l.add_value('data', value)
-            l.add_value('type', "info") 
-            return l
-        # applause not parsable ...
-        l = ItemLoader(item=SpeechInfoItem(), selector=paragraph)
-        if "Beifall" in value:
-            print("error while parsing unknown applause")
-            l.add_value('type', "unknown applause")    
+        parser = SpeechInfoParserStateMachine()
+        results = parser.doParsing(value)
         
-        l.add_value('type', "info")    
-        l.add_value('data', value)
-        return l
+        for parsedItem in results:
+            l = ItemLoader(item=ParsedInfoItem(), selector=paragraph)
+            l.add_value('activityList', parsedItem.activityList)
+            l.add_value('entityList',  parsedItem.entityList)
+            l.add_value('quote', parsedItem.quote)
+            l.add_value('description', parsedItem.description)
+            l.add_value('rawSourceText', parsedItem.rawSourceText) 
+            parsedInfoItem = l.load_item()      
+            if parsedInfoItem: # filter empty items from buggy parser ...
+                parentItemLoader.add_value('parsedInfoItems', dict(parsedInfoItem))
 
     def getOriginalRequestUrl(self, response, itemLoader):
         url = response.url
@@ -141,14 +125,13 @@ class SpeechesSpider(scrapy.Spider):
                 result = re.split(r"[()]", pureSpeech)
                 for j, item in enumerate(result):   
                     if item is None or item.strip() == "":
-                        continue                
-                    
-                    if j % 2:                         
-                        l = self.parseInfoObject(item, paragraph)
-                        # l.add_value('data', item) # this is original data for "info" objects.                          
-                        # l.add_value('type', "info")
+                        continue       
+                    if j % 2:       
+                        l = ItemLoader(item=GeneralInfoItem(), response=response, selector=paragraph)                   
+                        self.parseInfoObject(item, paragraph, l)
+                        l.add_value('data', item) # this is original data for "info" objects.                          
+                        l.add_value('type', "info")
                         l.add_value('orderId', index)
-                        # l.add_value('applause', item)
                     else:
                         l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)               
                         l.add_value('data', item) # this is original data for "info" objects.                                
