@@ -122,7 +122,8 @@ class SpeechesSpider(scrapy.Spider):
                     index += 1
                     continue
                 
-                result = re.split(r"[()]", pureSpeech)
+                # regex from gruselkabinett :(
+                result = re.split(r'(?!\(\d+ d\.B\.\)|\(E\))[\(\)](?<!\(E\))(?<!\(\d d\.B\.\))(?<!\(\d{2} d\.B\.\))(?<!\(\d{3} d\.B\.\))(?<!\(\d{4} d\.B\.\))(?<!\(\d{5} d\.B\.\))', pureSpeech)
                 for j, item in enumerate(result):   
                     if item is None or item.strip() == "":
                         continue       

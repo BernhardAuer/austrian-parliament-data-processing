@@ -12,6 +12,7 @@ from validTitlesList import validTitles
 from austrianParliamentSpecificTitlesList import austrianParliamentTitles
 from jmespath import search
 import re
+import unicodedata
 
 def parseDate(dateString):
      dateTime = parse(dateString).replace(microsecond=0) # this replace shitty thing is needed for mongodb (js dates only, huh)
@@ -216,6 +217,11 @@ class GeneralInfoItem(scrapy.Item):
      requestUrl = scrapy.Field(output_processor = TakeFirst())
      pass
 
+def replaceHtmlSpecificEscapeChars(value):
+     value = unicodedata.normalize("NFKD", value)
+     value = value.replace('&nbsp;',' ') # todo: check if this is needed ... i dont think so because of the unicode normalization
+     return value.replace('\u00ad','') # soft-hyphen 
+
 class InputCleaner(scrapy.Item):
-     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), replaceHtmlSpecificEscapeChars, stripDuplicateSpaces), output_processor = TakeFirst())
      pass
