@@ -218,10 +218,9 @@ class GeneralInfoItem(scrapy.Item):
      pass
 
 def replaceHtmlSpecificEscapeChars(value):
-     value = unicodedata.normalize("NFKD", value)
-     value = value.replace('&nbsp;',' ') # todo: check if this is needed ... i dont think so because of the unicode normalization
+     value = value.replace(u'\xa0', u' ') # non-breaking space
      return value.replace('\u00ad','') # soft-hyphen 
 
 class InputCleaner(scrapy.Item):
-     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), replaceHtmlSpecificEscapeChars, stripDuplicateSpaces), output_processor = TakeFirst())
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline, replaceHtmlSpecificEscapeChars), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
      pass
