@@ -8,6 +8,7 @@ from jmespath import search
 from datetime import datetime
 import re
 import pymongo
+import traceback
 
 class SpeechesSpider(scrapy.Spider):
     name = "speeches"
@@ -147,6 +148,7 @@ class SpeechesSpider(scrapy.Spider):
         except Exception as e:
             print("an error occured while parsing data:")
             print(e) 
+            print(traceback.format_exc())
                 
         # yield scrapy.Request(url, self.parse)
         
