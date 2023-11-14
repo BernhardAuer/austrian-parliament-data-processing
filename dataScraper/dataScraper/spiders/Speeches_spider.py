@@ -116,6 +116,7 @@ class SpeechesSpider(scrapy.Spider):
                 if timeRegex:                    
                     l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
                     l.add_value('type', "info")
+                    l.add_value('subType', "time")
                     l.add_value('orderId', index)
                     l.add_value('data', paragraphAsText) 
                     l = self.getOriginalRequestUrl(response, l)
