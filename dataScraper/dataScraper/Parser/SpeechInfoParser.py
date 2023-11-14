@@ -20,7 +20,7 @@ class Entity:
         self.name = name    
     def __str__(self):
         return "Entity-type: " + self.type + "; name: " + self.name 
-    def asdict(self):
+    def asDict(self):
         return {'type': self.type, 'name': self.name}
 
 class InfoItem:
@@ -105,7 +105,10 @@ class SpeechInfoParserStateMachine(object):
             case StateMachineAction.DetectActivity:                    
                 activity = self.getActivity(word)
                 print(word + ": " + str(activity))
-                if activity is not None: 
+                if activity is not None and self.InfoItem.activityList and self.InfoItem.entityList: 
+                    self.currentState = "EndAndStartNewParsing"
+                    return
+                elif activity is not None:
                     self.InfoItem.activityList.append(activity)                    
                     nextState = StateMachineAction.DetectConnectingWord
                 else:
@@ -158,7 +161,7 @@ class SpeechInfoParserStateMachine(object):
                 print(word + ": " + str(entity))
                 if self.PersonOrPartsOfPartyAsEntityFollowing and entity is not None:
                     entityInstance = Entity("somePersonsOfPoliticalParty", entity)
-                    self.InfoItem.entityList.append(entityInstance.asdict())
+                    self.InfoItem.entityList.append(entityInstance)
                     nextState =  StateMachineAction.DetectConnectingWord
                 elif self.PersonOrPartsOfPartyAsEntityFollowing and entity is None and word == ".": # todo: better check if preceding word is abg
                     # -> person ATTENTION: there is this edge case: Abg. Brandstätter -> so we need to ignore the dot and parse person name in next iteration
@@ -185,12 +188,12 @@ class SpeechInfoParserStateMachine(object):
                 elif self.PersonOrPartsOfPartyAsEntityFollowing and entity is None:
                     self.entityList.append("person_" + str(word)) # -> person
                     entityInstance = Entity("person", word)
-                    self.InfoItem.entityList.append(entityInstance.asdict())
+                    self.InfoItem.entityList.append(entityInstance)
                     self.PersonNameSplitByWhitespace = True
                     nextState =  StateMachineAction.DetectConnectingWord
                 elif entity is not None:     
                     entityInstance = Entity("politicalParty", entity)
-                    self.InfoItem.entityList.append(entityInstance.asdict()) 
+                    self.InfoItem.entityList.append(entityInstance) 
                     nextState =  StateMachineAction.DetectConnectingWord
                 else:
                     self.currentState =  StateMachineAction.DetectActivityImplicit # no entity detected     
@@ -243,14 +246,23 @@ class SpeechInfoParserStateMachine(object):
                     if "allgemeiner beifall" in self.InfoItem.rawSourceText.lower():
                         print("applause by every party edge case ....")
                         for partyName in ["övp", "spö", "fpö", "grüne", "neos"]: # todo make this dynamically
-                            self.InfoItem.entityList.append(Entity("politicalParty", partyName).asdict()) 
+                            self.InfoItem.entityList.append(Entity("politicalParty", partyName)) 
+                    self.currentState = "Ending"
+                    return
                 else:
                     nextState = StateMachineAction.DetectActivity
                     return nextState
                 
+            case "Ending":    
                 # ending detected 
-                if not self.InfoItem.activityList: # list is empty -> no valid activity could be parsed
+                if not self.InfoItem.activityList: # list is empty -> no valid activity could be parsed # todo: fix bug for very last item with no activity
                     self.InfoItem.activityList.append("unknown")
+                
+                # convert to dict because of mongoDB
+                convertedList = []
+                for entity in self.InfoItem.entityList:
+                    convertedList.append(entity.asDict())                    
+                self.InfoItem.entityList = convertedList
                 
                 self.ResultList.append(copy.deepcopy(self.InfoItem))
                 print(self.InfoItem)
@@ -262,7 +274,29 @@ class SpeechInfoParserStateMachine(object):
                 self.Speech = None
                 self.PersonNameWithDash = False
                 nextState = StateMachineAction.DetectActivity # start from beginning?
-                    
+                
+            case "EndAndStartNewParsing":    
+                # ending detected 
+                if not self.InfoItem.activityList: # list is empty -> no valid activity could be parsed # todo: fix bug for very last item with no activity
+                    self.InfoItem.activityList.append("unknown")
+                
+                # convert to dict because of mongoDB
+                convertedList = []
+                for entity in self.InfoItem.entityList:
+                    convertedList.append(entity.asDict())                    
+                self.InfoItem.entityList = convertedList
+                
+                self.ResultList.append(copy.deepcopy(self.InfoItem))
+                print(self.InfoItem)
+                self.InfoItem = InfoItem()
+                self.currentState =  StateMachineAction.DetectActivity
+                # todo: maybe just re-instanciate this StateMachineObject? so no wrong states could be persisted
+                self.PersonOrPartsOfPartyAsEntityFollowing = False
+                self.PersonNameSplitByWhitespace = False
+                self.Speech = None
+                self.PersonNameWithDash = False
+                return                  
+                  
             case _:
                 print("nix da error!!!!!!!!")
                 nextState = "error!!"
@@ -279,19 +313,28 @@ class SpeechInfoParserStateMachine(object):
             if index == endingIndex:
                 isLastWord = True
             
-            self.addWordToRawSourceText(word) 
             if self.isFillerWord(word):
                 print("skip, weil fillerWord!" + word) # todo: fix this.... " Abg. Leichtfried: Also die Rede war jetzt in Ordnung!"
+                
+                self.addWordToRawSourceText(word) 
                 continue 
             precedingWord = listOfWordsAndPunctuation[index - 1]
             nextState = None
             while nextState is None:
                 nextState = self.doMatching(self.currentState, word, precedingWord, isLastWord, listOfWordsAndPunctuation, index)
+            
+            self.addWordToRawSourceText(word) # add this after "successfull" parse, to ensure that raw-text gets added to the correct item
             self.currentState = nextState    
-                
+               
+    
+        # convert to dict because of mongoDB
+        convertedList = []
+        for entity in self.InfoItem.entityList:
+            convertedList.append(entity.asDict())                    
+        self.InfoItem.entityList = convertedList 
         # add last item? duplicate edge case?
         self.ResultList.append(copy.deepcopy(self.InfoItem))
-            
+                
         return self.ResultList                
         # print("geparste Aktivität:")
         # print(self.activityList)
@@ -299,10 +342,10 @@ class SpeechInfoParserStateMachine(object):
         # print(self.entityList)
         # print("geparste rede:")
         # print(self.Speech)
-        print("-----------------")
-        for result in self.ResultList:
-            print("\nITEM:")
-            print(result)
+        # print("-----------------")
+        # for result in self.ResultList:
+        #     print("\nITEM:")
+        #     print(result)
 
     def addWordToRawSourceText(self, word):
         if self.InfoItem.rawSourceText == "" or re.match("[^\w\s]", word):
@@ -326,3 +369,5 @@ class SpeechInfoParserStateMachine(object):
 # test.doParsing("Allgemeiner Beifall. –  hallo, das ist ein test –  und noch ein test")
 # test.doParsing("Abg. Leichtfried – in Richtung des das Rednerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!")
 # test.doParsing("Zwischenruf des Abg. Hafenecker. – Abg. Stögmüller – in Richtung Abg. Hafenecker –: Für die Bevölkerung ist die Polizei zuständig, Herr Kollege! – Präsident Sobotka gibt das Glockenzeichen.")
+
+# test.doParsing("Heiterkeit und Beifall bei den Grünen sowie Beifall der Abg. Herr.")
