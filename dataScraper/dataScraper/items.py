@@ -180,6 +180,7 @@ class SpeechItem(scrapy.Item):
      subType = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())     
      data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
      speaker = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
+     politicalRole = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
      requestUrl = scrapy.Field(output_processor = TakeFirst()) 
      pass
 

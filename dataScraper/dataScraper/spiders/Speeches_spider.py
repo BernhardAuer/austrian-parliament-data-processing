@@ -80,6 +80,15 @@ class SpeechesSpider(scrapy.Spider):
         itemLoader.add_value('requestUrl', url)
         return itemLoader
 
+    def parsePoliticalRole(self, value):
+        if "präsident" in value.lower(): # Präsident xyz or Präsidentin zx
+            return "presidentOfParliament"
+        
+        if "abgeordnete" in value.lower(): # Abgeordnete xyz or Abgeordneter zy
+            return "mp" # member of parliament
+        
+        return None
+
     def parse(self, response):
         
         if response.status == 404:
@@ -88,6 +97,7 @@ class SpeechesSpider(scrapy.Spider):
         try:
             currentSpeaker = None
             pureSpeech = None
+            currentSpeakerPoliticalRole = None
             index = 0
             for paragraph in response.css("p"):
                 potentialSpeaker = paragraph.css("b a *::text").get() # first entry should be the speaker...
@@ -104,9 +114,10 @@ class SpeechesSpider(scrapy.Spider):
                         titlesBeforeName = splitNameList[0]
                         if (len(splitNameList) > 1):
                             titlesAfterName = fullNameWithTitles.split(potentialSpeaker)[1]
-                        # print("title1:" + titlesBeforeName)
-                        # print("title2:" + titlesAfterName)
+                        print("title1:" + titlesBeforeName)
+                        print("title2:" + titlesAfterName)
                         pureSpeech = paragraphAsText[extractSpeakerRegex.end():]
+                        currentSpeakerPoliticalRole = self.parsePoliticalRole(titlesBeforeName)
                     else:
                         pureSpeech = paragraphAsText
                 else:
@@ -141,7 +152,9 @@ class SpeechesSpider(scrapy.Spider):
                         l.add_value('type', "speech")
                         l.add_value('orderId', index) 
                         if currentSpeaker is not None:
-                            l.add_value('speaker', currentSpeaker)  
+                            l.add_value('speaker', currentSpeaker) 
+                            l.add_value('politicalRole', currentSpeakerPoliticalRole) 
+                             
                     
                     l = self.getOriginalRequestUrl(response, l)                                  
                     yield l.load_item()                    
