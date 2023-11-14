@@ -99,7 +99,11 @@ class SpeechInfoParserStateMachine(object):
     
     def doMatching(self, state, word, precedingWord, isLastWord, fullWordsList, index):
         print("***currentState:" + str(self.currentState) + " CurrentWord: " + word + " isLastWord?: " + str(isLastWord))
-          
+        if self.isFillerWord(word) and self.currentState is not "ParseSpeech" and self.currentState is not "ParseBehaviourOfSpeaker":
+            print("skip, weil fillerWord!" + word) # todo: fix this.... " Abg. Leichtfried: Also die Rede war jetzt in Ordnung!"
+            nextState = self.currentState
+            return nextState
+        
         nextState = None
         match state:
             case StateMachineAction.DetectActivity:                    
@@ -312,12 +316,7 @@ class SpeechInfoParserStateMachine(object):
             isLastWord = False
             if index == endingIndex:
                 isLastWord = True
-            
-            if self.isFillerWord(word):
-                print("skip, weil fillerWord!" + word) # todo: fix this.... " Abg. Leichtfried: Also die Rede war jetzt in Ordnung!"
-                
-                self.addWordToRawSourceText(word) 
-                continue 
+                        
             precedingWord = listOfWordsAndPunctuation[index - 1]
             nextState = None
             while nextState is None:
