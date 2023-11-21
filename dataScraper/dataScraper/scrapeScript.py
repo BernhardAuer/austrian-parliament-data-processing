@@ -52,7 +52,7 @@ def scrape():
     # see https://stackoverflow.com/a/64617052 
     # this is also interesting https://stackoverflow.com/a/52930823
     configure_logging(settings={
-    "LOG_STDOUT": False
+    "LOG_STDOUT": True
     })
     formattedDate = datetime.now().strftime("%Y-%m-%d")
     logfileName = "./logs/scrapy_" + formattedDate + ".log"

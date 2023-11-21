@@ -9,6 +9,7 @@ from datetime import datetime
 import re
 import pymongo
 import traceback
+import logging
 
 class SpeechesSpider(scrapy.Spider):
     name = "speeches"
@@ -22,6 +23,7 @@ class SpeechesSpider(scrapy.Spider):
             'dataScraper.pipelines.InsertToSpeechCollectionPipeline': 400
         }
     }
+       
     
     def __init__(self, mongodb_uri, mongodb_db):
         self.mongodb_uri = mongodb_uri
@@ -45,7 +47,7 @@ class SpeechesSpider(scrapy.Spider):
         db = client[self.mongodb_db]        
         collection = db["speechesMetaData"]
         urls = []
-        for item in collection.find({'speechUrl': { "$exists": True }}).limit(30):
+        for item in collection.find({'speechUrl': { "$exists": True }}):
             url = self.baseUrl + item["speechUrl"]
             urls.append(url)
         client.close()
@@ -60,7 +62,7 @@ class SpeechesSpider(scrapy.Spider):
     
     def parseInfoObject(self, value, paragraph, parentItemLoader):
         value = self.cleanInput(value)
-        parser = SpeechInfoParserStateMachine()
+        parser = SpeechInfoParserStateMachine(self.logger)
         results = parser.doParsing(value)
         
         for parsedItem in results:
@@ -114,15 +116,14 @@ class SpeechesSpider(scrapy.Spider):
                         titlesBeforeName = splitNameList[0]
                         if (len(splitNameList) > 1):
                             titlesAfterName = fullNameWithTitles.split(potentialSpeaker)[1]
-                        print("title1:" + titlesBeforeName)
-                        print("title2:" + titlesAfterName)
+                        self.logger.debug('title1: %s', titlesBeforeName)
+                        self.logger.debug('title2: %s', titlesAfterName)
                         pureSpeech = paragraphAsText[extractSpeakerRegex.end():]
                         currentSpeakerPoliticalRole = self.parsePoliticalRole(titlesBeforeName)
                     else:
                         pureSpeech = paragraphAsText
                 else:
                     pureSpeech = paragraphAsText
-                
                 timeRegex = re.search("^\d{1,2}.\d{2}$", paragraphAsText)
                 if timeRegex:                    
                     l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
@@ -160,9 +161,9 @@ class SpeechesSpider(scrapy.Spider):
                     yield l.load_item()                    
                     index += 1  
         except Exception as e:
-            print("an error occured while parsing data:")
-            print(e) 
-            print(traceback.format_exc())
+            self.logger.error('an error occured while parsing data:')
+            self.logger.error('%s', e)
+            self.logger.error('%s', traceback.format_exc())
                 
         # yield scrapy.Request(url, self.parse)
         
