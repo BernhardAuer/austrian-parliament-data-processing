@@ -104,11 +104,14 @@ public class SpeechesMetaDataService
   
     public async Task<List<LegislatureMeetingsListDto>> GetLegislaturesAndMeetings()
     {
-        var legislaturesAndMeetings = await _speechesMetaDataCollection.Aggregate().Group(key => key.legislature,
+        var legislaturesAndMeetings = await _speechesMetaDataCollection.Aggregate()
+            .SortBy(x => x.legislature) // this is needed, so that groupBy utilizes index
+            .ThenBy(x => x.meetingNr) // this is needed, so that groupBy utilizes index
+            .Group(key => key.legislature,
             group => new LegislatureMeetingsListDto()
             {
                 Legislature = group.Key,
-                Meetings = group.Where(x => x.meetingNr != null).Select(x => x.meetingNr!.Value).Distinct().ToArray()
+                Meetings = group.Select(x => x.meetingNr!.Value).Distinct().ToArray()
             }).ToListAsync();
 
         legislaturesAndMeetings.ForEach(x => x.LegislatureAsInt = (new RomanNumeral(x.Legislature)).ToInt());
