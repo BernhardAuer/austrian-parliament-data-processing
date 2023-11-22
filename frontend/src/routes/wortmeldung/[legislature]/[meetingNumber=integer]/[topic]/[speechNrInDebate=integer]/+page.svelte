@@ -11,7 +11,7 @@
 	{#each data.speech as speech, i}
 		{#if speech.type == 'info'}
 			<div class="flex justify-center items-center">
-				<div class="badge badge-accent">{speech.text}</div>
+				<div class="badge-accent rounded-lg px-3 py-1">{speech.text}</div>
 			</div>
 		{:else}
 			<div class="chat chat-start">
