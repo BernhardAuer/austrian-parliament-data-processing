@@ -57,7 +57,7 @@
 	};
 </script>
 
-<div class="card min-w-fit max-w-xs {mapLabelsToBackgroundColor(speech.typeOfSpeech)} shadow-xl">
+<div class="card max-w-xs {mapLabelsToBackgroundColor(speech.typeOfSpeech)} shadow-xl">
 	<div class="card-body">
 		<h2 class="card-title self-center">{speech.nameOfSpeaker}</h2>
 		<div class="relative flex items-center">
