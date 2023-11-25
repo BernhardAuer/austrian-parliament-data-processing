@@ -71,10 +71,6 @@
 				<p class="text-justify line-clamp-4">
 					{speech.speechSneakPeak}
 				</p>
-				<!-- <aclass="self-center link link-hover">
-					[weiterlesen]
-				</a> -->
-				
 				<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(topic)}/{speech.speechNrInDebate}" class="btn btn-ghost">
 					weiterlesen
 				</a>

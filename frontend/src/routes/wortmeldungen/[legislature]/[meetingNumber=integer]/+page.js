@@ -3,12 +3,10 @@ import SpeechService from './../../../../services/speechService.js';
 let service = new SpeechService();
 let speechesByTopic = [];
 let topics = [];
-export const csr = false;
-
 const groupBy = (x, f) => x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {}); // credit: https://stackoverflow.com/questions/14446511/most-efficient-method-to-groupby-on-an-array-of-objects
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ params }) {
+export async function load({ params, url }) {
     let speeches = await service.fetchSpeeches({ legislature: params.legislature, meetingNumber: params.meetingNumber });    
     if (Array.isArray(speeches) && !speeches.length) {
         throw error(404, 'Not found');
@@ -19,11 +17,11 @@ export async function load({ params }) {
 
     speechesByTopic = groupBy(speeches, (x) => x.topic);
     topics = Object.keys(speechesByTopic);
-      
     return {
         topics: topics,
         speechesByTopic: speechesByTopic,
         legislature: params.legislature,
-        meetingNr: params.meetingNumber
+        meetingNr: params.meetingNumber,
+        selectedTopic: url.searchParams.get('thema')
     };
 }
