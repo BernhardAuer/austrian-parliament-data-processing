@@ -8,7 +8,7 @@ public class SpeechesDto
     public string TopNr { get; set; }
     public string Topic { get; set; }
     public string PoliticalPartie { get; set; }
-    public string Speech { get; set; }
+    public string? SpeechSneakPeak { get; set; }
     
     public int SpeechNrInDebate { get; set; }
 

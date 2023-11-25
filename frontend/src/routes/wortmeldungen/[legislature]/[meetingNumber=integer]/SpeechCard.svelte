@@ -57,7 +57,7 @@
 	};
 </script>
 
-<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(topic)}/{speech.speechNrInDebate}" class="card min-w-fit max-w-xs {mapLabelsToBackgroundColor(speech.typeOfSpeech)} shadow-xl">
+<div class="card min-w-fit max-w-xs {mapLabelsToBackgroundColor(speech.typeOfSpeech)} shadow-xl">
 	<div class="card-body">
 		<h2 class="card-title self-center">{speech.nameOfSpeaker}</h2>
 		<div class="relative flex items-center">
@@ -66,10 +66,20 @@
 				>{getLongNameOfPoliticalParty(speech.politicalPartie)}</span
 			>
 			<div class="flex-grow border-t border-gray-400" />
-		</div>
-
-		<p class="text-justify"></p>
-
+		</div>		
+			{#if speech.speechSneakPeak != null}
+				<p class="text-justify line-clamp-4">
+					{speech.speechSneakPeak}
+				</p>
+				<!-- <aclass="self-center link link-hover">
+					[weiterlesen]
+				</a> -->
+				
+				<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(topic)}/{speech.speechNrInDebate}" class="btn btn-ghost">
+					weiterlesen
+				</a>
+			{/if}
+		
 		<div class="flex flex-wrap self-center gap-2">
 			<div class="badge badge-outline">{speech.typeOfSpeech}</div>
 			<div class="badge badge-outline">
@@ -77,4 +87,4 @@
 			</div>
 		</div>
 	</div>
-</a>
+</div>

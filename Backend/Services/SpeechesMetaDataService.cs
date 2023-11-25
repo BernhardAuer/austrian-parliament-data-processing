@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using RomanNumerals;
 using WebApi.DTOs;
+using WebApi.Enums;
 using WebApi.Models;
 
 namespace WebApi.Services;
@@ -41,9 +43,11 @@ public class SpeechesMetaDataService
                 topNr = x.topNr,
                 topic = x.topic,
                 politicalPartie = x.politicalPartie,
-                speechNrInDebate = x.speechNrInDebate
+                speechNrInDebate = x.speechNrInDebate,
+                speech = x.speech
             })
             .ToListAsync();
+        
         return result;
     }
 

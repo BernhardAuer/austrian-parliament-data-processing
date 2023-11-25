@@ -1,6 +1,8 @@
 using System;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.DTOs;
+using WebApi.Enums;
 using WebApi.Models;
 using WebApi.Services;
 using WebApi.Mappings;
@@ -34,11 +36,28 @@ namespace WebApi.Controllers
                     PoliticalPartie = x.politicalPartie,
                     TypeOfSpeech = _austrianParliamentAbbreviationMappings.GetLongNameSpeechType(x.typeOfSpeech),
                     LengthOfSpeechInSec = x.lengthOfSpeechInSec,
-                    Speech = "", // todo: convert this to speech summary
+                    SpeechSneakPeak = GetTextWithoutSalutation(x?.speech?.FirstOrDefault(x => x.type == SpeechObjectTypeEnum.Speech)?.data),
                     SpeechNrInDebate = x.speechNrInDebate ?? 0
                 })
                 .ToList();
             return result;
+        }
+
+        private string? GetTextWithoutSalutation(string? input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+            var pattern = @".*\!(.*)";
+            var rg = new Regex(pattern);
+            var match = rg.Match(input);
+            if (match.Groups.Count > 1)
+            {
+                return "..." + match.Groups[1].Value + "...";
+            }
+
+            return input + "...";
         }
         
         [HttpGet]
@@ -59,7 +78,7 @@ namespace WebApi.Controllers
                 .ToList();
             return result;
         }
-        
+
         [HttpGet]
         [Route("getTypeOfSpeechesCountList")]
         public async Task<List<TypeOfSpeechCountDto>> GetTypeOfSpeechesCountList([FromQuery] TypeOfSpeechFilterDto typeOfSpeechFilterDto)
