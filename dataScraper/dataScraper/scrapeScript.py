@@ -42,11 +42,6 @@ def scrape():
           'XX',
           ]
 
-    process = CrawlerProcess(customSettings)
-    process.crawl(NationalCouncilMeetingSpider)
-    for gp in gps:
-        process.crawl(SpeechesMetaDataSpider, gp)
-
     # configure logging
     configure_logging(install_root_handler=False)
     # see https://stackoverflow.com/a/64617052 
@@ -64,6 +59,11 @@ def scrape():
     file_handler.setFormatter(formatter)
     file_handler.setLevel("INFO")
     logging.root.addHandler(file_handler) 
+    
+    process = CrawlerProcess(customSettings)
+    process.crawl(NationalCouncilMeetingSpider)
+    for gp in gps:
+        process.crawl(SpeechesMetaDataSpider, gp)
     process.crawl(SpeechesSpider)
     process.start() # the script will block here until the crawling is finished
 
