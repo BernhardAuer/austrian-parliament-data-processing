@@ -1,6 +1,8 @@
 <script>
 	export let speech = null;
-
+	export let legislature = null;
+	export let meetingNr = null;
+	export let topic = null;
 	const getLongNameOfPoliticalParty = (shortName) => {
 		let mapDict = {
 			v: 'ÖVP',
@@ -10,7 +12,7 @@
 			n: 'NEOS'
 		};
 		let abbrToLower = shortName.toLowerCase();
-		return mapDict[abbrToLower];
+		return mapDict[abbrToLower] ?? shortName;
 	};
 
 	const convertLengthToReadableString = (lengthInSec) => {
@@ -55,21 +57,27 @@
 	};
 </script>
 
-<div class="card min-w-fit max-w-xs {mapLabelsToBackgroundColor(speech.typeOfSpeech)} shadow-xl">
+<div class="card max-w-xs {mapLabelsToBackgroundColor(speech.typeOfSpeech)} shadow-xl">
 	<div class="card-body">
 		<h2 class="card-title self-center">{speech.nameOfSpeaker}</h2>
 		<div class="relative flex items-center">
-			<div class="flex-grow border-t border-gray-400" />
-			<span class="flex-shrink mx-4 text-gray-400"
-				>{getLongNameOfPoliticalParty(speech.politicalPartie)}</span
+			<div class="flex-grow border-t border-neutral" />
+			<span class="flex-shrink mx-4 text-neutral truncate"
+				>{speech.typeOfSpeech}</span
 			>
-			<div class="flex-grow border-t border-gray-400" />
-		</div>
-
-		<p class="text-justify"></p>
-
+			<div class="flex-grow border-t border-neutral" />
+		</div>		
+			{#if speech.speechSneakPeak != null}
+				<p class="text-justify line-clamp-4">
+					{speech.speechSneakPeak}
+				</p>
+				<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(topic)}/{speech.speechNrInDebate}" class="btn btn-ghost">
+					weiterlesen
+				</a>
+			{/if}
+		
 		<div class="flex flex-wrap self-center gap-2">
-			<div class="badge badge-outline">{speech.typeOfSpeech}</div>
+			<div class="badge badge-outline">{getLongNameOfPoliticalParty(speech.politicalPartie)}</div>			
 			<div class="badge badge-outline">
 				{convertLengthToReadableString(speech.lengthOfSpeechInSec)} min
 			</div>

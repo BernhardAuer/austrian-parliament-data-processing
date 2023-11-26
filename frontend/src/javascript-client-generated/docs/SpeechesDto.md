@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **topNr** | **String** |  | [optional] 
 **topic** | **String** |  | [optional] 
 **politicalPartie** | **String** |  | [optional] 
-**speech** | **String** |  | [optional] 
+**speechSneakPeak** | **String** |  | [optional] 
+**speechNrInDebate** | **Number** |  | [optional] 
 
 

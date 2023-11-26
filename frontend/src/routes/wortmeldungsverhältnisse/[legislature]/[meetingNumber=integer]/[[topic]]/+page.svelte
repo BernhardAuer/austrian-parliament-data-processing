@@ -12,7 +12,7 @@
 		shownFilterOptions = new FilterOptions(structuredClone(event.detail));
 		chartDataPromise = service.fetchDistributionOfSpeakingTime(shownFilterOptions);
 
-		const topicEncoded = shownFilterOptions?.topic?.topic?.replace('/', '%2F') ?? '';
+		const topicEncoded = encodeURIComponent(shownFilterOptions?.topic?.topic) ?? '';
 		// shallow routing is not possible right now
 		// https://github.com/sveltejs/kit/issues/2673
 		history.replaceState(

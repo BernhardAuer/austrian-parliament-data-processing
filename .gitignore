@@ -49,3 +49,6 @@ symlink-from
 # openApi files
 swagger.json
 swagger.yaml
+
+# log files
+*.log

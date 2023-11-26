@@ -65,8 +65,11 @@ class SpeechesDto {
             if (data.hasOwnProperty('politicalPartie')) {
                 obj['politicalPartie'] = ApiClient.convertToType(data['politicalPartie'], 'String');
             }
-            if (data.hasOwnProperty('speech')) {
-                obj['speech'] = ApiClient.convertToType(data['speech'], 'String');
+            if (data.hasOwnProperty('speechSneakPeak')) {
+                obj['speechSneakPeak'] = ApiClient.convertToType(data['speechSneakPeak'], 'String');
+            }
+            if (data.hasOwnProperty('speechNrInDebate')) {
+                obj['speechNrInDebate'] = ApiClient.convertToType(data['speechNrInDebate'], 'Number');
             }
         }
         return obj;
@@ -99,8 +102,8 @@ class SpeechesDto {
             throw new Error("Expected the field `politicalPartie` to be a primitive type in the JSON string but got " + data['politicalPartie']);
         }
         // ensure the json data is a string
-        if (data['speech'] && !(typeof data['speech'] === 'string' || data['speech'] instanceof String)) {
-            throw new Error("Expected the field `speech` to be a primitive type in the JSON string but got " + data['speech']);
+        if (data['speechSneakPeak'] && !(typeof data['speechSneakPeak'] === 'string' || data['speechSneakPeak'] instanceof String)) {
+            throw new Error("Expected the field `speechSneakPeak` to be a primitive type in the JSON string but got " + data['speechSneakPeak']);
         }
 
         return true;
@@ -142,9 +145,14 @@ SpeechesDto.prototype['topic'] = undefined;
 SpeechesDto.prototype['politicalPartie'] = undefined;
 
 /**
- * @member {String} speech
+ * @member {String} speechSneakPeak
  */
-SpeechesDto.prototype['speech'] = undefined;
+SpeechesDto.prototype['speechSneakPeak'] = undefined;
+
+/**
+ * @member {Number} speechNrInDebate
+ */
+SpeechesDto.prototype['speechNrInDebate'] = undefined;
 
 
 

@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using RomanNumerals;
 using WebApi.DTOs;
+using WebApi.Enums;
 using WebApi.Models;
 
 namespace WebApi.Services;
@@ -40,10 +42,27 @@ public class SpeechesMetaDataService
                 lengthOfSpeechInSec = x.lengthOfSpeechInSec,
                 topNr = x.topNr,
                 topic = x.topic,
-                politicalPartie = x.politicalPartie
+                politicalPartie = x.politicalPartie,
+                speechNrInDebate = x.speechNrInDebate,
+                speech = x.speech
             })
             .ToListAsync();
+        
         return result;
+    }
+
+    public async Task<List<Speech>> GetPureSpeeches(string legislature, int meetingNumber, string topic, int speechNrInDebate)
+    {
+        var query = _speechesMetaDataCollection
+            .Aggregate()
+            .Match(x => x.legislature == legislature && x.meetingNr == meetingNumber 
+                                                     && x.topic == topic
+                                                     && x.speechNrInDebate == speechNrInDebate);
+        
+        var result = await query.Limit(1)
+            .Project(x => x.speech)
+            .FirstOrDefaultAsync();
+        return result.ToList();
     }
 
     public async Task<List<TypeOfSpeechCount>> GetTypeOfSpeechesCountList(TypeOfSpeechFilterDto typeOfSpeechFilterDto)
@@ -89,11 +108,14 @@ public class SpeechesMetaDataService
   
     public async Task<List<LegislatureMeetingsListDto>> GetLegislaturesAndMeetings()
     {
-        var legislaturesAndMeetings = await _speechesMetaDataCollection.Aggregate().Group(key => key.legislature,
+        var legislaturesAndMeetings = await _speechesMetaDataCollection.Aggregate()
+            .SortBy(x => x.legislature) // this is needed, so that groupBy utilizes index
+            .ThenBy(x => x.meetingNr) // this is needed, so that groupBy utilizes index
+            .Group(key => key.legislature,
             group => new LegislatureMeetingsListDto()
             {
                 Legislature = group.Key,
-                Meetings = group.Where(x => x.meetingNr != null).Select(x => x.meetingNr!.Value).Distinct().ToArray()
+                Meetings = group.Select(x => x.meetingNr!.Value).Distinct().ToArray()
             }).ToListAsync();
 
         legislaturesAndMeetings.ForEach(x => x.LegislatureAsInt = (new RomanNumeral(x.Legislature)).ToInt());

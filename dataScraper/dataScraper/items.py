@@ -5,12 +5,14 @@
 
 import scrapy
 from dateutil.parser import parse
-from itemloaders.processors import MapCompose, TakeFirst
+from itemloaders.processors import MapCompose, Compose, TakeFirst, Join
 from datetime import datetime
 from dataclasses import dataclass, field
 from validTitlesList import validTitles
 from austrianParliamentSpecificTitlesList import austrianParliamentTitles
 from jmespath import search
+import re
+import unicodedata
 
 def parseDate(dateString):
      dateTime = parse(dateString).replace(microsecond=0) # this replace shitty thing is needed for mongodb (js dates only, huh)
@@ -163,4 +165,63 @@ class SpeechesMetaDataItem(scrapy.Item):
      videoUrl = scrapy.Field(input_processor = MapCompose(getName, stripString, parseVideoUrl), output_processor = TakeFirst())
      speechUrl= scrapy.Field(input_processor = MapCompose(getName, stripString, parseSpeechUrl), output_processor = TakeFirst())
      speechTimeProtocol = scrapy.Field(input_processor = MapCompose(getName, stripString, parseSpeechTimeFromProtocol, mergeMeetingDateWithSpeechTimeSeconds), output_processor = TakeFirst())
+     pass
+
+def stripNewline(value):
+     return value.replace("\r\n", " ") # strip() does not work for: "randomWord\r\n", only for: "randomWord \r\n"
+
+def stripDuplicateSpaces(value):
+     return value.replace("  ", " ")
+
+
+class SpeechItem(scrapy.Item):
+     orderId = scrapy.Field(output_processor = TakeFirst())     
+     type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = Join())
+     subType = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())     
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     speaker = scrapy.Field(input_processor = MapCompose(getName, stripString), output_processor = TakeFirst())
+     politicalRole = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
+     requestUrl = scrapy.Field(output_processor = TakeFirst()) 
+     pass
+
+class SpeechInfoItem(scrapy.Item):
+     orderId = scrapy.Field(output_processor = TakeFirst()) 
+     type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     requestUrl = scrapy.Field(output_processor = TakeFirst()) 
+     pass
+
+class ApplauseItem(scrapy.Item):
+     applauseByEntireParties = scrapy.Field()
+     applauseByPartsOfParties = scrapy.Field()
+     # applauseByPerson = scrapy.Field()
+     orderId = scrapy.Field(output_processor = TakeFirst()) 
+     type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     requestUrl = scrapy.Field(output_processor = TakeFirst()) 
+     pass
+
+
+class ParsedInfoItem(scrapy.Item):
+     activityList = scrapy.Field()
+     entityList = scrapy.Field()
+     description = scrapy.Field(output_processor = TakeFirst()) 
+     quote = scrapy.Field(output_processor = TakeFirst()) 
+     rawSourceText = scrapy.Field(output_processor = TakeFirst()) 
+     pass
+
+class GeneralInfoItem(scrapy.Item):
+     parsedInfoItems = scrapy.Field()
+     orderId = scrapy.Field(output_processor = TakeFirst()) 
+     type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
+     requestUrl = scrapy.Field(output_processor = TakeFirst())
+     pass
+
+def replaceHtmlSpecificEscapeChars(value):
+     value = value.replace(u'\xa0', u' ') # non-breaking space
+     return value.replace('\u00ad','') # soft-hyphen 
+
+class InputCleaner(scrapy.Item):
+     data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline, replaceHtmlSpecificEscapeChars), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
      pass
