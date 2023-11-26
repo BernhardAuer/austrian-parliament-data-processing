@@ -49,6 +49,9 @@ namespace WebApi.Controllers
             {
                 return null;
             }
+
+            input = input.Trim('!');
+            
             var pattern = @".*\!(.*)";
             var rg = new Regex(pattern);
             var match = rg.Match(input);
