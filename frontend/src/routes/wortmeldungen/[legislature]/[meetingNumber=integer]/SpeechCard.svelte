@@ -12,7 +12,7 @@
 			n: 'NEOS'
 		};
 		let abbrToLower = shortName.toLowerCase();
-		return mapDict[abbrToLower];
+		return mapDict[abbrToLower] ?? shortName;
 	};
 
 	const convertLengthToReadableString = (lengthInSec) => {
@@ -61,11 +61,11 @@
 	<div class="card-body">
 		<h2 class="card-title self-center">{speech.nameOfSpeaker}</h2>
 		<div class="relative flex items-center">
-			<div class="flex-grow border-t border-gray-400" />
-			<span class="flex-shrink mx-4 text-gray-400"
-				>{getLongNameOfPoliticalParty(speech.politicalPartie)}</span
+			<div class="flex-grow border-t border-neutral" />
+			<span class="flex-shrink mx-4 text-neutral truncate"
+				>{speech.typeOfSpeech}</span
 			>
-			<div class="flex-grow border-t border-gray-400" />
+			<div class="flex-grow border-t border-neutral" />
 		</div>		
 			{#if speech.speechSneakPeak != null}
 				<p class="text-justify line-clamp-4">
@@ -77,7 +77,7 @@
 			{/if}
 		
 		<div class="flex flex-wrap self-center gap-2">
-			<div class="badge badge-outline">{speech.typeOfSpeech}</div>
+			<div class="badge badge-outline">{getLongNameOfPoliticalParty(speech.politicalPartie)}</div>			
 			<div class="badge badge-outline">
 				{convertLengthToReadableString(speech.lengthOfSpeechInSec)} min
 			</div>
