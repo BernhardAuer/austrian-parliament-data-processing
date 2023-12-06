@@ -3,6 +3,7 @@
 </svelte:head>
 
 <script>
+	import LicenseHint from '../../../../components/LicenseHint.svelte';
 	import TopicAccordion from './TopicAccordion.svelte';
     /** @type {import('./$types').PageData} */
     export let data;
@@ -13,6 +14,8 @@
 		Wortmeldungen der {data.meetingNr}. NR-Sitzung ({data.legislature} GP)
 	</h1>
 </div>
+
+<LicenseHint/>
 
 <div class="py-4 space-y-2">
 	{#each data.topics as topic}
