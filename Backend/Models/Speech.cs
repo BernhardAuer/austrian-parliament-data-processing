@@ -11,4 +11,6 @@ public class Speech
     public string data { get; set; }
     public string? speaker { get; set; }
     public int orderId { get; set; }
+    
+    public SpeechParsedInfoItem[] parsedInfoItems { get; set; }
 }

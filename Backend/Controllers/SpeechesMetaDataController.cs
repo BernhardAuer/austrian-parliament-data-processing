@@ -37,7 +37,18 @@ namespace WebApi.Controllers
                     TypeOfSpeech = _austrianParliamentAbbreviationMappings.GetLongNameSpeechType(x.typeOfSpeech),
                     LengthOfSpeechInSec = x.lengthOfSpeechInSec,
                     SpeechSneakPeak = GetTextWithoutSalutation(x?.speech?.FirstOrDefault(x => x.type == SpeechObjectTypeEnum.Speech)?.data),
-                    SpeechNrInDebate = x.speechNrInDebate ?? 0
+                    SpeechNrInDebate = x.speechNrInDebate ?? 0,
+                    ActivitiesCount = x?. speech == null ? new Dictionary<string, int>(): x.speech
+                        .Where(y => y.parsedInfoItems != null)
+                        .SelectMany(y => y.parsedInfoItems)
+                        .Where(y => y.activityList != null)
+                        .SelectMany(y => y.activityList)
+                        .GroupBy(y => y)
+                        .Select(grp => new
+                        {
+                            activityName = grp.Key,
+                            Count = grp.Count()
+                        }).ToDictionary(y => y.activityName, y => y.Count)
                 })
                 .ToList();
             return result;
