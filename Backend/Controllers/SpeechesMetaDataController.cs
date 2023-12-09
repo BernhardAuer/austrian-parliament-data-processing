@@ -85,6 +85,7 @@ namespace WebApi.Controllers
             var result = speeches.Select(x => new SpeechDto()
                 {
                     NameOfSpeaker = x.speaker,
+                    PoliticalRole = x.politicalRole,
                     OrderId = x.orderId,
                     Data = x.data,
                     Type = x.type

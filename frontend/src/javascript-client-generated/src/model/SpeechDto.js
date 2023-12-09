@@ -57,6 +57,9 @@ class SpeechDto {
             if (data.hasOwnProperty('nameOfSpeaker')) {
                 obj['nameOfSpeaker'] = ApiClient.convertToType(data['nameOfSpeaker'], 'String');
             }
+            if (data.hasOwnProperty('politicalRole')) {
+                obj['politicalRole'] = ApiClient.convertToType(data['politicalRole'], 'String');
+            }
             if (data.hasOwnProperty('orderId')) {
                 obj['orderId'] = ApiClient.convertToType(data['orderId'], 'Number');
             }
@@ -77,6 +80,10 @@ class SpeechDto {
         // ensure the json data is a string
         if (data['nameOfSpeaker'] && !(typeof data['nameOfSpeaker'] === 'string' || data['nameOfSpeaker'] instanceof String)) {
             throw new Error("Expected the field `nameOfSpeaker` to be a primitive type in the JSON string but got " + data['nameOfSpeaker']);
+        }
+        // ensure the json data is a string
+        if (data['politicalRole'] && !(typeof data['politicalRole'] === 'string' || data['politicalRole'] instanceof String)) {
+            throw new Error("Expected the field `politicalRole` to be a primitive type in the JSON string but got " + data['politicalRole']);
         }
 
         return true;
@@ -101,6 +108,11 @@ SpeechDto.prototype['data'] = undefined;
  * @member {String} nameOfSpeaker
  */
 SpeechDto.prototype['nameOfSpeaker'] = undefined;
+
+/**
+ * @member {String} politicalRole
+ */
+SpeechDto.prototype['politicalRole'] = undefined;
 
 /**
  * @member {Number} orderId

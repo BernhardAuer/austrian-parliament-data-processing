@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **type** | [**SpeechObjectTypeEnum**](SpeechObjectTypeEnum.md) |  | [optional] 
 **data** | **String** |  | [optional] 
 **nameOfSpeaker** | **String** |  | [optional] 
+**politicalRole** | **String** |  | [optional] 
 **orderId** | **Number** |  | [optional] 
 
 
