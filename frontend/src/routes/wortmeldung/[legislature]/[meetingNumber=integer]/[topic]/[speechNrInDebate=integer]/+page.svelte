@@ -9,7 +9,7 @@
 
 <div class="mx-auto">
 	<h1 class="text-4xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
-		Wortmeldung
+		Wortmeldung {data.nameOfSpeaker ?? ""}
 	</h1>
 	<h2 class="text-2xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
 		{data.topic}

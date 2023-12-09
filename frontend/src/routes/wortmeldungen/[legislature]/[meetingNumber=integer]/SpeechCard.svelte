@@ -71,7 +71,7 @@
 				<p class="text-justify line-clamp-4">
 					{speech.speechSneakPeak}
 				</p>
-				<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(topic)}/{speech.speechNrInDebate}" class="btn btn-ghost">
+				<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(topic)}/{speech.speechNrInDebate}?speaker={speech.nameOfSpeaker}" class="btn btn-ghost">
 					weiterlesen
 				</a>
 			{/if}
