@@ -26,14 +26,15 @@
 				<div class="badge-accent rounded-lg px-3 py-1">{speech.text}</div>
 			</div>
 		{:else if speech?.text?.length > 0}
-			<div class="chat chat-start">
+			<div class="chat {speech?.politicalRole == "mp" ? "chat-start" : "chat-end"}">
 				<div class="chat-header">
-					{speech.nameOfSpeaker ?? ''}
+					{speech.nameOfSpeaker ?? ''} 
+										  
 					{#if speech?.startTime !== undefined}
 						<time class="text-xs opacity-50">{speech.startTime}</time>
 					{/if}
 				</div>
-				<div class="chat-bubble">
+				<div class="chat-bubble {speech?.politicalRole == "mp" ? "chat-bubble-neutral" : "chat-bubble-primary"}">
 					{#each speech?.text as text, j}
 						{text}
 						<!-- do newlines only if there are further elements -->
@@ -41,7 +42,7 @@
 							<br /> <br />
 						{/if}
 					{/each}
-				</div>
+				</div>				
 			</div>
 		{/if}
 	{/each}
