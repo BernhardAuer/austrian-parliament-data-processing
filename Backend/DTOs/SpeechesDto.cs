@@ -11,5 +11,7 @@ public class SpeechesDto
     public string? SpeechSneakPeak { get; set; }
     
     public int SpeechNrInDebate { get; set; }
+    
+    public Dictionary<string, int> ActivitiesCount { get; set; }
 
 }

@@ -71,6 +71,9 @@ class SpeechesDto {
             if (data.hasOwnProperty('speechNrInDebate')) {
                 obj['speechNrInDebate'] = ApiClient.convertToType(data['speechNrInDebate'], 'Number');
             }
+            if (data.hasOwnProperty('activitiesCount')) {
+                obj['activitiesCount'] = ApiClient.convertToType(data['activitiesCount'], {'String': 'Number'});
+            }
         }
         return obj;
     }
@@ -153,6 +156,11 @@ SpeechesDto.prototype['speechSneakPeak'] = undefined;
  * @member {Number} speechNrInDebate
  */
 SpeechesDto.prototype['speechNrInDebate'] = undefined;
+
+/**
+ * @member {Object.<String, Number>} activitiesCount
+ */
+SpeechesDto.prototype['activitiesCount'] = undefined;
 
 
 

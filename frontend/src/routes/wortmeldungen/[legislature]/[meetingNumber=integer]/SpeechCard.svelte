@@ -81,6 +81,27 @@
 			<div class="badge badge-outline">
 				{convertLengthToReadableString(speech.lengthOfSpeechInSec)} min
 			</div>
+			{#if "applause" in speech?.activitiesCount}
+				<div class="badge badge-outline">
+					<div class="tooltip" data-tip="Beifall">
+					👏🏻 {speech?.activitiesCount["applause"]}
+					</div>
+				</div>
+			{/if}
+			{#if "cheerfulness" in speech?.activitiesCount}
+				<div class="badge badge-outline">
+					<div class="tooltip" data-tip="Heiterkeit">
+						😅 {speech?.activitiesCount["cheerfulness"]}
+					</div>
+				</div>
+			{/if}
+			{#if "shouting" in speech?.activitiesCount}
+				<div class="badge badge-outline">
+					<div class="tooltip" data-tip="Zwischenruf">
+						🗣️ {speech?.activitiesCount["shouting"]}
+					</div>
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
