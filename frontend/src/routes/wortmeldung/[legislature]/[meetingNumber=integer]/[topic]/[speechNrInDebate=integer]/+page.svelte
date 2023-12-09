@@ -13,7 +13,7 @@
 			<div class="flex justify-center items-center">
 				<div class="badge-accent rounded-lg px-3 py-1">{speech.text}</div>
 			</div>
-		{:else}
+		{:else if speech?.text?.length > 0}
 			<div class="chat chat-start">
 				<div class="chat-header">
 					{speech.nameOfSpeaker ?? ''}
