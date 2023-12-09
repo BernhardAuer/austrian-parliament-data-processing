@@ -7,7 +7,7 @@
 	<title>Wortmeldung | parli-info.org</title>
 </svelte:head>
 
-<div class="py-4 space-y-2 container">
+<div class="mx-auto py-4 space-y-2 max-w-3xl">
 	{#each data.speech as speech, i}
 		{#if speech.type == 'info'}
 			<div class="flex justify-center items-center">

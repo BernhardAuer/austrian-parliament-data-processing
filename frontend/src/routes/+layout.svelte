@@ -46,7 +46,7 @@
 		</div>
 	</div>
 
-	<div class="mb-auto container sm:px-6 px-3 sm:min-w-fit min-w-full self-center">
+	<div class="mb-auto max-sm:container sm:px-6 px-3 self-center">
 		<slot />
 	</div>
 	
