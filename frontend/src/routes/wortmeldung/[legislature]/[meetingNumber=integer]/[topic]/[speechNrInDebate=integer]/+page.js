@@ -12,5 +12,10 @@ export async function load({ params }) {
     if (speech == null) {
         throw error(404, 'Not found');
     }
-    return {speech};
+    return {
+        speech: speech,
+        legislature: params.legislature, 
+        meetingNumber: params.meetingNumber, 
+        topic: params.topic
+    };
 }

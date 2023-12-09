@@ -7,6 +7,18 @@
 	<title>Wortmeldung | parli-info.org</title>
 </svelte:head>
 
+<div class="mx-auto">
+	<h1 class="text-4xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
+		Wortmeldung
+	</h1>
+	<h2 class="text-2xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
+		{data.topic}
+	</h2>
+	<h3 class="text-xl font-normal leading-normal mt-0 mb-2 break-words">
+		{data.meetingNumber}. NR-Sitzung / {data.legislature} GP
+	</h3>
+</div>
+
 <div class="mx-auto py-4 space-y-2 max-w-3xl">
 	{#each data.speech as speech, i}
 		{#if speech.type == 'info'}
