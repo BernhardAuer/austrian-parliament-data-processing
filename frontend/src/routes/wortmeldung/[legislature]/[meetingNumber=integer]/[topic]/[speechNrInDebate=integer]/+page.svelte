@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>Wortmeldung | parli-info.org</title>
+	<title>Wortmeldung {data.nameOfSpeaker ?? ""} zu {data.topic} ({data.meetingNumber}/{data.legislature} GP) | parli-info.org</title>
 </svelte:head>
 
 <div class="mx-auto">
