@@ -1,6 +1,35 @@
 <script>
 	/** @type {import('./$types').PageData} */
 	export let data;
+
+	let availableChatBubbleColors = [
+		"bg-sky-100",
+		"bg-red-300",
+		"bg-slate-400",
+	 	"bg-orange-100", 
+	 	"bg-amber-100",
+		"bg-lime-100",
+		"bg-teal-100",
+		"bg-blue-100",
+		"bg-pink-100",
+		"bg-stone-100",
+	]
+	let uniqueColorForNameDict = {}
+
+	const getChatBubbleColor = (speechSubtype, name) => {
+		switch(speechSubtype) {
+			case "remarksFromPresident": return "chat-bubble-primary";	
+			case "speechByMainSpeaker": return "chat-bubble-neutral";		
+			case "interjection": 
+				if (name in uniqueColorForNameDict) {
+					return uniqueColorForNameDict[name];
+				} else {
+					let color = availableChatBubbleColors.pop();
+					uniqueColorForNameDict[name] = color;
+					return color;
+				}
+		}
+	};
 </script>
 
 <svelte:head>
@@ -26,15 +55,14 @@
 				<div class="badge-accent rounded-lg px-3 py-1">{speech.text}</div>
 			</div>
 		{:else if speech?.text?.length > 0}
-			<div class="chat {speech?.politicalRole == "mp" ? "chat-start" : "chat-end"}">
+			<div class="chat {speech?.subtype == "speechByMainSpeaker" ? "chat-start" : "chat-end"}">
 				<div class="chat-header">
-					{speech.nameOfSpeaker ?? ''} 
-										  
+					{speech.nameOfSpeaker ?? ''}										  
 					{#if speech?.startTime !== undefined}
 						<time class="text-xs opacity-50">{speech.startTime}</time>
 					{/if}
 				</div>
-				<div class="chat-bubble {speech?.politicalRole == "mp" ? "chat-bubble-neutral" : "chat-bubble-primary"}">
+				<div class="chat-bubble {getChatBubbleColor(speech?.subtype, speech.nameOfSpeaker)}">					
 					{#each speech?.text as text, j}
 						{text}
 						<!-- do newlines only if there are further elements -->

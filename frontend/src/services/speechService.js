@@ -83,6 +83,7 @@ export default class SpeechService {
                     tempSpeechContainer.type = "speech";
                     tempSpeechContainer.nameOfSpeaker = element.nameOfSpeaker;
                     tempSpeechContainer.politicalRole = element.politicalRole;
+                    tempSpeechContainer.subtype = element.subtype;
                     tempSpeechContainer.text.push(element.data);
                 }
             });

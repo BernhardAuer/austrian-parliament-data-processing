@@ -9,7 +9,6 @@ docs/NationalCouncilMeetingsPerYearDto.md
 docs/SpeechDto.md
 docs/SpeechDurationDto.md
 docs/SpeechObjectTypeEnum.md
-docs/SpeechesApi.md
 docs/SpeechesDto.md
 docs/SpeechesMetaDataApi.md
 docs/TopicSearchResultDto.md
@@ -19,7 +18,6 @@ mocha.opts
 package.json
 src/ApiClient.js
 src/api/NationalCouncilMeetingApi.js
-src/api/SpeechesApi.js
 src/api/SpeechesMetaDataApi.js
 src/index.js
 src/model/DistributionOfSpeakingTimeDto.js

@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Constants;
 using WebApi.DTOs;
 using WebApi.Enums;
 using WebApi.Models;
@@ -81,17 +82,59 @@ namespace WebApi.Controllers
         {
             var speeches =
                 await _speechesMetaDataService.GetPureSpeeches(legislature, meetingNumber, topic, speechNrInDebate);
-
-            var result = speeches.Select(x => new SpeechDto()
+            List<SpeechDto> speechDtos = new List<SpeechDto>();
+            foreach (var speech in speeches)
+            {
+                SpeechDto speechDto;
+                if (speech.parsedInfoItems != null)
                 {
-                    NameOfSpeaker = x.speaker,
-                    PoliticalRole = x.politicalRole,
-                    OrderId = x.orderId,
-                    Data = x.data,
-                    Type = x.type
-                })
-                .ToList();
-            return result;
+                    foreach (var infoItem in speech.parsedInfoItems)
+                    {
+                        if (infoItem?.activityList?.Length > 0 && (infoItem.activityList.Contains("shouting") || infoItem.activityList.Contains("shout")))
+                        {
+                            speechDto = new SpeechDto()
+                            {
+                                NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
+                                OrderId = speech.orderId,
+                                Data = infoItem.quote,
+                                Type = SpeechObjectTypeEnum.Speech,// speech.type,
+                                Subtype = SpeechTypes.Interjection
+                            };
+                            speechDtos.Add(speechDto);
+                        }
+                    }
+                }
+
+                speechDto = new SpeechDto()
+                {
+                    NameOfSpeaker = speech.speaker,
+                    PoliticalRole = speech.politicalRole,
+                    OrderId = speech.orderId,
+                    Data = speech.data,
+                    Type = speech.type,
+                    Subtype = speech.politicalRole == "presidentOfParliament" ? SpeechTypes.RemarksFromPresident : SpeechTypes.SpeechByMainSpeaker
+                };
+                speechDtos.Add(speechDto);
+            }
+        //
+        //     var result = speeches.Select(x => x.parsedInfoItems != null 
+        //             ?  new SpeechDto()
+        //             {
+        //                 Name= x.speaker,
+        //                 OrderId = x.orderId,
+        //                 Data = x.parsedInfoItems,
+        //                 Type = x.type
+        //             } 
+        //             : new SpeechDto()
+        //         {
+        //             Name= x.speaker,
+        //             PoliticalRole = x.politicalRole,
+        //             OrderId = x.orderId,
+        //             Data = x.data,
+        //             Type = x.type
+        //         })
+        //         .ToList();
+            return speechDtos;
         }
 
         [HttpGet]

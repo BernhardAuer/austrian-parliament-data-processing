@@ -9,4 +9,6 @@ public class SpeechParsedInfoItem
 {
     public string[] activityList { get; set; }
     public SpeechParsedInfoItemEntity[] entityList { get; set; }
+    public string? quote { get; set; }
+    public string? rawSourceText { get; set; }
 }

@@ -51,11 +51,17 @@ class SpeechDto {
             if (data.hasOwnProperty('type')) {
                 obj['type'] = SpeechObjectTypeEnum.constructFromObject(data['type']);
             }
+            if (data.hasOwnProperty('subtype')) {
+                obj['subtype'] = ApiClient.convertToType(data['subtype'], 'String');
+            }
             if (data.hasOwnProperty('data')) {
                 obj['data'] = ApiClient.convertToType(data['data'], 'String');
             }
             if (data.hasOwnProperty('nameOfSpeaker')) {
                 obj['nameOfSpeaker'] = ApiClient.convertToType(data['nameOfSpeaker'], 'String');
+            }
+            if (data.hasOwnProperty('activity')) {
+                obj['activity'] = ApiClient.convertToType(data['activity'], 'String');
             }
             if (data.hasOwnProperty('politicalRole')) {
                 obj['politicalRole'] = ApiClient.convertToType(data['politicalRole'], 'String');
@@ -74,12 +80,20 @@ class SpeechDto {
      */
     static validateJSON(data) {
         // ensure the json data is a string
+        if (data['subtype'] && !(typeof data['subtype'] === 'string' || data['subtype'] instanceof String)) {
+            throw new Error("Expected the field `subtype` to be a primitive type in the JSON string but got " + data['subtype']);
+        }
+        // ensure the json data is a string
         if (data['data'] && !(typeof data['data'] === 'string' || data['data'] instanceof String)) {
             throw new Error("Expected the field `data` to be a primitive type in the JSON string but got " + data['data']);
         }
         // ensure the json data is a string
         if (data['nameOfSpeaker'] && !(typeof data['nameOfSpeaker'] === 'string' || data['nameOfSpeaker'] instanceof String)) {
             throw new Error("Expected the field `nameOfSpeaker` to be a primitive type in the JSON string but got " + data['nameOfSpeaker']);
+        }
+        // ensure the json data is a string
+        if (data['activity'] && !(typeof data['activity'] === 'string' || data['activity'] instanceof String)) {
+            throw new Error("Expected the field `activity` to be a primitive type in the JSON string but got " + data['activity']);
         }
         // ensure the json data is a string
         if (data['politicalRole'] && !(typeof data['politicalRole'] === 'string' || data['politicalRole'] instanceof String)) {
@@ -100,6 +114,11 @@ class SpeechDto {
 SpeechDto.prototype['type'] = undefined;
 
 /**
+ * @member {String} subtype
+ */
+SpeechDto.prototype['subtype'] = undefined;
+
+/**
  * @member {String} data
  */
 SpeechDto.prototype['data'] = undefined;
@@ -108,6 +127,11 @@ SpeechDto.prototype['data'] = undefined;
  * @member {String} nameOfSpeaker
  */
 SpeechDto.prototype['nameOfSpeaker'] = undefined;
+
+/**
+ * @member {String} activity
+ */
+SpeechDto.prototype['activity'] = undefined;
 
 /**
  * @member {String} politicalRole
