@@ -86,73 +86,103 @@ namespace WebApi.Controllers
             List<SpeechDto> speechDtos = new List<SpeechDto>();
             foreach (var speech in speeches)
             {
-                SpeechDto speechDto;
-                if (speech.parsedInfoItems != null)
+                SpeechDto speechDto = null;
+                switch (speech.type)
                 {
-                    foreach (var infoItem in speech.parsedInfoItems)
-                    {
-                        if (infoItem?.activityList?.Length > 0 && (infoItem.activityList.Contains("shouting") || infoItem.activityList.Contains("shout")))
+                    case SpeechObjectTypeEnum.Info:
+                        var isUnknownInfoObject = false;
+                        foreach (var infoItem in speech?.parsedInfoItems ?? Enumerable.Empty<SpeechParsedInfoItem>())
                         {
-                            speechDto = new SpeechDto()
+                            speechDto = null;
+                            if (infoItem?.activityList?.Length > 0 && (infoItem.activityList.Contains("shouting") ||
+                                                                       infoItem.activityList.Contains("shout")))
                             {
-                                NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
-                                OrderId = speech.orderId,
-                                Data = infoItem?.quote,
-                                Description = infoItem?.description,
-                                Type =  infoItem?.quote != null ? SpeechObjectTypeEnum.Speech : SpeechObjectTypeEnum.Info,// speech.type,
-                                Subtype = infoItem?.quote != null ? SpeechTypes.Interjection : SpeechTypes.InterjectionWithoutQuote
-                            };
-                            speechDtos.Add(speechDto);
-                        }
-                        if (infoItem?.activityList?.Length > 0 && (infoItem.activityList.Contains("applause")))
-                        {
-                            speechDto = new SpeechDto()
-                            {
-                                NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
-                                OrderId = speech.orderId,
-                                Type = SpeechObjectTypeEnum.Info,// speech.type,
-                                Subtype = SpeechTypes.Applause
-                            };
-                            speechDtos.Add(speechDto);
-                        }
-                        if (infoItem?.activityList?.Length > 0 && (infoItem.activityList.Contains("cheerfulness")))
-                        {
-                            speechDto = new SpeechDto()
-                            {
-                                NameOfSpeaker = string.Join(", ", infoItem?.entityList?.Select(x => x?.name) ?? ImmutableList<string>.Empty),
-                                OrderId = speech.orderId,
-                                Type = SpeechObjectTypeEnum.Info,// speech.type,
-                                Subtype = SpeechTypes.Cheerfulness
-                            };
-                            speechDtos.Add(speechDto);
-                        }
-                    }
-                }
+                                speechDto = new SpeechDto()
+                                {
+                                    NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
+                                    OrderId = speech.orderId,
+                                    Data = infoItem?.quote,
+                                    Description = infoItem?.description,
+                                    Type = infoItem?.quote != null
+                                        ? SpeechObjectTypeEnum.Speech
+                                        : SpeechObjectTypeEnum.Info, // speech.type,
+                                    Subtype = infoItem?.quote != null
+                                        ? SpeechTypes.Interjection
+                                        : SpeechTypes.InterjectionWithoutQuote
+                                };
+                                speechDtos.Add(speechDto);
+                            }
 
-                if (speech.subType == "time")
-                {
-                    speechDto = new SpeechDto()
-                    {
-                        OrderId = speech.orderId,
-                        Data = speech.data,
-                        Type = speech.type,
-                        Subtype = speech.subType
-                    };
-                } else
-                {
-                    speechDto = new SpeechDto()
-                    {
-                        NameOfSpeaker = speech.speaker,
-                        PoliticalRole = speech.politicalRole,
-                        OrderId = speech.orderId,
-                        Data = speech.data,
-                        Type = speech.type,
-                        Subtype = speech.politicalRole == "presidentOfParliament"
-                            ? SpeechTypes.RemarksFromPresident
-                            : SpeechTypes.SpeechByMainSpeaker
-                    };
+                            if (infoItem?.activityList?.Length > 0 && (infoItem.activityList.Contains("applause")))
+                            {
+                                speechDto = new SpeechDto()
+                                {
+                                    NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
+                                    OrderId = speech.orderId,
+                                    Type = SpeechObjectTypeEnum.Info, // speech.type,
+                                    Subtype = SpeechTypes.Applause
+                                };
+                                speechDtos.Add(speechDto);
+                            }
+
+                            if (infoItem?.activityList?.Length > 0 && (infoItem.activityList.Contains("cheerfulness")))
+                            {
+                                speechDto = new SpeechDto()
+                                {
+                                    NameOfSpeaker = string.Join(", ",
+                                        infoItem?.entityList?.Select(x => x?.name) ?? ImmutableList<string>.Empty),
+                                    OrderId = speech.orderId,
+                                    Type = SpeechObjectTypeEnum.Info, // speech.type,
+                                    Subtype = SpeechTypes.Cheerfulness
+                                };
+                                speechDtos.Add(speechDto);
+                            }
+
+                            if (speechDto == null)
+                            {
+                                isUnknownInfoObject = true;
+                            }
+                        }
+                        if (speech.subType == "time")
+                        {
+                            speechDto = new SpeechDto()
+                            {
+                                OrderId = speech.orderId,
+                                Data = speech.data,
+                                Type = speech.type,
+                                Subtype = speech.subType
+                            };
+                            speechDtos.Add(speechDto);
+                        }
+
+                        if (speechDto == null || isUnknownInfoObject)
+                        {
+                            speechDto = new SpeechDto()
+                            {
+                                OrderId = speech.orderId,
+                                Data = speech.data,
+                                Type = speech.type,
+                                Subtype = speech.subType
+                            };
+                            speechDtos.Add(speechDto);
+                        }
+                        break;
+                
+                    case SpeechObjectTypeEnum.Speech:
+                        speechDto = new SpeechDto()
+                        {
+                            NameOfSpeaker = speech.speaker,
+                            PoliticalRole = speech.politicalRole,
+                            OrderId = speech.orderId,
+                            Data = speech.data,
+                            Type = speech.type,
+                            Subtype = speech.politicalRole == "presidentOfParliament"
+                                ? SpeechTypes.RemarksFromPresident
+                                : SpeechTypes.SpeechByMainSpeaker
+                        };
+                        speechDtos.Add(speechDto);
+                        break;
                 }
-                speechDtos.Add(speechDto);
             }
         //
         //     var result = speeches.Select(x => x.parsedInfoItems != null 
