@@ -96,24 +96,49 @@ namespace WebApi.Controllers
                             {
                                 NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
                                 OrderId = speech.orderId,
-                                Data = infoItem.quote,
+                                Data = infoItem?.quote,
                                 Type = SpeechObjectTypeEnum.Speech,// speech.type,
-                                Subtype = SpeechTypes.Interjection
+                                Subtype = infoItem?.quote != null ? SpeechTypes.Interjection : SpeechTypes.InterjectionWithoutQuote
+                            };
+                            speechDtos.Add(speechDto);
+                        }
+                        if (infoItem?.activityList?.Length > 0 && (infoItem.activityList.Contains("applause")))
+                        {
+                            speechDto = new SpeechDto()
+                            {
+                                NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
+                                OrderId = speech.orderId,
+                                Type = SpeechObjectTypeEnum.Info,// speech.type,
+                                Subtype = SpeechTypes.Applause
                             };
                             speechDtos.Add(speechDto);
                         }
                     }
                 }
 
-                speechDto = new SpeechDto()
+                if (speech.subType == "time")
                 {
-                    NameOfSpeaker = speech.speaker,
-                    PoliticalRole = speech.politicalRole,
-                    OrderId = speech.orderId,
-                    Data = speech.data,
-                    Type = speech.type,
-                    Subtype = speech.politicalRole == "presidentOfParliament" ? SpeechTypes.RemarksFromPresident : SpeechTypes.SpeechByMainSpeaker
-                };
+                    speechDto = new SpeechDto()
+                    {
+                        OrderId = speech.orderId,
+                        Data = speech.data,
+                        Type = speech.type,
+                        Subtype = speech.subType
+                    };
+                } else
+                {
+                    speechDto = new SpeechDto()
+                    {
+                        NameOfSpeaker = speech.speaker,
+                        PoliticalRole = speech.politicalRole,
+                        OrderId = speech.orderId,
+                        Data = speech.data,
+                        Type = speech.type,
+                        Subtype = speech.politicalRole == "presidentOfParliament"
+                            ? SpeechTypes.RemarksFromPresident
+                            : SpeechTypes.SpeechByMainSpeaker
+                    };
+                }
                 speechDtos.Add(speechDto);
             }
         //

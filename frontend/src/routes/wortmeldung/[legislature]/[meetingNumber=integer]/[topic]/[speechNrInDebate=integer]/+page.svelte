@@ -1,4 +1,6 @@
 <script>
+	import { LogarithmicScale } from 'chart.js';
+
 	/** @type {import('./$types').PageData} */
 	export let data;
 
@@ -49,27 +51,40 @@
 </div>
 
 <div class="mx-auto py-4 space-y-2 max-w-3xl">
+	<!-- {JSON.stringify(data)} -->
 	{#each data.speech as speech, i}
-		{#if speech.type == 'info'}
+		{#if speech.type == 1}
+			{#if speech?.subtype == "applause"}
 			<div class="flex justify-center items-center">
-				<div class="badge-accent rounded-lg px-3 py-1">{speech.text}</div>
+				<div class="badge badge-outline">
+					<div class="tooltip" data-tip="Beifall">
+					👏🏻 {speech?.nameOfSpeaker}
+					</div>
+				</div>
 			</div>
-		{:else if speech?.text?.length > 0}
+			{:else}
+				<div class="flex justify-center items-center">
+					<div class="badge-accent rounded-lg px-3 py-1">{speech?.data}</div>
+					<!-- {JSON.stringify(speech)} -->
+				</div>
+			{/if}
+		{:else if speech.type == 3}
 			<div class="chat {speech?.subtype == "speechByMainSpeaker" ? "chat-start" : "chat-end"}">
 				<div class="chat-header">
-					{speech.nameOfSpeaker ?? ''}										  
-					{#if speech?.startTime !== undefined}
-						<time class="text-xs opacity-50">{speech.startTime}</time>
+					{speech?.nameOfSpeaker ?? ''}										  
+					{#if speech?.time}
+						<time class="text-xs opacity-50">{speech?.time}</time>
 					{/if}
 				</div>
-				<div class="chat-bubble {getChatBubbleColor(speech?.subtype, speech.nameOfSpeaker)}">					
-					{#each speech?.text as text, j}
+				<div class="chat-bubble {getChatBubbleColor(speech?.subtype, speech?.nameOfSpeaker)}">		
+					<!-- {JSON.stringify(speech)} -->
+					{#each speech?.data as text, j}
 						{text}
 						<!-- do newlines only if there are further elements -->
-						{#if j !== speech?.text?.length - 1}
+						{#if j !== speech?.data?.length - 1}
 							<br /> <br />
 						{/if}
-					{/each}
+					{/each}			
 				</div>				
 			</div>
 		{/if}

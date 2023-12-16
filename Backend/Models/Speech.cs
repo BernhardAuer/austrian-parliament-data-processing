@@ -8,6 +8,7 @@ namespace WebApi.Models;
 public class Speech
 {
     public SpeechObjectTypeEnum type { get; set; } // todo: does current C# version support string enums?
+    public string? subType { get; set; } // todo: does current C# version support string enums?
     public string data { get; set; }
     public string? speaker { get; set; }
     
