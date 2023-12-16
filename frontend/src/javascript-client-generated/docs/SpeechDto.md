@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **subtype** | **String** |  | [optional] 
 **data** | **String** |  | [optional] 
 **nameOfSpeaker** | **String** |  | [optional] 
-**activity** | **String** |  | [optional] 
+**description** | **String** |  | [optional] 
 **politicalRole** | **String** |  | [optional] 
 **orderId** | **Number** |  | [optional] 
 

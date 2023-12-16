@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Constants;
@@ -97,7 +98,8 @@ namespace WebApi.Controllers
                                 NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
                                 OrderId = speech.orderId,
                                 Data = infoItem?.quote,
-                                Type = SpeechObjectTypeEnum.Speech,// speech.type,
+                                Description = infoItem?.description,
+                                Type =  infoItem?.quote != null ? SpeechObjectTypeEnum.Speech : SpeechObjectTypeEnum.Info,// speech.type,
                                 Subtype = infoItem?.quote != null ? SpeechTypes.Interjection : SpeechTypes.InterjectionWithoutQuote
                             };
                             speechDtos.Add(speechDto);
@@ -110,6 +112,17 @@ namespace WebApi.Controllers
                                 OrderId = speech.orderId,
                                 Type = SpeechObjectTypeEnum.Info,// speech.type,
                                 Subtype = SpeechTypes.Applause
+                            };
+                            speechDtos.Add(speechDto);
+                        }
+                        if (infoItem?.activityList?.Length > 0 && (infoItem.activityList.Contains("cheerfulness")))
+                        {
+                            speechDto = new SpeechDto()
+                            {
+                                NameOfSpeaker = string.Join(", ", infoItem?.entityList?.Select(x => x?.name) ?? ImmutableList<string>.Empty),
+                                OrderId = speech.orderId,
+                                Type = SpeechObjectTypeEnum.Info,// speech.type,
+                                Subtype = SpeechTypes.Cheerfulness
                             };
                             speechDtos.Add(speechDto);
                         }

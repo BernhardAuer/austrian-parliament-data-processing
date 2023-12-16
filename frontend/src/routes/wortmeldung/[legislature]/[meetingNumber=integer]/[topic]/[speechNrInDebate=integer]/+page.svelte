@@ -62,6 +62,22 @@
 					</div>
 				</div>
 			</div>
+			{:else if speech?.subtype == "cheerfulness"}
+			<div class="flex justify-center items-center">
+				<div class="badge badge-outline">
+					<div class="tooltip" data-tip="Heiterkeit">
+					😅 {speech?.nameOfSpeaker}
+					</div>
+				</div>
+			</div>
+			{:else if speech?.subtype == "interjectionWithoutQuote"}
+			<div class="flex justify-center items-center">
+				<div class="badge badge-outline">
+					<div class="tooltip" data-tip="Zwischenruf">
+					🗣️ {speech?.nameOfSpeaker}
+					</div>
+				</div>
+			</div>
 			{:else}
 				<div class="flex justify-center items-center">
 					<div class="badge-accent rounded-lg px-3 py-1">{speech?.data}</div>
@@ -75,6 +91,9 @@
 					{#if speech?.time}
 						<time class="text-xs opacity-50">{speech?.time}</time>
 					{/if}
+					{#if speech?.description}
+					<time class="text-xs opacity-50">{speech?.description}</time>
+				{/if}
 				</div>
 				<div class="chat-bubble {getChatBubbleColor(speech?.subtype, speech?.nameOfSpeaker)}">		
 					<!-- {JSON.stringify(speech)} -->
