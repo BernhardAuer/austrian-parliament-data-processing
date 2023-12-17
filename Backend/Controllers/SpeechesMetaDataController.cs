@@ -99,7 +99,7 @@ namespace WebApi.Controllers
                             {
                                 speechDto = new SpeechDto()
                                 {
-                                    NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
+                                    NameOfSpeaker = string.Join(", ", infoItem?.entityList?.Select(x => x.name) ?? Enumerable.Empty<string>()),
                                     OrderId = speech.orderId,
                                     Data = infoItem?.quote,
                                     Description = infoItem?.description,
@@ -117,7 +117,7 @@ namespace WebApi.Controllers
                             {
                                 speechDto = new SpeechDto()
                                 {
-                                    NameOfSpeaker = string.Join(", ", infoItem.entityList.Select(x => x.name)),
+                                    NameOfSpeaker = string.Join(", ", infoItem?.entityList?.Select(x => x.name) ?? Enumerable.Empty<string>()),
                                     OrderId = speech.orderId,
                                     Type = SpeechObjectTypeEnum.Info, // speech.type,
                                     Subtype = SpeechTypes.Applause
@@ -130,7 +130,7 @@ namespace WebApi.Controllers
                                 speechDto = new SpeechDto()
                                 {
                                     NameOfSpeaker = string.Join(", ",
-                                        infoItem?.entityList?.Select(x => x?.name) ?? ImmutableList<string>.Empty),
+                                        infoItem?.entityList?.Select(x => x?.name) ?? Enumerable.Empty<string>()),
                                     OrderId = speech.orderId,
                                     Type = SpeechObjectTypeEnum.Info, // speech.type,
                                     Subtype = SpeechTypes.Cheerfulness
