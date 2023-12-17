@@ -34,8 +34,8 @@ export default class SpeechService {
                     if (currentItem?.type == 1 && currentItem?.subtype == "time") {
                         return mergedSpeeches;
                     }
-                    // first speach paragraph by any person
-                    if (i == 0 || (speeches[i-1]?.nameOfSpeaker != currentItem?.nameOfSpeaker) ) {                        
+                    // first speach paragraph by any person (or first item or no speach at all)
+                    if (i == 0 || currentItem?.type == 1 || (speeches[i-1]?.nameOfSpeaker != currentItem?.nameOfSpeaker)) {                        
                         // add time information if available
                         let previousItem = speeches[i-1];
                         if (previousItem?.type == 1 && previousItem?.subtype == "time") {
