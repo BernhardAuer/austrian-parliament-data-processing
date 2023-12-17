@@ -10,7 +10,6 @@ public class SpeechesMetaData
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
     public string? nameOfSpeaker { get; set; }
-    public int nrOfSpeechInDebate { get; set; }
     public int nrOfSpeechByThisPerson { get; set; }
     public string? typeOfSpeech { get; set; }
     public DateTime startDateTime { get; set; }
@@ -32,5 +31,7 @@ public class SpeechesMetaData
     public int? speechNrInDebate { get; set; }
     
     public Speech[]? speech { get; set; }
+    public string? speechUrl { get; set; } 
+    public string? videoUrl { get; set; } 
     
 }

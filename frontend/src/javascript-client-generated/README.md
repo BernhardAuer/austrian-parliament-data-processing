@@ -121,11 +121,11 @@ All URIs are relative to *http://localhost*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *WebApiVersion1000CultureneutralPublicKeyTokennull.NationalCouncilMeetingApi* | [**apiNationalCouncilMeetingGetNationalCouncilMeetingsGet**](docs/NationalCouncilMeetingApi.md#apiNationalCouncilMeetingGetNationalCouncilMeetingsGet) | **GET** /api/NationalCouncilMeeting/getNationalCouncilMeetings | 
-*WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesApi* | [**apiSpeechesGetPureSpeechesGet**](docs/SpeechesApi.md#apiSpeechesGetPureSpeechesGet) | **GET** /api/Speeches/getPureSpeeches | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetDistributionOfSpeakingTimeGet) | **GET** /api/SpeechesMetaData/getDistributionOfSpeakingTime | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet) | **GET** /api/SpeechesMetaData/getLegislaturesAndMeetingNumbers | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetPureSpeechesGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetPureSpeechesGet) | **GET** /api/SpeechesMetaData/getPureSpeeches | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetSpeechDurationsGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetSpeechDurationsGet) | **GET** /api/SpeechesMetaData/getSpeechDurations | 
+*WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetSpeechSourceLinksGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetSpeechSourceLinksGet) | **GET** /api/SpeechesMetaData/getSpeechSourceLinks | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetSpeechesGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetSpeechesGet) | **GET** /api/SpeechesMetaData/getSpeeches | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataGetTypeOfSpeechesCountListGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataGetTypeOfSpeechesCountListGet) | **GET** /api/SpeechesMetaData/getTypeOfSpeechesCountList | 
 *WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi* | [**apiSpeechesMetaDataSearchTopicsGet**](docs/SpeechesMetaDataApi.md#apiSpeechesMetaDataSearchTopicsGet) | **GET** /api/SpeechesMetaData/searchTopics | 
@@ -139,6 +139,7 @@ Class | Method | HTTP request | Description
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechDto](docs/SpeechDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechDurationDto](docs/SpeechDurationDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechObjectTypeEnum](docs/SpeechObjectTypeEnum.md)
+ - [WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechSourceLinksDto](docs/SpeechSourceLinksDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesDto](docs/SpeechesDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.TopicSearchResultDto](docs/TopicSearchResultDto.md)
  - [WebApiVersion1000CultureneutralPublicKeyTokennull.TypeOfSpeechCountDto](docs/TypeOfSpeechCountDto.md)

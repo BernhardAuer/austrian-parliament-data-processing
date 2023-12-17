@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **politicalPartie** | **String** |  | [optional] 
 **speechSneakPeak** | **String** |  | [optional] 
 **speechNrInDebate** | **Number** |  | [optional] 
+**speechNrOfPerson** | **Number** |  | [optional] 
 **activitiesCount** | **{String: Number}** |  | [optional] 
 
 

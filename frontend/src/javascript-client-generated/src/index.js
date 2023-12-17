@@ -19,11 +19,11 @@ import NationalCouncilMeetingsPerYearDto from './model/NationalCouncilMeetingsPe
 import SpeechDto from './model/SpeechDto';
 import SpeechDurationDto from './model/SpeechDurationDto';
 import SpeechObjectTypeEnum from './model/SpeechObjectTypeEnum';
+import SpeechSourceLinksDto from './model/SpeechSourceLinksDto';
 import SpeechesDto from './model/SpeechesDto';
 import TopicSearchResultDto from './model/TopicSearchResultDto';
 import TypeOfSpeechCountDto from './model/TypeOfSpeechCountDto';
 import NationalCouncilMeetingApi from './api/NationalCouncilMeetingApi';
-import SpeechesApi from './api/SpeechesApi';
 import SpeechesMetaDataApi from './api/SpeechesMetaDataApi';
 
 
@@ -102,6 +102,12 @@ export {
     SpeechObjectTypeEnum,
 
     /**
+     * The SpeechSourceLinksDto model constructor.
+     * @property {module:model/SpeechSourceLinksDto}
+     */
+    SpeechSourceLinksDto,
+
+    /**
      * The SpeechesDto model constructor.
      * @property {module:model/SpeechesDto}
      */
@@ -124,12 +130,6 @@ export {
     * @property {module:api/NationalCouncilMeetingApi}
     */
     NationalCouncilMeetingApi,
-
-    /**
-    * The SpeechesApi service constructor.
-    * @property {module:api/SpeechesApi}
-    */
-    SpeechesApi,
 
     /**
     * The SpeechesMetaDataApi service constructor.
