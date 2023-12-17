@@ -9,6 +9,7 @@ docs/NationalCouncilMeetingsPerYearDto.md
 docs/SpeechDto.md
 docs/SpeechDurationDto.md
 docs/SpeechObjectTypeEnum.md
+docs/SpeechSourceLinksDto.md
 docs/SpeechesDto.md
 docs/SpeechesMetaDataApi.md
 docs/TopicSearchResultDto.md
@@ -26,6 +27,8 @@ src/model/NationalCouncilMeetingsPerYearDto.js
 src/model/SpeechDto.js
 src/model/SpeechDurationDto.js
 src/model/SpeechObjectTypeEnum.js
+src/model/SpeechSourceLinksDto.js
 src/model/SpeechesDto.js
 src/model/TopicSearchResultDto.js
 src/model/TypeOfSpeechCountDto.js
+test/model/SpeechSourceLinksDto.spec.js

@@ -17,6 +17,7 @@ namespace WebApi.Controllers
     {
         private readonly SpeechesMetaDataService _speechesMetaDataService;
         private readonly AustrianParliamentAbbreviationMappings _austrianParliamentAbbreviationMappings;
+        private readonly string _sourceOriginBaseUrl = "https://www.parlament.gv.at";
 
         public SpeechesMetaDataController(SpeechesMetaDataService speechesMetaDataService, AustrianParliamentAbbreviationMappings austrianParliamentAbbreviationMappings)
         {
@@ -195,6 +196,17 @@ namespace WebApi.Controllers
             return speechDtos;
         }
 
+        [HttpGet]
+        [Route("getSpeechSourceLinks")]
+        public async Task<SpeechSourceLinksDto> GetSpeechSourceLinks([FromQuery] string legislature, [FromQuery] int meetingNumber, 
+            [FromQuery] int speechNrInDebate, [FromQuery] string topic)
+        {
+            var sourceLinks =
+                await _speechesMetaDataService.GetSpeechSourceLinks(legislature, meetingNumber, topic, speechNrInDebate);
+
+            return new SpeechSourceLinksDto { SpeechUrl = _sourceOriginBaseUrl + sourceLinks?.speechUrl, VideoUrl = _sourceOriginBaseUrl + sourceLinks?.videoUrl };
+        }
+        
         [HttpGet]
         [Route("getTypeOfSpeechesCountList")]
         public async Task<List<TypeOfSpeechCountDto>> GetTypeOfSpeechesCountList([FromQuery] TypeOfSpeechFilterDto typeOfSpeechFilterDto)

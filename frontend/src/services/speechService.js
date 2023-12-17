@@ -58,5 +58,16 @@ export default class SpeechService {
         }
         return null;
     }
+
+    fetchSpeechSourceLinks = async (options) => {
+        try {
+
+            let sourceLinks = await this.#apiInstance.apiSpeechesMetaDataGetSpeechSourceLinksGet(options);
+            return sourceLinks;
+        } catch (e) {
+            console.log(e);
+        }
+        return null;
+    }
 }
 

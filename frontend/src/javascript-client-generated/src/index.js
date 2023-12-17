@@ -19,6 +19,7 @@ import NationalCouncilMeetingsPerYearDto from './model/NationalCouncilMeetingsPe
 import SpeechDto from './model/SpeechDto';
 import SpeechDurationDto from './model/SpeechDurationDto';
 import SpeechObjectTypeEnum from './model/SpeechObjectTypeEnum';
+import SpeechSourceLinksDto from './model/SpeechSourceLinksDto';
 import SpeechesDto from './model/SpeechesDto';
 import TopicSearchResultDto from './model/TopicSearchResultDto';
 import TypeOfSpeechCountDto from './model/TypeOfSpeechCountDto';
@@ -99,6 +100,12 @@ export {
      * @property {module:model/SpeechObjectTypeEnum}
      */
     SpeechObjectTypeEnum,
+
+    /**
+     * The SpeechSourceLinksDto model constructor.
+     * @property {module:model/SpeechSourceLinksDto}
+     */
+    SpeechSourceLinksDto,
 
     /**
      * The SpeechesDto model constructor.

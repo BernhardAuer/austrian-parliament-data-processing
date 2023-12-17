@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetLegislaturesAndMeetingNumbersGet) | **GET** /api/SpeechesMetaData/getLegislaturesAndMeetingNumbers | 
 [**apiSpeechesMetaDataGetPureSpeechesGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetPureSpeechesGet) | **GET** /api/SpeechesMetaData/getPureSpeeches | 
 [**apiSpeechesMetaDataGetSpeechDurationsGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetSpeechDurationsGet) | **GET** /api/SpeechesMetaData/getSpeechDurations | 
+[**apiSpeechesMetaDataGetSpeechSourceLinksGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetSpeechSourceLinksGet) | **GET** /api/SpeechesMetaData/getSpeechSourceLinks | 
 [**apiSpeechesMetaDataGetSpeechesGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetSpeechesGet) | **GET** /api/SpeechesMetaData/getSpeeches | 
 [**apiSpeechesMetaDataGetTypeOfSpeechesCountListGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataGetTypeOfSpeechesCountListGet) | **GET** /api/SpeechesMetaData/getTypeOfSpeechesCountList | 
 [**apiSpeechesMetaDataSearchTopicsGet**](SpeechesMetaDataApi.md#apiSpeechesMetaDataSearchTopicsGet) | **GET** /api/SpeechesMetaData/searchTopics | 
@@ -191,6 +192,56 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**[SpeechDurationDto]**](SpeechDurationDto.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: text/plain, application/json, text/json
+
+
+## apiSpeechesMetaDataGetSpeechSourceLinksGet
+
+> SpeechSourceLinksDto apiSpeechesMetaDataGetSpeechSourceLinksGet(opts)
+
+
+
+### Example
+
+```javascript
+import WebApiVersion1000CultureneutralPublicKeyTokennull from 'web_api_version1_0_0_0_cultureneutral_public_key_tokennull';
+
+let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.SpeechesMetaDataApi();
+let opts = {
+  'legislature': "legislature_example", // String | 
+  'meetingNumber': 56, // Number | 
+  'speechNrInDebate': 56, // Number | 
+  'topic': "topic_example" // String | 
+};
+apiInstance.apiSpeechesMetaDataGetSpeechSourceLinksGet(opts).then((data) => {
+  console.log('API called successfully. Returned data: ' + data);
+}, (error) => {
+  console.error(error);
+});
+
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **legislature** | **String**|  | [optional] 
+ **meetingNumber** | **Number**|  | [optional] 
+ **speechNrInDebate** | **Number**|  | [optional] 
+ **topic** | **String**|  | [optional] 
+
+### Return type
+
+[**SpeechSourceLinksDto**](SpeechSourceLinksDto.md)
 
 ### Authorization
 

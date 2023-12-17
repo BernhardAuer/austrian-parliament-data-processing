@@ -1,6 +1,7 @@
 <script>
 	import InfoBadge from './InfoBadge.svelte';
 import ChatBubble from './ChatBubble.svelte';
+	import SourceLinksHint from './SourceLinksHint.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
@@ -36,6 +37,8 @@ import ChatBubble from './ChatBubble.svelte';
 		{data.meetingNumber}. NR-Sitzung / {data.legislature} GP
 	</h3>
 </div>
+
+<SourceLinksHint speechUrl={data.sourceLinks?.speechUrl} videoUrl={data.sourceLinks?.videoUrl}/>
 
 <div class="mx-auto py-4 space-y-2 max-w-3xl">
 	{#each data.speech as speech}
