@@ -1,7 +1,20 @@
 <script>
 	import '../app.css';
 	import Footer from './footer.svelte'
+	import { fade } from "svelte/transition";
+  	import { navigating } from "$app/stores";
+	import { BarLoader } from 'svelte-loading-spinners';
 </script>
+
+<!-- shoutout to https://www.ratamero.com/blog/showing-a-loading-spinner-when-navigation-is-delayed-in-sveltekit -->
+{#if Boolean($navigating)}
+	<div class="css-tweaked-bar-loader w-full fixed top-0 z-50">
+		<BarLoader size="60" color="#1e40af" duration="1s"/>
+	</div>
+	<div class="fixed w-full h-full z-10" in:fade={{ duration: 150 }}>
+		<div class="absolute w-full h-full bg-white dark:bg-cyan-800 opacity-50 z-10"></div>
+	</div>
+{/if}
 
 <div class="flex flex-col h-screen justify-between">
 	<div class="navbar bg-base-100 shadow-sm">
@@ -53,3 +66,9 @@
 	<Footer class="self-end"></Footer>
 </div>
 
+<style>
+	/* overwrite svelte component styling from svelte-loading-spinners */
+	.css-tweaked-bar-loader :global(.wrapper) {  /* this is needed so css is not leaking ... see https://stackoverflow.com/a/56989664  */
+		width: 100% !important;
+	}
+</style>
