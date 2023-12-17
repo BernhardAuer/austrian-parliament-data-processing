@@ -55,6 +55,10 @@
 		};
 		return colorDict[labelName];
 	};
+
+	const getUrlParamSpeechNrOfPerson = (speechNrOfPerson) => {
+		return speechNrOfPerson != 0 ? "/" + speechNrOfPerson : "";
+	};
 </script>
 
 <div class="card max-w-xs {mapLabelsToBackgroundColor(speech.typeOfSpeech)} shadow-xl">
@@ -71,7 +75,7 @@
 				<p class="text-justify line-clamp-4">
 					{speech.speechSneakPeak}
 				</p>
-				<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(topic)}/{speech.speechNrInDebate}?speaker={speech.nameOfSpeaker}" class="btn btn-ghost">
+				<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(topic)}/{speech.nameOfSpeaker}{getUrlParamSpeechNrOfPerson(speech.speechNrOfPerson)}" class="btn btn-ghost">
 					weiterlesen
 				</a>
 			{/if}

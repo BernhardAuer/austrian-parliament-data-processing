@@ -1,15 +1,14 @@
 import { error } from '@sveltejs/kit';
-import SpeechService from './../../../../../../services/speechService.js';
+import SpeechService from './../../../../../../../services/speechService.js';
 let service = new SpeechService();
-export const csr = false;
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, url }) {
     let speechPromise = service.fetchPureSpeech({ legislature: params.legislature, meetingNumber: params.meetingNumber, topic: params.topic,
-    speechNrInDebate: params.speechNrInDebate });    
+    nameOfSpeaker: params.nameOfSpeaker, speechNrOfPerson: params?.speechNrOfPerson });    
     
     let sourceLinksPromise = service.fetchSpeechSourceLinks({ legislature: params.legislature, meetingNumber: params.meetingNumber, topic: params.topic,
-        speechNrInDebate: params.speechNrInDebate });  
+        nameOfSpeaker: params.nameOfSpeaker, speechNrOfPerson: params?.speechNrOfPerson });
 
     let [speech, sourceLinks] = await Promise.all([speechPromise, sourceLinksPromise]);
     if (speech == null) {
@@ -20,7 +19,7 @@ export async function load({ params, url }) {
         legislature: params.legislature, 
         meetingNumber: params.meetingNumber, 
         topic: params.topic,
-        nameOfSpeaker: url.searchParams.get('speaker'),
+        nameOfSpeaker: params.nameOfSpeaker,
         sourceLinks: sourceLinks
     };
 }

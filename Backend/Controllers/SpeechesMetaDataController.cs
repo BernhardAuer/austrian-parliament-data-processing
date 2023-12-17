@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Constants;
@@ -41,6 +40,7 @@ namespace WebApi.Controllers
                     LengthOfSpeechInSec = x.lengthOfSpeechInSec,
                     SpeechSneakPeak = GetTextWithoutSalutation(x?.speech?.FirstOrDefault(x => x.type == SpeechObjectTypeEnum.Speech)?.data),
                     SpeechNrInDebate = x.speechNrInDebate ?? 0,
+                    SpeechNrOfPerson = x.nrOfSpeechByThisPerson,
                     ActivitiesCount = x?. speech == null ? new Dictionary<string, int>(): x.speech
                         .Where(y => y.parsedInfoItems != null)
                         .SelectMany(y => y.parsedInfoItems)
@@ -80,10 +80,10 @@ namespace WebApi.Controllers
         [HttpGet]
         [Route("getPureSpeeches")]
         public async Task<List<SpeechDto>> GetPureSpeeches([FromQuery] string legislature, [FromQuery] int meetingNumber, 
-            [FromQuery] int speechNrInDebate, [FromQuery] string topic)
+            [FromQuery] string topic, [FromQuery] string nameOfSpeaker, [FromQuery] int speechNrOfPerson = 0)
         {
             var speeches =
-                await _speechesMetaDataService.GetPureSpeeches(legislature, meetingNumber, topic, speechNrInDebate);
+                await _speechesMetaDataService.GetPureSpeeches(legislature, meetingNumber, topic, nameOfSpeaker, speechNrOfPerson);
             List<SpeechDto> speechDtos = new List<SpeechDto>();
             foreach (var speech in speeches)
             {
@@ -199,10 +199,10 @@ namespace WebApi.Controllers
         [HttpGet]
         [Route("getSpeechSourceLinks")]
         public async Task<SpeechSourceLinksDto> GetSpeechSourceLinks([FromQuery] string legislature, [FromQuery] int meetingNumber, 
-            [FromQuery] int speechNrInDebate, [FromQuery] string topic)
+            [FromQuery] string topic, [FromQuery] string nameOfSpeaker, [FromQuery] int speechNrOfPerson = 0)
         {
             var sourceLinks =
-                await _speechesMetaDataService.GetSpeechSourceLinks(legislature, meetingNumber, topic, speechNrInDebate);
+                await _speechesMetaDataService.GetSpeechSourceLinks(legislature, meetingNumber, topic, nameOfSpeaker, speechNrOfPerson);
 
             return new SpeechSourceLinksDto { SpeechUrl = _sourceOriginBaseUrl + sourceLinks?.speechUrl, VideoUrl = _sourceOriginBaseUrl + sourceLinks?.videoUrl };
         }

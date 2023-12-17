@@ -118,8 +118,9 @@ let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.Speeches
 let opts = {
   'legislature': "legislature_example", // String | 
   'meetingNumber': 56, // Number | 
-  'speechNrInDebate': 56, // Number | 
-  'topic': "topic_example" // String | 
+  'topic': "topic_example", // String | 
+  'nameOfSpeaker': "nameOfSpeaker_example", // String | 
+  'speechNrOfPerson': 0 // Number | 
 };
 apiInstance.apiSpeechesMetaDataGetPureSpeechesGet(opts).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -136,8 +137,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **legislature** | **String**|  | [optional] 
  **meetingNumber** | **Number**|  | [optional] 
- **speechNrInDebate** | **Number**|  | [optional] 
  **topic** | **String**|  | [optional] 
+ **nameOfSpeaker** | **String**|  | [optional] 
+ **speechNrOfPerson** | **Number**|  | [optional] [default to 0]
 
 ### Return type
 
@@ -218,8 +220,9 @@ let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.Speeches
 let opts = {
   'legislature': "legislature_example", // String | 
   'meetingNumber': 56, // Number | 
-  'speechNrInDebate': 56, // Number | 
-  'topic': "topic_example" // String | 
+  'topic': "topic_example", // String | 
+  'nameOfSpeaker': "nameOfSpeaker_example", // String | 
+  'speechNrOfPerson': 0 // Number | 
 };
 apiInstance.apiSpeechesMetaDataGetSpeechSourceLinksGet(opts).then((data) => {
   console.log('API called successfully. Returned data: ' + data);
@@ -236,8 +239,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **legislature** | **String**|  | [optional] 
  **meetingNumber** | **Number**|  | [optional] 
- **speechNrInDebate** | **Number**|  | [optional] 
  **topic** | **String**|  | [optional] 
+ **nameOfSpeaker** | **String**|  | [optional] 
+ **speechNrOfPerson** | **Number**|  | [optional] [default to 0]
 
 ### Return type
 

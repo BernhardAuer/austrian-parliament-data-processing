@@ -135,8 +135,9 @@ export default class SpeechesMetaDataApi {
      * @param {Object} opts Optional parameters
      * @param {String} [legislature] 
      * @param {Number} [meetingNumber] 
-     * @param {Number} [speechNrInDebate] 
      * @param {String} [topic] 
+     * @param {String} [nameOfSpeaker] 
+     * @param {Number} [speechNrOfPerson = 0)] 
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link Array.<module:model/SpeechDto>} and HTTP response
      */
     apiSpeechesMetaDataGetPureSpeechesGetWithHttpInfo(opts) {
@@ -148,8 +149,9 @@ export default class SpeechesMetaDataApi {
       let queryParams = {
         'legislature': opts['legislature'],
         'meetingNumber': opts['meetingNumber'],
-        'speechNrInDebate': opts['speechNrInDebate'],
-        'topic': opts['topic']
+        'topic': opts['topic'],
+        'nameOfSpeaker': opts['nameOfSpeaker'],
+        'speechNrOfPerson': opts['speechNrOfPerson']
       };
       let headerParams = {
       };
@@ -171,8 +173,9 @@ export default class SpeechesMetaDataApi {
      * @param {Object} opts Optional parameters
      * @param {String} opts.legislature 
      * @param {Number} opts.meetingNumber 
-     * @param {Number} opts.speechNrInDebate 
      * @param {String} opts.topic 
+     * @param {String} opts.nameOfSpeaker 
+     * @param {Number} opts.speechNrOfPerson  (default to 0)
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link Array.<module:model/SpeechDto>}
      */
     apiSpeechesMetaDataGetPureSpeechesGet(opts) {
@@ -239,8 +242,9 @@ export default class SpeechesMetaDataApi {
      * @param {Object} opts Optional parameters
      * @param {String} [legislature] 
      * @param {Number} [meetingNumber] 
-     * @param {Number} [speechNrInDebate] 
      * @param {String} [topic] 
+     * @param {String} [nameOfSpeaker] 
+     * @param {Number} [speechNrOfPerson = 0)] 
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/SpeechSourceLinksDto} and HTTP response
      */
     apiSpeechesMetaDataGetSpeechSourceLinksGetWithHttpInfo(opts) {
@@ -252,8 +256,9 @@ export default class SpeechesMetaDataApi {
       let queryParams = {
         'legislature': opts['legislature'],
         'meetingNumber': opts['meetingNumber'],
-        'speechNrInDebate': opts['speechNrInDebate'],
-        'topic': opts['topic']
+        'topic': opts['topic'],
+        'nameOfSpeaker': opts['nameOfSpeaker'],
+        'speechNrOfPerson': opts['speechNrOfPerson']
       };
       let headerParams = {
       };
@@ -275,8 +280,9 @@ export default class SpeechesMetaDataApi {
      * @param {Object} opts Optional parameters
      * @param {String} opts.legislature 
      * @param {Number} opts.meetingNumber 
-     * @param {Number} opts.speechNrInDebate 
      * @param {String} opts.topic 
+     * @param {String} opts.nameOfSpeaker 
+     * @param {Number} opts.speechNrOfPerson  (default to 0)
      * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/SpeechSourceLinksDto}
      */
     apiSpeechesMetaDataGetSpeechSourceLinksGet(opts) {

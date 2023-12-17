@@ -44,6 +44,7 @@ public class SpeechesMetaDataService
                 topic = x.topic,
                 politicalPartie = x.politicalPartie,
                 speechNrInDebate = x.speechNrInDebate,
+                nrOfSpeechByThisPerson = x.nrOfSpeechByThisPerson,
                 speech = x.speech
             })
             .ToListAsync();
@@ -51,13 +52,14 @@ public class SpeechesMetaDataService
         return result;
     }
 
-    public async Task<List<Speech>> GetPureSpeeches(string legislature, int meetingNumber, string topic, int speechNrInDebate)
+    public async Task<List<Speech>> GetPureSpeeches(string legislature, int meetingNumber, string topic, string nameOfSpeaker, int speechNrOfPerson)
     {
         var query = _speechesMetaDataCollection
             .Aggregate()
             .Match(x => x.legislature == legislature && x.meetingNr == meetingNumber 
                                                      && x.topic == topic
-                                                     && x.speechNrInDebate == speechNrInDebate);
+                                                     && x.nameOfSpeaker == nameOfSpeaker
+                                                     && x.nrOfSpeechByThisPerson == speechNrOfPerson);
         
         var result = await query.Limit(1)
             .Project(x => x.speech)
@@ -65,13 +67,14 @@ public class SpeechesMetaDataService
         return result.ToList();
     }
     
-    public async Task<dynamic> GetSpeechSourceLinks(string legislature, int meetingNumber, string topic, int speechNrInDebate)
+    public async Task<dynamic> GetSpeechSourceLinks(string legislature, int meetingNumber, string topic, string nameOfSpeaker, int speechNrOfPerson)
     {
         var query = _speechesMetaDataCollection
             .Aggregate()
             .Match(x => x.legislature == legislature && x.meetingNr == meetingNumber 
                                                      && x.topic == topic
-                                                     && x.speechNrInDebate == speechNrInDebate);
+                                                     && x.nameOfSpeaker == nameOfSpeaker
+                                                     && x.nrOfSpeechByThisPerson == speechNrOfPerson);
         
         var result = await query.Limit(1)
             .Project(x => new { x.videoUrl, x.speechUrl })
