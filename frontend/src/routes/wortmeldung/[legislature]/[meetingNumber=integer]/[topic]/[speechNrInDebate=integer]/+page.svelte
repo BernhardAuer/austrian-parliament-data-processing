@@ -1,10 +1,11 @@
 <script>
-	import { LogarithmicScale } from 'chart.js';
+	import InfoBadge from './InfoBadge.svelte';
+import ChatBubble from './ChatBubble.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
 
-	let availableChatBubbleColors = [
+	const availableChatBubbleColors = [
 		"bg-sky-100",
 		"bg-red-300",
 		"bg-slate-400",
@@ -16,22 +17,8 @@
 		"bg-pink-100",
 		"bg-stone-100",
 	]
-	let uniqueColorForNameDict = {}
-
-	const getChatBubbleColor = (speechSubtype, name) => {
-		switch(speechSubtype) {
-			case "remarksFromPresident": return "chat-bubble-primary";	
-			case "speechByMainSpeaker": return "chat-bubble-neutral";		
-			case "interjection": 
-				if (name in uniqueColorForNameDict) {
-					return uniqueColorForNameDict[name];
-				} else {
-					let color = availableChatBubbleColors.pop();
-					uniqueColorForNameDict[name] = color;
-					return color;
-				}
-		}
-	};
+	const uniqueColorForNameDict = {}
+	
 </script>
 
 <svelte:head>
@@ -51,61 +38,11 @@
 </div>
 
 <div class="mx-auto py-4 space-y-2 max-w-3xl">
-	<!-- {JSON.stringify(data)} -->
-	{#each data.speech as speech, i}
+	{#each data.speech as speech}
 		{#if speech.type == 1}
-			{#if speech?.subtype == "applause"}
-			<div class="flex justify-center items-center">
-				<div class="badge badge-outline">
-					<div class="tooltip tooltip-secondary" data-tip={speech?.data ?? "Beifall"}>
-					👏🏻 {speech?.nameOfSpeaker}
-					</div>
-				</div>
-			</div>
-			{:else if speech?.subtype == "cheerfulness"}
-			<div class="flex justify-center items-center">
-				<div class="badge badge-outline">
-					<div class="tooltip tooltip-secondary" data-tip={speech?.data ?? "Heiterkeit"}>
-					😅 {speech?.nameOfSpeaker}
-					</div>
-				</div>
-			</div>
-			{:else if speech?.subtype == "interjectionWithoutQuote"}
-			<div class="flex justify-center items-center">
-				<div class="badge badge-outline">
-					<div class="tooltip tooltip-secondary" data-tip={speech?.data ?? "Zwischenruf"}>
-					🗣️ {speech?.nameOfSpeaker}
-					</div>
-				</div>
-			</div>
-			{:else}
-				<div class="flex justify-center items-center">
-					<div class="badge-accent rounded-lg px-3 py-1">{speech?.data}</div>
-					<!-- {JSON.stringify(speech)} -->
-				</div>
-			{/if}
+			<InfoBadge speech = {speech}/>
 		{:else if speech.type == 3}
-			<div class="chat {speech?.subtype == "speechByMainSpeaker" ? "chat-start" : "chat-end"}">
-				<div class="chat-header">
-					{speech?.nameOfSpeaker ?? ''}										  
-					{#if speech?.time}
-						<time class="text-xs opacity-50">{speech?.time}</time>
-					{/if}
-					{#if speech?.description}
-					<time class="text-xs opacity-50">{speech?.description}</time>
-				{/if}
-				</div>
-				<div class="chat-bubble {getChatBubbleColor(speech?.subtype, speech?.nameOfSpeaker)}">		
-					<!-- {JSON.stringify(speech)} -->
-					{#each speech?.data as text, j}
-						{text}
-						<!-- do newlines only if there are further elements -->
-						{#if j !== speech?.data?.length - 1}
-							<br /> <br />
-						{/if}
-					{/each}			
-				</div>				
-			</div>
+			<ChatBubble speech = {speech} uniqueColorForNameDict={uniqueColorForNameDict} availableChatBubbleColors={availableChatBubbleColors}/>
 		{/if}
 	{/each}
 </div>
