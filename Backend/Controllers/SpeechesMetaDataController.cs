@@ -90,7 +90,6 @@ namespace WebApi.Controllers
                 switch (speech.type)
                 {
                     case SpeechObjectTypeEnum.Info:
-                        var isUnknownInfoObject = false;
                         foreach (var infoItem in speech?.parsedInfoItems ?? Enumerable.Empty<SpeechParsedInfoItem>())
                         {
                             speechDto = null;
@@ -101,7 +100,7 @@ namespace WebApi.Controllers
                                 {
                                     NameOfSpeaker = string.Join(", ", infoItem?.entityList?.Select(x => x.name) ?? Enumerable.Empty<string>()),
                                     OrderId = speech.orderId,
-                                    Data = infoItem?.quote,
+                                    Data = infoItem?.quote ?? infoItem?.rawSourceText,
                                     Description = infoItem?.description,
                                     Type = infoItem?.quote != null
                                         ? SpeechObjectTypeEnum.Speech
@@ -117,6 +116,7 @@ namespace WebApi.Controllers
                             {
                                 speechDto = new SpeechDto()
                                 {
+                                    Data = infoItem?.rawSourceText,
                                     NameOfSpeaker = string.Join(", ", infoItem?.entityList?.Select(x => x.name) ?? Enumerable.Empty<string>()),
                                     OrderId = speech.orderId,
                                     Type = SpeechObjectTypeEnum.Info, // speech.type,
@@ -129,6 +129,7 @@ namespace WebApi.Controllers
                             {
                                 speechDto = new SpeechDto()
                                 {
+                                    Data = infoItem?.rawSourceText,
                                     NameOfSpeaker = string.Join(", ",
                                         infoItem?.entityList?.Select(x => x?.name) ?? Enumerable.Empty<string>()),
                                     OrderId = speech.orderId,
@@ -140,7 +141,14 @@ namespace WebApi.Controllers
 
                             if (speechDto == null)
                             {
-                                isUnknownInfoObject = true;
+                                speechDto = new SpeechDto()
+                                {
+                                    Data = infoItem?.rawSourceText,
+                                    OrderId = speech.orderId,
+                                    Type = SpeechObjectTypeEnum.Info, // speech.type,
+                                    Subtype = speech.subType
+                                };
+                                speechDtos.Add(speechDto);
                             }
                         }
                         if (speech.subType == "time")
@@ -155,7 +163,7 @@ namespace WebApi.Controllers
                             speechDtos.Add(speechDto);
                         }
 
-                        if (speechDto == null || isUnknownInfoObject)
+                        if (speechDto == null)
                         {
                             speechDto = new SpeechDto()
                             {
@@ -184,24 +192,6 @@ namespace WebApi.Controllers
                         break;
                 }
             }
-        //
-        //     var result = speeches.Select(x => x.parsedInfoItems != null 
-        //             ?  new SpeechDto()
-        //             {
-        //                 Name= x.speaker,
-        //                 OrderId = x.orderId,
-        //                 Data = x.parsedInfoItems,
-        //                 Type = x.type
-        //             } 
-        //             : new SpeechDto()
-        //         {
-        //             Name= x.speaker,
-        //             PoliticalRole = x.politicalRole,
-        //             OrderId = x.orderId,
-        //             Data = x.data,
-        //             Type = x.type
-        //         })
-        //         .ToList();
             return speechDtos;
         }
 

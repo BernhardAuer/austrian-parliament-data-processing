@@ -57,7 +57,7 @@
 			{#if speech?.subtype == "applause"}
 			<div class="flex justify-center items-center">
 				<div class="badge badge-outline">
-					<div class="tooltip" data-tip="Beifall">
+					<div class="tooltip tooltip-secondary" data-tip={speech?.data ?? "Beifall"}>
 					👏🏻 {speech?.nameOfSpeaker}
 					</div>
 				</div>
@@ -65,7 +65,7 @@
 			{:else if speech?.subtype == "cheerfulness"}
 			<div class="flex justify-center items-center">
 				<div class="badge badge-outline">
-					<div class="tooltip" data-tip="Heiterkeit">
+					<div class="tooltip tooltip-secondary" data-tip={speech?.data ?? "Heiterkeit"}>
 					😅 {speech?.nameOfSpeaker}
 					</div>
 				</div>
@@ -73,7 +73,7 @@
 			{:else if speech?.subtype == "interjectionWithoutQuote"}
 			<div class="flex justify-center items-center">
 				<div class="badge badge-outline">
-					<div class="tooltip" data-tip="Zwischenruf">
+					<div class="tooltip tooltip-secondary" data-tip={speech?.data ?? "Zwischenruf"}>
 					🗣️ {speech?.nameOfSpeaker}
 					</div>
 				</div>
