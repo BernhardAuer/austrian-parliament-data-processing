@@ -4,6 +4,24 @@
 	import { fade } from "svelte/transition";
   	import { navigating } from "$app/stores";
 	import { BarLoader } from 'svelte-loading-spinners';
+	import { page } from '$app/stores';
+
+	const legislature = $page.params['legislature'];
+	const meetingNumber = $page.params['meetingNumber'];
+	const topic = $page.params['topic'];
+
+	const getDataFilterUrlParams = () => {
+		let resultParams = "";
+		if (legislature != undefined && meetingNumber != undefined) {
+			resultParams += `/${legislature}/${meetingNumber}`;
+		}
+		if (topic != undefined) {
+			resultParams += `/${topic}`;
+		}
+		return resultParams;
+	};
+	$: legislature, meetingNumber, topic, console.log(getDataFilterUrlParams());
+	$: $page, console.log(JSON.stringify($page.params))
 </script>
 
 <!-- shoutout to https://www.ratamero.com/blog/showing-a-loading-spinner-when-navigation-is-delayed-in-sveltekit -->
@@ -49,10 +67,10 @@
 
 		<div class="navbar-center hidden lg:flex">
 			<ul class="menu menu-horizontal px-1">
-				<li><a href="/wortmeldungsarten">Wortmeldungsarten</a></li>	
-				<li><a href="/wortmeldungsdauer">Wortmeldungsdauer</a></li>		
-				<li><a href="/wortmeldungsverhältnisse">Wortmeldungsverhältnis</a></li>		
-				<li><a href="/sitzungsverteilung">Nationalratssitzungen</a></li>				
+				<li><a href={"/wortmeldungsarten" + getDataFilterUrlParams()}>Wortmeldungsarten</a></li>	
+				<li><a href={"/wortmeldungsdauer" + getDataFilterUrlParams()}>Wortmeldungsdauer</a></li>		
+				<li><a href={"/wortmeldungsverhältnisse" + getDataFilterUrlParams()}>Wortmeldungsverhältnis</a></li>		
+				<li><a href={"/sitzungsverteilung" + getDataFilterUrlParams()}>Nationalratssitzungen</a></li>				
 			</ul>
 		</div>
 		<div class="navbar-end">
