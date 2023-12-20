@@ -99,10 +99,12 @@ def entity_PersonOrPeople(phrase, infoItems):
     
     # detect descriptive behaviour of speaker
     # attention: gedankenstrich
-    if word == "–" and "–:" in remainingPhrase: # todo: needs further checks ...
-        # edge case: description before speech e.g.:Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!
+    if word == "–" and "–:" in remainingPhrase and not "–" in remainingPhrase[:remainingPhrase.index("–:")]:
+        # description before speech e.g.:Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!
         infoItems[-1].addToRawSourceText(word)
         return (State.BehaviourDescription, remainingPhrase, infoItems)
+    elif word == "–":
+        return (State.DetermineWordMeaning, phrase, infoItems)
     
     entity = detectPoliticalPartyAbr(wordWithoutPunctuation)    
     if entity:
@@ -126,10 +128,10 @@ def entity_PersonOrPeople(phrase, infoItems):
         
 def behaviourDescription(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
+    infoItems[-1].addToRawSourceText(word)
     if word.endswith("–:"):
         return (State.Interjection, remainingPhrase, infoItems)
     
-    infoItems[-1].addToRawSourceText(word)
     infoItems[-1].description = appendWordToPhrase(infoItems[-1].description, word)
     return (State.BehaviourDescription, remainingPhrase, infoItems)
 
