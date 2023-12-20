@@ -15,7 +15,8 @@ def newItem(phrase, infoItems):
     return (State.DetermineWordMeaning, phrase, infoItems)
 
 def determineWordMeaning(phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase) 
+    word, remainingPhrase = getFirstWord(phrase)
+    wordWithoutPunctuation = stripPunctuation(word)
     
     # -------------------------------------- general tasks ---------------------------------
     if word == "":
@@ -25,19 +26,19 @@ def determineWordMeaning(phrase, infoItems):
         return (State.NewItem, remainingPhrase, infoItems)
     
     # skip fillerwords
-    if isFillerWord(word):
+    if isFillerWord(wordWithoutPunctuation):
         infoItems[-1].addToRawSourceText(word)
         return (State.DetermineWordMeaning, remainingPhrase, infoItems)
         
     
     # -------------------------------------- specialized tasks ---------------------------------
-    if getActivity(word):
+    if getActivity(wordWithoutPunctuation):
         return (State.Activity, phrase, infoItems)     
     
-    if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, stripPunctuation(word)):
+    if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, wordWithoutPunctuation):
         return (State.EntityPersonOrPeople, phrase, infoItems)
         
-    if detectPoliticalPartyAbr(word):
+    if detectPoliticalPartyAbr(wordWithoutPunctuation):
         return (State.EntityPoliticalParty, phrase, infoItems) 
     
     # flag as unknown activity if neccessary # todo convert list to set
@@ -62,6 +63,11 @@ def activity(phrase, infoItems):
             infoItems[-1].activityList.remove("unknown")
         infoItems[-1].addToRawSourceText(word)
         return (State.Activity, remainingPhrase, infoItems)
+    
+    # edge case ... pls tell me if you know a better solution
+    if "allgemeiner beifall" in infoItems[-1].rawSourceText.lower():
+        for partyName in ["övp", "spö", "fpö", "grüne", "neos"]: # todo make this dynamically
+            infoItems[-1].entityList.append(Entity("politicalParty", partyName)) 
     
     return (State.DetermineWordMeaning, phrase, infoItems) 
 
@@ -100,7 +106,7 @@ def entity_PersonOrPeople(phrase, infoItems):
     # detect descriptive behaviour of speaker
     # attention: gedankenstrich
     if word == "–" and "–:" in remainingPhrase and not "–" in remainingPhrase[:remainingPhrase.index("–:")]:
-        # description before speech e.g.:Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!
+        # description before speech e.g.:"Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!"
         infoItems[-1].addToRawSourceText(word)
         return (State.BehaviourDescription, remainingPhrase, infoItems)
     elif word == "–":
