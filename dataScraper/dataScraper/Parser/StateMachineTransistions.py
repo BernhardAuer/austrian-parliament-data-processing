@@ -85,7 +85,7 @@ def entity_PoliticalParty(phrase, infoItems):
     if endsWithComma:        
         return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
     elif isInterjection:       
-        return (State.Speech, remainingPhrase, infoItems) 
+        return (State.Interjection, remainingPhrase, infoItems) 
 
     return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
 
@@ -142,7 +142,7 @@ def entity_PersonOrPeople(phrase, infoItems):
         return (newState, remainingPhrase, infoItems)
      
     if isInterjection:
-        newState = State.Speech
+        newState = State.Interjection
     else:        
         newState = State.EntityPersonOrPeople
     return (newState, remainingPhrase, infoItems)  
@@ -151,7 +151,7 @@ def behaviourDescription(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
     # interjection begins
     if word.endswith("–:"):       
-        newState = State.Speech
+        newState = State.Interjection
         return (newState, remainingPhrase, infoItems)
     infoItems[-1].description += " " + word # todo: whitespace on beginning....
     newState = State.BehaviourDescription
@@ -169,7 +169,7 @@ def interjection(phrase, infoItems):
     # add item to list if not there already
     if "shouting" not in infoItems[-1].activityList:
         infoItems[-1].activityList.append("shouting")
-    return (State.Speech, remainingPhrase, infoItems)
+    return (State.Interjection, remainingPhrase, infoItems)
 
 def newItem(phrase, infoItems):
     # flag as unknown activity if neccessary #todo check if here neded

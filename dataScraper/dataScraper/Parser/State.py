@@ -1,11 +1,11 @@
 class State:
-    Start = "initialize"
+    Initialize = "initialize"
     DetermineWordMeaning = "determineWordMeaning"    
     ConnectingWord = "ConnectingWord"
     Activity = "activity"
     EntityPoliticalParty = "entity_PoliticalParty"
     EntityPersonOrPeople = "entity_PersonOrPeople"
     BehaviourDescription = "behaviourDescription"
-    Speech = "interjection"
+    Interjection = "interjection"
     NewItem = "newItem"     
     Ending = "ending"  
