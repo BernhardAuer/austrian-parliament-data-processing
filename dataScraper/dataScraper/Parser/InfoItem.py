@@ -1,3 +1,5 @@
+from HelperFunctions import appendWordToPhrase
+
 class InfoItem:
     def __init__(self):
         self.rawSourceText = "" # the orignial string, from which this item is beeing parsed
@@ -14,3 +16,5 @@ class InfoItem:
         + ";\ndescription: " + self.description
         + ";\nrawSourceText: " + self.rawSourceText)
     
+    def addToRawSourceText(self, word):
+        self.rawSourceText = appendWordToPhrase(self.rawSourceText, word)

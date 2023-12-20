@@ -50,3 +50,6 @@ def getFirstWord(txt):
 
 def stripPunctuation(word):    
     return word.translate(str.maketrans('', '', string.punctuation))
+
+def appendWordToPhrase(phrase, word):
+    return phrase + word if phrase == "" else phrase + " " + word
