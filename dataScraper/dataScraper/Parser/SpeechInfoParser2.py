@@ -78,7 +78,7 @@ def getActivity(word):
         "beifall": "applause",
         "zwischenruf": "shouting",
         "zwischenrufe": "shouting",
-        "ruf": "shout",
+        "ruf": "shouting",
         "heiterkeit": "cheerfulness"
     }
     return activityDict.get(word.lower()) 
@@ -153,6 +153,9 @@ def detectBeginningOfEntityTransistions(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
     if word == "":
         return (State.Ending, remainingPhrase, infoItems)
+        
+    word = word.strip(".")  
+    
     if isFillerWord(word):
         return (State.BeginningOfEntity, remainingPhrase, infoItems)  
     isEntityFollowing = isWordOfType(Wordtype.PRECEDING_Entity_WORDS, word)
@@ -172,7 +175,14 @@ def entityPoliticalPartyTransistions(phrase, infoItems):
         endsWithComma = True        
         
     if isFillerWord(word):
-        return (State.EntityPoliticalParty, remainingPhrase, infoItems)  
+        return (State.EntityPoliticalParty, remainingPhrase, infoItems)
+    
+    # check if re-transition is needed ...
+    isEntityFollowing = isWordOfType(Wordtype.PRECEDING_Entity_WORDS, word)
+    if isEntityFollowing:                    
+        newState = State.BeginningOfEntity
+        return (newState, phrase, infoItems)  
+      
     entity = detectPoliticalPartyAbr(word)
     
     # no known entity detected
@@ -222,8 +232,8 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
     # detect "abg."" etc.
     isEntityFillerWord = isWordOfType(Wordtype.PRECEDING_Entity_WORDS, word)
     if isEntityFillerWord:                    
-        newState = State.EntityPersonOrPeople
-        return (newState, remainingPhrase, infoItems) 
+        newState = State.BeginningOfEntity
+        return (newState, phrase, infoItems) 
     
     entity = detectPoliticalPartyAbr(word)
     
@@ -253,7 +263,7 @@ def entityPoliticalPartyConnectingWordTransistions(phrase, infoItems):
         newState = State.BeginningOfEntity
         return (newState, remainingPhrase, infoItems) 
     
-    newState = State.ImplicitActivity
+    newState = State.BeginningOfEntity
     return (newState, phrase, infoItems) 
 
 def entityPersonOrPeopleConnectingWordTransistions(phrase, infoItems):
@@ -269,7 +279,7 @@ def entityPersonOrPeopleConnectingWordTransistions(phrase, infoItems):
         newState = State.EntityPersonOrPeople
         return (newState, remainingPhrase, infoItems) 
     
-    newState = State.ImplicitActivity
+    newState = State.BeginningOfEntity
     return (newState, phrase, infoItems) 
 
 def implicitActivityTransistions( phrase, infoItems):
