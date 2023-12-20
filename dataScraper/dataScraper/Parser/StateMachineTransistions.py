@@ -106,13 +106,13 @@ def entity_PersonOrPeople(phrase, infoItems):
         
 def behaviourDescription(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
-    # interjection begins
-    if word.endswith("–:"):       
-        newState = State.Interjection
-        return (newState, remainingPhrase, infoItems)
-    infoItems[-1].description += " " + word # todo: whitespace on beginning....
-    newState = State.BehaviourDescription
-    return (newState, remainingPhrase, infoItems)
+    if word.endswith("–:"):
+        return (State.Interjection, remainingPhrase, infoItems)
+    
+    if infoItems[-1].description != "":
+        infoItems[-1].description += " "
+    infoItems[-1].description += word
+    return (State.BehaviourDescription, remainingPhrase, infoItems)
 
 def interjection(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)
