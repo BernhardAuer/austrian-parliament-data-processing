@@ -8,6 +8,7 @@ m = StateMachine()
 m.set_start(State.Start)
 
 m.add_state(State.Start, startTransitions)
+m.add_state(State.DetermineWordMeaning, determineWordMeaningTransitions)
 m.add_state(State.Activity, activityTransitions, infoItem)
 m.add_state(State.ActivityConnectingWord, activityConnectingWordTransistions, infoItem)
 m.add_state(State.BeginningOfEntity, detectBeginningOfEntityTransistions, infoItem)

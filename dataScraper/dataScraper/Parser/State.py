@@ -1,5 +1,6 @@
 class State:
     Start = "Start"
+    DetermineWordMeaning = "DetermineWordMeaning"
     Activity = "DetectActivity"
     ActivityConnectingWord = "ActivityConnectingWord"
     BeginningOfEntity = "BeginningOfEntity"

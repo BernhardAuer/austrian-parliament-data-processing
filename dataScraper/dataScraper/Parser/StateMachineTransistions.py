@@ -5,12 +5,39 @@ from WordType import Wordtype
 from Entity import Entity
 from HelperFunctions import *
 
-def startTransitions(txt, infoItems):
-    # word, txt = self.getFirstWord(txt)
-    newState = State.Activity
+def startTransitions(phrase, infoItems):
     # initiallize everything
     infoItems = [InfoItem()]
-    return (newState, txt, infoItems)
+    return (State.DetermineWordMeaning, phrase, infoItems)
+
+def determineWordMeaningTransitions(phrase, infoItems):
+    word, remainingPhrase = getFirstWord(phrase) 
+    
+    # -------------------------------------- general tasks ---------------------------------
+    if word == "":
+        return (State.Ending, remainingPhrase, infoItems)
+                
+    if word == "–": # attention: this is a gedankenstrich (U+2013), not a bindestrich (U+002d)
+        return (State.NewItem, remainingPhrase, infoItems)
+    
+    # skip fillerwords
+    if isFillerWord(word):
+        return (State.DetermineWordMeaning, remainingPhrase, infoItems)
+    
+    
+    # -------------------------------------- specialized tasks ---------------------------------
+    if getActivity(word):                 
+        newState = State.Activity
+        return (newState, phrase, infoItems)     
+    
+    if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, word):                    
+        newState = State.BeginningOfEntity
+        return (newState, phrase, infoItems)
+        
+    if detectPoliticalPartyAbr(word):            
+        newState = State.EntityPoliticalParty
+        return (newState, phrase, infoItems) 
+
 
 def activityTransitions(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
@@ -24,12 +51,6 @@ def activityTransitions(phrase, infoItems):
     if activity is None:
         newState = State.BeginningOfEntity
         return (newState, phrase, infoItems)       
-    
-    # additional activity todo: ??? for what is this shit again? cant remember ...
-    # new activity / new entity
-    # if self.InfoItem.activityList and self.InfoItem.entityList: 
-    #     newState = State.Ending
-    #     return (newState, remainingPhrase, infoItems)
     
     infoItems[-1].activityList.append(activity)                    
     newState = State.ActivityConnectingWord
