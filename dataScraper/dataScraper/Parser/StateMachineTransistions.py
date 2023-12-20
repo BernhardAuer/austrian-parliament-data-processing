@@ -159,20 +159,12 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
     return (newState, remainingPhrase, infoItems)  
 
 def entityPoliticalPartyConnectingWordTransistions(phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase)
-    if word == "":
-        return (State.Ending, remainingPhrase, infoItems)
-    if isFillerWord(word):
-        return (State.EntityPoliticalPartyConnectingWord, remainingPhrase, infoItems)  
-    isConnectingWord = isWordOfType(Wordtype.CONNECTING_WORDS, word)
-    
-    # new entity
-    if isConnectingWord:
+    word, remainingPhrase = getFirstWord(phrase) 
+    if isWordOfType(Wordtype.CONNECTING_WORDS, word):
         newState = State.BeginningOfEntity
         return (newState, remainingPhrase, infoItems) 
     
-    newState = State.BeginningOfEntity
-    return (newState, phrase, infoItems) 
+    return (State.DetermineWordMeaning, phrase, infoItems) 
 
 def entityPersonOrPeopleConnectingWordTransistions(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)
@@ -189,75 +181,37 @@ def entityPersonOrPeopleConnectingWordTransistions(phrase, infoItems):
     
     newState = State.BeginningOfEntity
     return (newState, phrase, infoItems) 
-
-def implicitActivityTransistions( phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase) 
-    if word == "":
-        return (State.Ending, remainingPhrase, infoItems)
-    if isFillerWord(word):
-        return (State.ImplicitActivity, remainingPhrase, infoItems)  
-    
-    # interjection begins
-    if word.endswith(":"):     
-        infoItems[-1].activityList.append("shouting")
-        infoItems[-1].quote = "" 
-        newState = State.Speech #todo
-        return (newState, remainingPhrase, infoItems)
-    
-    # keep Word as unknown activity
-    if not infoItems[-1].activityList:
-        infoItems[-1].activityList.append("unknown")
-    newState = State.Activity
-    return (newState, remainingPhrase, infoItems)
-
         
 def speakerBehaviourDescriptionTransistions(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
-    if word == "":
-        return (State.Ending, remainingPhrase, infoItems)
-    if isFillerWord(word):
-        return (State.BehaviourDescription, remainingPhrase, infoItems)  
-    
     # interjection begins
-    if word.endswith(":"):       
-        newState = State.Speech #todo
+    if word.endswith("–:"):       
+        newState = State.Speech
         return (newState, remainingPhrase, infoItems)
     infoItems[-1].description += " " + word # todo: whitespace on beginning....
     newState = State.BehaviourDescription
     return (newState, remainingPhrase, infoItems)
 
 def speechTransistions(phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase) 
-    if word == "":
-        return (State.Ending, remainingPhrase, infoItems)
-    if isFillerWord(word):
-        return (State.Speech, remainingPhrase, infoItems)  
-    if word == "–": # attention: gedankenstrich
-        newState = State.NewItem
-        return (newState, remainingPhrase, infoItems)
+    word, remainingPhrase = getFirstWord(phrase)
+    if word == "" or word == "–":
+        return (State.DetermineWordMeaning, remainingPhrase, infoItems)
     
     if infoItems[-1].quote != "":
         infoItems[-1].quote += " "
-    infoItems[-1].quote += word    
+    infoItems[-1].quote += word
+    
     # add item to list if not there already
     if "shouting" not in infoItems[-1].activityList:
         infoItems[-1].activityList.append("shouting")
-    newState = State.Speech
-    return (newState, remainingPhrase, infoItems)
+    return (State.Speech, remainingPhrase, infoItems)
 
 def newItemTransistions(phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase) 
-    if word == "":
-        return (State.Ending, remainingPhrase, infoItems)
-    if word is None: # this is the end
-        newState = State.Ending
-        return (newState, remainingPhrase, infoItems)
-    
     # flag as unknown activity if neccessary #todo check if here neded
     if not infoItems[-1].activityList:
         infoItems[-1].activityList.append("unknown")
     infoItems.append(InfoItem())
-    newState = State.Activity
+    newState = State.DetermineWordMeaning
     return (newState, phrase, infoItems)
 
 def addWordToRawSourceText(self, word):

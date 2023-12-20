@@ -10,6 +10,5 @@ class State:
     EntityPersonOrPeopleConnectingWord = "EntityPersonOrPeopleConnectingWord"
     BehaviourDescription = "BehaviourDescription"
     Speech = "Speech"
-    ImplicitActivity = "DetectActivityImplicit"
     NewItem = "NewItem"     
     Ending = "Ending"  
