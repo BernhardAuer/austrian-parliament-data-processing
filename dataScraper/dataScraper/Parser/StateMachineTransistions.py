@@ -74,61 +74,35 @@ def entity_PoliticalParty(phrase, infoItems):
 
 def entity_PersonOrPeople(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)
-    
-    endsWithComma = False
-    if word.endswith(","):
-        endsWithComma = True        
-    
-    endsWithPeriod = False
-    if word.endswith("."):
-        endsWithPeriod = True        
-    
-    # detect interjection
-    isInterjection = False
-    if word.endswith(":"): 
-        isInterjection = True
-    
+    isInterjectionFollowing = word.endswith(":") 
+    isEndOfCurrentEntity = word.endswith(".") # todo: this is a temp fix (right now we don't know when a person name ends....)
     word = stripPunctuation(word)    
     
-    if isFillerWord(word):
+    if isFillerWord(word) or isWordOfType(Wordtype.CONNECTING_WORDS, word) or isWordOfType(Wordtype.PRECEDING_Entity_WORDS, stripPunctuation(word)):
         return (State.EntityPersonOrPeople, remainingPhrase, infoItems)
     
-    if isWordOfType(Wordtype.CONNECTING_WORDS, word):
-        return (State.EntityPersonOrPeople, remainingPhrase, infoItems) 
-        
-    if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, stripPunctuation(word)):
-        return (State.EntityPersonOrPeople, remainingPhrase, infoItems)
-        
     # detect descriptive behaviour of speaker
     # attention: gedankenstrich
     if word == "–" and "–:" in remainingPhrase: # todo: needs further checks ...
         # edge case: description before speech e.g.:Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!
-        newState = State.BehaviourDescription # todo
-        return (newState, remainingPhrase, infoItems)
+        return (State.BehaviourDescription, remainingPhrase, infoItems)
     
     entity = detectPoliticalPartyAbr(word)    
-    if entity is not None:
-        # some persons of specific party
+    if entity:
+        # some persons of a political party
         entityInstance = Entity("somePersonsOfPoliticalParty", entity)
         infoItems[-1].entityList.append(entityInstance)
     else:
-        # specific person (full name)   
+        # name of specific person  
         entityInstance = Entity("person", word) # todo: this needs further enhancements for full names ....
         infoItems[-1].entityList.append(entityInstance) 
+         
+    if isInterjectionFollowing:
+        return (State.Interjection, remainingPhrase, infoItems)
+    elif not isEndOfCurrentEntity: # todo: this is a temp fix ...
+        return (State.EntityPersonOrPeople, remainingPhrase, infoItems)
     
-    if endsWithComma:
-        newState = State.EntityPersonOrPeople # todo
-        return (newState, remainingPhrase, infoItems)
-    
-    if endsWithPeriod:
-        newState = State.DetermineWordMeaning
-        return (newState, remainingPhrase, infoItems)
-     
-    if isInterjection:
-        newState = State.Interjection
-    else:        
-        newState = State.EntityPersonOrPeople
-    return (newState, remainingPhrase, infoItems)  
+    return (State.DetermineWordMeaning, remainingPhrase, infoItems)
         
 def behaviourDescription(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
