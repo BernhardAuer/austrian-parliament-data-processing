@@ -123,7 +123,7 @@ def behaviourDescription(phrase, infoItems):
 def interjection(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)
     if word == "" or word == "–":
-        return (State.DetermineWordMeaning, remainingPhrase, infoItems)
+        return (State.DetermineWordMeaning, phrase, infoItems)
 
     infoItems[-1].quote += word if infoItems[-1].quote == "" else " " + word
     
