@@ -44,7 +44,7 @@ def isFillerWord(word):
     return word in fillerWords
 
 def getFirstWord(txt):
-    splitted_txt = txt.split(" ", 1)
+    splitted_txt = txt.split(maxsplit = 1)
     word, txt = splitted_txt if len(splitted_txt) > 1 else (txt,"")
     return (word, txt)
 
