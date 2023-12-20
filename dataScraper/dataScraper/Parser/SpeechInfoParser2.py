@@ -225,11 +225,18 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
     word = word.strip(".")  
     
     if isFillerWord(word):
-        return (State.EntityPersonOrPeople, remainingPhrase, infoItems)  
+        return (State.EntityPersonOrPeople, remainingPhrase, infoItems)
+      
     # detect descriptive behaviour of speaker
-    if word == "–": # attention: gedankenstrich
+    # attention: gedankenstrich
+    if word == "–" and "–:" in remainingPhrase: # todo: needs further checks ...
         # edge case: description before speech e.g.:Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!
         newState = State.BehaviourDescription # todo
+        return (newState, remainingPhrase, infoItems)
+    
+    if word == "–": 
+        # edge case: description before speech e.g.:Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!
+        newState = State.NewItem # todo
         return (newState, remainingPhrase, infoItems)
     
     # detect interjection
@@ -412,19 +419,19 @@ def addWordToRawSourceText(self, word):
        
        
 # test = SpeechInfoParserStateMachine(None)
-# test.doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker. – Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
-# test.doParsing("Beifall bei den Grünen sowie der Abg. Cornelia Julia Ecker.")
-# test.doParsing("Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
-# test.doParsing("Abg. Meinl-Reisinger: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
-#test.doParsing("Zwischenrufe der Abgeordneten Heinisch-Hosek und Kucharowits.")
-# test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
-# test.doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Weitere Rufe bei der ÖVP: Streng!")
-# test.doParsing("in die rechte Ecke zeigend")
-# test.doParsing("Allgemeiner Beifall. –  hallo, das ist ein test –  und noch ein test")
-# test.doParsing("Abg. Leichtfried – in Richtung des das Rednerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!")
-# test.doParsing("Zwischenruf des Abg. Hafenecker. – Abg. Stögmüller – in Richtung Abg. Hafenecker –: Für die Bevölkerung ist die Polizei zuständig, Herr Kollege! – Präsident Sobotka gibt das Glockenzeichen.")
+doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker. – Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
+# doParsing("Beifall bei den Grünen sowie der Abg. Cornelia Julia Ecker.")
+# doParsing("Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
+#doParsing("Abg. Meinl-Reisinger: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
+#doParsing("Zwischenrufe der Abgeordneten Heinisch-Hosek und Kucharowits.")
+#doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
+#doParsing("Abg. Ottenschläger: Das war jetzt sehr streng! – Weitere Rufe bei der ÖVP: Streng!")
+#doParsing("in die rechte Ecke zeigend")
+# doParsing("Allgemeiner Beifall. –  hallo, das ist ein test –  und noch ein test")
+# doParsing("Abg. Leichtfried – in Richtung des das Rednerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!")
+# doParsing("Zwischenruf des Abg. Hafenecker. – Abg. Stögmüller – in Richtung Abg. Hafenecker –: Für die Bevölkerung ist die Polizei zuständig, Herr Kollege! – Präsident Sobotka gibt das Glockenzeichen.")
 
-# test.doParsing("Heiterkeit und Beifall bei den Grünen sowie Beifall der Abg. Herr.")
+# doParsing("Heiterkeit und Beifall bei den Grünen sowie Beifall der Abg. Herr.")
 
 
 
