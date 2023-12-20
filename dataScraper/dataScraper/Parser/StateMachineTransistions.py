@@ -5,12 +5,12 @@ from WordType import Wordtype
 from Entity import Entity
 from HelperFunctions import *
 
-def startTransitions(phrase, infoItems):
+def initialize(phrase, infoItems):
     # initiallize everything
     infoItems = [InfoItem()]
     return (State.DetermineWordMeaning, phrase, infoItems)
 
-def determineWordMeaningTransitions(phrase, infoItems):
+def determineWordMeaning(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
     
     # -------------------------------------- general tasks ---------------------------------
@@ -39,7 +39,7 @@ def determineWordMeaningTransitions(phrase, infoItems):
     print("unknown word ....")
     return (State.DetermineWordMeaning, remainingPhrase, infoItems) 
 
-def activityTransitions(phrase, infoItems):
+def activity(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)  
     word = stripPunctuation(word)
     
@@ -53,7 +53,7 @@ def activityTransitions(phrase, infoItems):
     
     return (State.DetermineWordMeaning, phrase, infoItems) 
 
-def entityPoliticalPartyTransistions(phrase, infoItems):
+def entity_PoliticalParty(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
 
     endsWithComma = False
@@ -89,7 +89,7 @@ def entityPoliticalPartyTransistions(phrase, infoItems):
 
     return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
 
-def entityPersonOrPeopleTransistions(phrase, infoItems):
+def entity_PersonOrPeople(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)
     
     endsWithComma = False
@@ -147,7 +147,7 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
         newState = State.EntityPersonOrPeople
     return (newState, remainingPhrase, infoItems)  
         
-def speakerBehaviourDescriptionTransistions(phrase, infoItems):
+def behaviourDescription(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
     # interjection begins
     if word.endswith("–:"):       
@@ -157,7 +157,7 @@ def speakerBehaviourDescriptionTransistions(phrase, infoItems):
     newState = State.BehaviourDescription
     return (newState, remainingPhrase, infoItems)
 
-def speechTransistions(phrase, infoItems):
+def interjection(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)
     if word == "" or word == "–":
         return (State.DetermineWordMeaning, remainingPhrase, infoItems)
@@ -171,7 +171,7 @@ def speechTransistions(phrase, infoItems):
         infoItems[-1].activityList.append("shouting")
     return (State.Speech, remainingPhrase, infoItems)
 
-def newItemTransistions(phrase, infoItems):
+def newItem(phrase, infoItems):
     # flag as unknown activity if neccessary #todo check if here neded
     if not infoItems[-1].activityList:
         infoItems[-1].activityList.append("unknown")
