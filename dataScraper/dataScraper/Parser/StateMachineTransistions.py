@@ -35,8 +35,10 @@ def determineWordMeaning(phrase, infoItems):
     if detectPoliticalPartyAbr(word):
         return (State.EntityPoliticalParty, phrase, infoItems) 
     
-    
-    print("unknown word ....")
+    # flag as unknown activity if neccessary # todo convert list to set
+    if not infoItems[-1].activityList and "unknown" not in infoItems[-1].activityList:
+        infoItems[-1].activityList.append("unknown")
+    print("unknown word .... precede with parsing")
     return (State.DetermineWordMeaning, remainingPhrase, infoItems) 
 
 def activity(phrase, infoItems):
@@ -49,6 +51,8 @@ def activity(phrase, infoItems):
     # python 3.8 walrus operator -> func return val gets added to list only if not null
     if activity := getActivity(word):
         infoItems[-1].activityList.append(activity)
+        if "unknown" in infoItems[-1].activityList:
+            infoItems[-1].activityList.remove("unknown")
         return (State.Activity, remainingPhrase, infoItems)
     
     return (State.DetermineWordMeaning, phrase, infoItems) 
@@ -126,15 +130,13 @@ def interjection(phrase, infoItems):
     # add item to list if not there already
     if "shouting" not in infoItems[-1].activityList:
         infoItems[-1].activityList.append("shouting")
+        if "unknown" in infoItems[-1].activityList:
+            infoItems[-1].activityList.remove("unknown")
     return (State.Interjection, remainingPhrase, infoItems)
 
 def newItem(phrase, infoItems):
-    # flag as unknown activity if neccessary #todo check if here neded
-    if not infoItems[-1].activityList:
-        infoItems[-1].activityList.append("unknown")
     infoItems.append(InfoItem())
-    newState = State.DetermineWordMeaning
-    return (newState, phrase, infoItems)
+    return (State.DetermineWordMeaning, phrase, infoItems)
 
 def addWordToRawSourceText(self, word):
     if self.InfoItem.rawSourceText == "" or re.match("[^\w\s]", word):
