@@ -54,40 +54,23 @@ def activity(phrase, infoItems):
     return (State.DetermineWordMeaning, phrase, infoItems) 
 
 def entity_PoliticalParty(phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase) 
-
-    endsWithComma = False
-    if word.endswith(","):
-        endsWithComma = True        
-
-    # detect interjection        
-    isInterjection = False
-    if word.endswith(":"):    
-        isInterjection = True
+    word, remainingPhrase = getFirstWord(phrase)         
+    isInterjectionFollowing = word.endswith(":")    
     word = stripPunctuation(word)
-    if isFillerWord(word):
+    
+    if isFillerWord(word) or isWordOfType(Wordtype.CONNECTING_WORDS, word):
         return (State.EntityPoliticalParty, remainingPhrase, infoItems)
     
-    # check if re-transition is needed ...
-    if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, word):
-        return (State.DetermineWordMeaning, phrase, infoItems)  
-    
-    if isWordOfType(Wordtype.CONNECTING_WORDS, word):
-        return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
-    
-    entity = detectPoliticalPartyAbr(word)    
-    # no known entity detected
-    if entity is None:
-        return (State.DetermineWordMeaning, phrase, infoItems) 
-    
-    entityInstance = Entity("politicalParty", entity)
-    infoItems[-1].entityList.append(entityInstance) 
-    if endsWithComma:        
-        return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
-    elif isInterjection:       
-        return (State.Interjection, remainingPhrase, infoItems) 
+    if entity := detectPoliticalPartyAbr(word):
+        entityInstance = Entity("politicalParty", entity)
+        infoItems[-1].entityList.append(entityInstance) 
 
-    return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
+    if isInterjectionFollowing:       
+        return (State.Interjection, remainingPhrase, infoItems)
+    elif entity:
+        return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
+    
+    return (State.DetermineWordMeaning, phrase, infoItems)   
 
 def entity_PersonOrPeople(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)
