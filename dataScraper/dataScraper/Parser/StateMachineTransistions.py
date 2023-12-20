@@ -117,19 +117,15 @@ def behaviourDescription(phrase, infoItems):
     if word.endswith("–:"):
         return (State.Interjection, remainingPhrase, infoItems)
     
-    if infoItems[-1].description != "":
-        infoItems[-1].description += " "
-    infoItems[-1].description += word
+    infoItems[-1].description += word if infoItems[-1].description == "" else " " + word
     return (State.BehaviourDescription, remainingPhrase, infoItems)
 
 def interjection(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)
     if word == "" or word == "–":
         return (State.DetermineWordMeaning, remainingPhrase, infoItems)
-    
-    if infoItems[-1].quote != "":
-        infoItems[-1].quote += " "
-    infoItems[-1].quote += word
+
+    infoItems[-1].quote += word if infoItems[-1].quote == "" else " " + word
     
     # add item to list if not there already
     if "shouting" not in infoItems[-1].activityList:
@@ -137,10 +133,3 @@ def interjection(phrase, infoItems):
         if "unknown" in infoItems[-1].activityList:
             infoItems[-1].activityList.remove("unknown")
     return (State.Interjection, remainingPhrase, infoItems)
-
-def addWordToRawSourceText(self, word):
-    if self.InfoItem.rawSourceText == "" or re.match("[^\w\s]", word):
-        self.InfoItem.rawSourceText += word
-    else:
-        self.InfoItem.rawSourceText += " " + word
-             
