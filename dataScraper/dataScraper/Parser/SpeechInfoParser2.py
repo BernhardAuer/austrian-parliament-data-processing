@@ -1,5 +1,6 @@
 import copy
 import re
+import string
 from StateMachine import StateMachine
 
 class Wordtype:
@@ -34,7 +35,7 @@ class InfoItem:
     def __init__(self):
         self.rawSourceText = "" # the orignial string, from which this item is beeing parsed
         self.subType = "" # ?? applause, ...
-        self.activityList = [] # list of strings, eg. applause, cheerfulness, ...
+        self.activityList = [] # list of strings, eg. applause, cheerfulness, ... # todo: probably should be a set instead of list (prevent duplicate activities)
         self.entityList = [] # list of Entity() objects
         self.description = "" # further information/description about this parsed activity
         self.quote = "" # quote from the spoken shouts / speech from a person
@@ -79,11 +80,14 @@ def getActivity(word):
         "zwischenruf": "shouting",
         "zwischenrufe": "shouting",
         "ruf": "shouting",
+        "rufe": "shouting",
         "heiterkeit": "cheerfulness"
     }
     return activityDict.get(word.lower()) 
     
 def detectPoliticalPartyAbr(word):
+    # strip any punctuation ...
+    word = word.translate(str.maketrans('', '', string.punctuation))
     entityDict = {
         "övp": "övp",
         "fpö": "fpö",
@@ -155,6 +159,8 @@ def detectBeginningOfEntityTransistions(phrase, infoItems):
         return (State.Ending, remainingPhrase, infoItems)
         
     word = word.strip(".")  
+    # strip any punctuation
+    # word = word.translate(str.maketrans('', '', string.punctuation))
     
     if isFillerWord(word):
         return (State.BeginningOfEntity, remainingPhrase, infoItems)  
@@ -190,11 +196,19 @@ def entityPoliticalPartyTransistions(phrase, infoItems):
         newState = State.ImplicitActivity # todo check this ...
         return (newState, phrase, infoItems) 
     
+    # detect interjection        
+    isInterjection = False
+    if word.endswith(":"):        
+        word = word.strip(":") 
+        isInterjection = True
+        
     entityInstance = Entity("politicalParty", entity)
     infoItems[-1].entityList.append(entityInstance) 
     if endsWithComma:        
         newState = State.EntityPoliticalParty
-    else:        
+    elif isInterjection:       
+        newState = State.Speech
+    else:
         newState = State.EntityPoliticalPartyConnectingWord
     return (newState, remainingPhrase, infoItems) 
 
@@ -219,9 +233,10 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
         return (newState, remainingPhrase, infoItems)
     
     # detect interjection
-    if word == ":":
-        newState = State.Speech
-        return (newState, remainingPhrase, infoItems)
+    isInterjection = False
+    if word.endswith(":"):        
+        word = word.strip(":") 
+        isInterjection = True
     
     # detect connecting word      
     isConnectingWord = isWordOfType(Wordtype.CONNECTING_WORDS, word)
@@ -246,8 +261,11 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
     
     # specific person (full name)   
     entityInstance = Entity("person", word) # todo: this needs further enhancements for full names ....
-    infoItems[-1].entityList.append(entityInstance)          
-    newState = State.EntityPersonOrPeople
+    infoItems[-1].entityList.append(entityInstance)  
+    if isInterjection:
+        newState = State.Speech
+    else:        
+        newState = State.EntityPersonOrPeople
     return (newState, remainingPhrase, infoItems)  
 
 def entityPoliticalPartyConnectingWordTransistions(phrase, infoItems):
@@ -290,12 +308,16 @@ def implicitActivityTransistions( phrase, infoItems):
         return (State.ImplicitActivity, remainingPhrase, infoItems)  
     
     # interjection begins
-    if word == ":":     
+    if word.endswith(":"):     
         infoItems[-1].activityList.append("shouting")
         infoItems[-1].quote = "" 
         newState = State.Speech #todo
         return (newState, remainingPhrase, infoItems)
-    newState = State.NewItem
+    
+    # keep Word as unknown activity
+    if not infoItems[-1].activityList:
+        infoItems[-1].activityList.append("unknown")
+    newState = State.Activity
     return (newState, remainingPhrase, infoItems)
 
         
@@ -307,7 +329,7 @@ def speakerBehaviourDescriptionTransistions(phrase, infoItems):
         return (State.BehaviourDescription, remainingPhrase, infoItems)  
     
     # interjection begins
-    if word == ":":       
+    if word.endswith(":"):       
         newState = State.Speech #todo
         return (newState, remainingPhrase, infoItems)
     infoItems[-1].description += " " + word # todo: whitespace on beginning....
@@ -324,7 +346,12 @@ def speechTransistions(phrase, infoItems):
         newState = State.NewItem
         return (newState, remainingPhrase, infoItems)
     
-    infoItems[-1].quote += " " + word
+    if infoItems[-1].quote != "":
+        infoItems[-1].quote += " "
+    infoItems[-1].quote += word    
+    # add item to list if not there already
+    if "shouting" not in infoItems[-1].activityList:
+        infoItems[-1].activityList.append("shouting")
     newState = State.Speech
     return (newState, remainingPhrase, infoItems)
 
@@ -336,6 +363,9 @@ def newItemTransistions(phrase, infoItems):
         newState = State.Ending
         return (newState, remainingPhrase, infoItems)
     
+    # flag as unknown activity if neccessary #todo check if here neded
+    if not infoItems[-1].activityList:
+        infoItems[-1].activityList.append("unknown")
     infoItems.append(InfoItem())
     newState = State.Activity
     return (newState, phrase, infoItems)
@@ -354,6 +384,7 @@ def doParsing(input):
     m.add_state(State.EntityPersonOrPeopleConnectingWord, entityPersonOrPeopleConnectingWordTransistions, infoItem)
     m.add_state(State.BehaviourDescription, speakerBehaviourDescriptionTransistions, infoItem)
     m.add_state(State.ImplicitActivity, implicitActivityTransistions, infoItem)
+    m.add_state(State.Speech, speechTransistions, infoItem)
     m.add_state(State.NewItem, newItemTransistions, infoItem)
     m.add_state(State.Ending, None, infoItem, end_state=1)
     m.set_start(State.Start)
@@ -399,6 +430,6 @@ def addWordToRawSourceText(self, word):
 
 
 
-doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ, Neos und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker.")
+#doParsing("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ, Neos und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker.")
 #doParsing("Beifall bei den Grünen sowie der Abg. Cornelia Julia Ecker.")
 #doParsing("Beifall bei den Grünen sowie der Abgeordneten Herr und Kucharowits.")
