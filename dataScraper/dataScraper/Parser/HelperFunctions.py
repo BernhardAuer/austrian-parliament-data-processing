@@ -47,3 +47,6 @@ def getFirstWord(txt):
     splitted_txt = txt.split(" ", 1)
     word, txt = splitted_txt if len(splitted_txt) > 1 else (txt,"")
     return (word, txt)
+
+def stripPunctuation(word):    
+    return word.translate(str.maketrans('', '', string.punctuation))

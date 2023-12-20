@@ -23,68 +23,58 @@ def determineWordMeaningTransitions(phrase, infoItems):
     # skip fillerwords
     if isFillerWord(word):
         return (State.DetermineWordMeaning, remainingPhrase, infoItems)
-    
+        
     
     # -------------------------------------- specialized tasks ---------------------------------
-    if getActivity(word):                 
-        newState = State.Activity
-        return (newState, phrase, infoItems)     
+    if getActivity(word):
+        return (State.Activity, phrase, infoItems)     
     
-    wordWithoutPunctuation = word.translate(str.maketrans('', '', string.punctuation))
-    if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, wordWithoutPunctuation):                    
-        newState = State.BeginningOfEntity
-        return (newState, phrase, infoItems)
+    if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, stripPunctuation(word)):
+        return (State.EntityPersonOrPeople, phrase, infoItems)
         
-    if detectPoliticalPartyAbr(word):            
-        newState = State.EntityPoliticalParty
-        return (newState, phrase, infoItems) 
-
+    if detectPoliticalPartyAbr(word):
+        return (State.EntityPoliticalParty, phrase, infoItems) 
+    
+    
+    print("unknown word ....")
+    return (State.DetermineWordMeaning, remainingPhrase, infoItems) 
 
 def activityTransitions(phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase)          
-    activity = getActivity(word)
-    infoItems[-1].activityList.append(activity)
-    return (State.ActivityConnectingWord, remainingPhrase, infoItems) 
-
-def activityConnectingWordTransistions( phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase)
-    if isWordOfType(Wordtype.CONNECTING_WORDS, word):
-        return (State.Activity, remainingPhrase, infoItems) 
+    word, remainingPhrase = getFirstWord(phrase)  
+    word = stripPunctuation(word)
     
-    return (State.DetermineWordMeaning, phrase, infoItems)  
-
-def detectBeginningOfEntityTransistions(phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase)
-    word = word.strip(".")  
-    # strip any punctuation todo
-    # word = word.translate(str.maketrans('', '', string.punctuation))
-     
-    if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, word): 
-        return (State.EntityPersonOrPeople, remainingPhrase, infoItems) 
-     
-    return (State.DetermineWordMeaning, phrase, infoItems)
+    if isWordOfType(Wordtype.CONNECTING_WORDS, word):
+        return (State.Activity, remainingPhrase, infoItems)
+        
+    # python 3.8 walrus operator -> func return val gets added to list only if not null
+    if activity := getActivity(word):
+        infoItems[-1].activityList.append(activity)
+        return (State.Activity, remainingPhrase, infoItems)
+    
+    return (State.DetermineWordMeaning, phrase, infoItems) 
 
 def entityPoliticalPartyTransistions(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
 
     endsWithComma = False
     if word.endswith(","):
-        word = word.strip(",")
         endsWithComma = True        
 
     # detect interjection        
     isInterjection = False
-    if word.endswith(":"):        
-        word = word.strip(":") 
+    if word.endswith(":"):    
         isInterjection = True
-    
+    word = stripPunctuation(word)
     if isFillerWord(word):
         return (State.EntityPoliticalParty, remainingPhrase, infoItems)
     
     # check if re-transition is needed ...
     if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, word):
         return (State.DetermineWordMeaning, phrase, infoItems)  
-      
+    
+    if isWordOfType(Wordtype.CONNECTING_WORDS, word):
+        return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
+    
     entity = detectPoliticalPartyAbr(word)    
     # no known entity detected
     if entity is None:
@@ -93,35 +83,39 @@ def entityPoliticalPartyTransistions(phrase, infoItems):
     entityInstance = Entity("politicalParty", entity)
     infoItems[-1].entityList.append(entityInstance) 
     if endsWithComma:        
-        newState = State.EntityPoliticalParty
+        return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
     elif isInterjection:       
-        newState = State.Speech
-    else:
-        newState = State.EntityPoliticalPartyConnectingWord
-    return (newState, remainingPhrase, infoItems) 
+        return (State.Speech, remainingPhrase, infoItems) 
+
+    return (State.EntityPoliticalParty, remainingPhrase, infoItems) 
 
 def entityPersonOrPeopleTransistions(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase)
     
     endsWithComma = False
     if word.endswith(","):
-        word = word.strip(",")
         endsWithComma = True        
     
     endsWithPeriod = False
     if word.endswith("."):
-        word = word.strip(".")
         endsWithPeriod = True        
     
     # detect interjection
     isInterjection = False
-    if word.endswith(":"):        
-        word = word.strip(":") 
+    if word.endswith(":"): 
         isInterjection = True
-        
+    
+    word = stripPunctuation(word)    
+    
     if isFillerWord(word):
         return (State.EntityPersonOrPeople, remainingPhrase, infoItems)
     
+    if isWordOfType(Wordtype.CONNECTING_WORDS, word):
+        return (State.EntityPersonOrPeople, remainingPhrase, infoItems) 
+        
+    if isWordOfType(Wordtype.PRECEDING_Entity_WORDS, stripPunctuation(word)):
+        return (State.EntityPersonOrPeople, remainingPhrase, infoItems)
+        
     # detect descriptive behaviour of speaker
     # attention: gedankenstrich
     if word == "–" and "–:" in remainingPhrase: # todo: needs further checks ...
@@ -129,23 +123,18 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
         newState = State.BehaviourDescription # todo
         return (newState, remainingPhrase, infoItems)
     
-    # detect connecting word
-    if isWordOfType(Wordtype.CONNECTING_WORDS, word):
-        newState = State.EntityPersonOrPeopleConnectingWord # todo
-        return (newState, remainingPhrase, infoItems)
-    
     entity = detectPoliticalPartyAbr(word)    
-    # some persons of specific party
-    if entity is not None:    
+    if entity is not None:
+        # some persons of specific party
         entityInstance = Entity("somePersonsOfPoliticalParty", entity)
         infoItems[-1].entityList.append(entityInstance)
-    
-    # specific person (full name)   
-    entityInstance = Entity("person", word) # todo: this needs further enhancements for full names ....
-    infoItems[-1].entityList.append(entityInstance) 
+    else:
+        # specific person (full name)   
+        entityInstance = Entity("person", word) # todo: this needs further enhancements for full names ....
+        infoItems[-1].entityList.append(entityInstance) 
     
     if endsWithComma:
-        newState = State.EntityPersonOrPeopleConnectingWord # todo
+        newState = State.EntityPersonOrPeople # todo
         return (newState, remainingPhrase, infoItems)
     
     if endsWithPeriod:
@@ -157,30 +146,6 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
     else:        
         newState = State.EntityPersonOrPeople
     return (newState, remainingPhrase, infoItems)  
-
-def entityPoliticalPartyConnectingWordTransistions(phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase) 
-    if isWordOfType(Wordtype.CONNECTING_WORDS, word):
-        newState = State.BeginningOfEntity
-        return (newState, remainingPhrase, infoItems) 
-    
-    return (State.DetermineWordMeaning, phrase, infoItems) 
-
-def entityPersonOrPeopleConnectingWordTransistions(phrase, infoItems):
-    word, remainingPhrase = getFirstWord(phrase)
-    if word == "":
-        return (State.Ending, remainingPhrase, infoItems)
-    if isFillerWord(word):
-        return (State.EntityPersonOrPeopleConnectingWord, remainingPhrase, infoItems)  
-    isConnectingWord = isWordOfType(Wordtype.CONNECTING_WORDS, word)
-    
-    # new entity
-    if isConnectingWord:
-        newState = State.EntityPersonOrPeople
-        return (newState, remainingPhrase, infoItems) 
-    
-    newState = State.BeginningOfEntity
-    return (newState, phrase, infoItems) 
         
 def speakerBehaviourDescriptionTransistions(phrase, infoItems):
     word, remainingPhrase = getFirstWord(phrase) 
