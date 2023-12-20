@@ -61,7 +61,7 @@ class InfoItem:
 
 def isWordOfType(type, word):        
     connectingWordsList = ["und", ",", "sowie"]
-    precedingEntityWordsList = ["abgeordnete","abg.","abgeordneten"]
+    precedingEntityWordsList = ["abgeordnete","abg","abgeordneten"]
     match type:
         case Wordtype.CONNECTING_WORDS:
             if word.lower() in connectingWordsList:
@@ -197,7 +197,9 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
     if word.endswith(","):
         word = word.strip(",")
         endsWithComma = True        
-        
+    
+    word = word.strip(".")  
+    
     if isFillerWord(word):
         return (State.EntityPersonOrPeople, remainingPhrase, infoItems)  
     # detect descriptive behaviour of speaker
@@ -216,7 +218,13 @@ def entityPersonOrPeopleTransistions(phrase, infoItems):
     if isConnectingWord:
         newState = State.EntityPersonOrPeopleConnectingWord # todo
         return (newState, phrase, infoItems)
-     
+    
+    # detect "abg."" etc.
+    isEntityFillerWord = isWordOfType(Wordtype.PRECEDING_Entity_WORDS, word)
+    if isEntityFillerWord:                    
+        newState = State.EntityPersonOrPeople
+        return (newState, remainingPhrase, infoItems) 
+    
     entity = detectPoliticalPartyAbr(word)
     
     # some persons of specific party
