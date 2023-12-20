@@ -6,8 +6,12 @@ from Entity import Entity
 from HelperFunctions import *
 
 def initialize(phrase, infoItems):
-    # initiallize everything
-    infoItems = [InfoItem()]
+    # initialize everything
+    infoItems = []
+    return (State.NewItem, phrase, infoItems)
+
+def newItem(phrase, infoItems):
+    infoItems.append(InfoItem())
     return (State.DetermineWordMeaning, phrase, infoItems)
 
 def determineWordMeaning(phrase, infoItems):
@@ -133,10 +137,6 @@ def interjection(phrase, infoItems):
         if "unknown" in infoItems[-1].activityList:
             infoItems[-1].activityList.remove("unknown")
     return (State.Interjection, remainingPhrase, infoItems)
-
-def newItem(phrase, infoItems):
-    infoItems.append(InfoItem())
-    return (State.DetermineWordMeaning, phrase, infoItems)
 
 def addWordToRawSourceText(self, word):
     if self.InfoItem.rawSourceText == "" or re.match("[^\w\s]", word):
