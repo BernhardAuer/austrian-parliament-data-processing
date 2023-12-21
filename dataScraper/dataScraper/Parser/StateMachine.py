@@ -34,13 +34,12 @@ class StateMachine:
                 return None
             (newState, cargo, infoItems) = handler(cargo, infoItems)
             if newState.upper() in self.endStates:
-                print("reached ", newState)
-                for infoItem in infoItems:
-                    print("New ITEM:")
-                    print(infoItem)
-                    print("----------------------")
+                # for infoItem in infoItems:
+                #     print("New ITEM:")
+                #     print(infoItem)
+                #     print("----------------------")
                 return infoItems
             else:                
-                print("currently ", newState)
-                print("TEXT:", cargo)
+                # print("currently ", newState)
+                # print("TEXT:", cargo)
                 handler = self.handlers[newState.upper()]   

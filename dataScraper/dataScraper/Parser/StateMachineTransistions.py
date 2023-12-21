@@ -44,7 +44,7 @@ def determineWordMeaning(phrase, infoItems):
     if not infoItems[-1].activityList and "unknown" not in infoItems[-1].activityList:
         infoItems[-1].activityList.append("unknown")
     infoItems[-1].addToRawSourceText(word)
-    print("unknown word .... precede with parsing")
+    # print("unknown word .... precede with parsing") # todo: use logger ...
     return (State.DetermineWordMeaning, remainingPhrase, infoItems) 
 
 def activity(phrase, infoItems):
