@@ -154,17 +154,15 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(len(results[1].entityList), 1)
         self.assertEqual(results[1].entityList[1].type, expectedPersonEntity.type)
         self.assertEqual(results[1].entityList[1].name, expectedPersonEntity.name)    
-    
-    # todo: bug detected: fix pls
-    @unittest.SkipTest   
+     
     def test_run_interjectionByPersonWithoutBehaviourDescription_shouldReturnParsedItem(self):
         # arrange
-        expectedRawSourceText = "Abg. Meinl-Reisinger: Geh bitte, he! Das ist ein bisschen sehr überheblich!"
+        expectedRawSourceText = "Abg. Meinl: Geh bitte, he! Das ist ein bisschen sehr überheblich!"
         expectedActivityListItem = "shouting"     
-        expectedPersonEntity = Entity("person", "Meinl-Reisinger")
+        expectedPersonEntity = Entity("person", "Meinl")
              
         # execute
-        results = self.fsm.run("Abg. Meinl-Reisinger: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
+        results = self.fsm.run("Abg. Meinl: Geh bitte, he! Das ist ein bisschen sehr überheblich!")
         
         # assert
         self.assertEqual(len(results), 1)
@@ -202,18 +200,16 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(len(result.entityList), 1)
         self.assertEqual(result.entityList[0].type, expectedPersonEntity.type)
         self.assertEqual(result.entityList[0].name, expectedPersonEntity.name)
-        
-    # todo: bug detected: fix pls "-" in name
-    @unittest.SkipTest  
+    
     def test_run_interjectionWithoutQuote_shouldReturnParsedItem(self):
         # arrange
-        expectedRawSourceText = "Zwischenrufe der Abgeordneten Heinisch-Hosek und Kucharowits."
+        expectedRawSourceText = "Zwischenrufe der Abgeordneten Heinisch und Kucharowits."
         expectedActivityListItem = "shouting"
-        expectedPersonEntity1 = Entity("person", "Heinisch-Hosek")
+        expectedPersonEntity1 = Entity("person", "Heinisch")
         expectedPersonEntity2 = Entity("person", "Kucharowits")
         
         # execute
-        results = self.fsm.run("Zwischenrufe der Abgeordneten Heinisch-Hosek und Kucharowits.")
+        results = self.fsm.run("Zwischenrufe der Abgeordneten Heinisch und Kucharowits.")
         
         # assert
         self.assertEqual(len(results), 1)
@@ -230,6 +226,29 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(result.entityList[0].name, expectedPersonEntity1.name)
         self.assertEqual(result.entityList[1].type, expectedPersonEntity2.type)
         self.assertEqual(result.entityList[1].name, expectedPersonEntity2.name)
+
+    def test_run_personNameWithDash_shouldReturnParsedItem(self):
+        # arrange
+        expectedRawSourceText = "Zwischenruf der Abgeordneten Heinisch-Hosek."
+        expectedActivityListItem = "shouting"
+        expectedPersonEntity1 = Entity("person", "Heinisch-Hosek")
+        
+        # execute
+        results = self.fsm.run("Zwischenruf der Abgeordneten Heinisch-Hosek.")
+        
+        # assert
+        self.assertEqual(len(results), 1)
+        result = results[0]
+        
+        self.assertEqual(result.rawSourceText, expectedRawSourceText)
+        self.assertEqual(result.description, "")
+        self.assertEqual(result.quote, "")
+        self.assertEqual(len(result.activityList), 1)
+        self.assertEqual(result.activityList[0], expectedActivityListItem)
+        
+        self.assertEqual(len(result.entityList), 1)
+        self.assertEqual(result.entityList[0].type, expectedPersonEntity1.type)
+        self.assertEqual(result.entityList[0].name, expectedPersonEntity1.name)
 
     def test_run_phraseWithMultipleIndependentEvents_shouldReturnMultipleItems(self):
         # arrange
