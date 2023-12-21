@@ -1,5 +1,5 @@
 import string
-from WordType import * 
+from dataScraper.Parser.WordType import * 
 
 def isWordOfType(type, word):        
     connectingWordsList = ["und", ",", "sowie"]

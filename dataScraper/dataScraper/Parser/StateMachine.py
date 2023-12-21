@@ -1,4 +1,4 @@
-import InfoItem
+from dataScraper.Parser.InfoItem import InfoItem
 
 # https://python-course.eu/applications-python/finite-state-machine.php
 class StateMachine:
@@ -31,7 +31,7 @@ class StateMachine:
             i += 1
             if (i > 1000):
                 print("detected potentially endless loop. abort parsing.")
-                return
+                return None
             (newState, cargo, infoItems) = handler(cargo, infoItems)
             if newState.upper() in self.endStates:
                 print("reached ", newState)
@@ -39,10 +39,8 @@ class StateMachine:
                     print("New ITEM:")
                     print(infoItem)
                     print("----------------------")
-                break 
-            else:
-                
+                return infoItems
+            else:                
                 print("currently ", newState)
                 print("TEXT:", cargo)
-                # print(infoItems[-1])
                 handler = self.handlers[newState.upper()]   

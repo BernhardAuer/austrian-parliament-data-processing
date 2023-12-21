@@ -1,4 +1,4 @@
-from HelperFunctions import appendWordToPhrase
+from dataScraper.Parser.HelperFunctions import appendWordToPhrase
 
 class InfoItem:
     def __init__(self):

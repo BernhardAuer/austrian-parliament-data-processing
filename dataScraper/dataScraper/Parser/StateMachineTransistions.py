@@ -1,9 +1,8 @@
-import re
-from State import State
-from InfoItem import InfoItem
-from WordType import Wordtype
-from Entity import Entity
-from HelperFunctions import *
+from dataScraper.Parser.State import State
+from dataScraper.Parser.InfoItem import InfoItem
+from dataScraper.Parser.WordType import Wordtype
+from dataScraper.Parser.Entity import Entity
+from dataScraper.Parser.HelperFunctions import *
 
 def initialize(phrase, infoItems):
     # initialize everything
