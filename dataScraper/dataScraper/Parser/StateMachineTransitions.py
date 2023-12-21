@@ -4,16 +4,21 @@ from dataScraper.Parser.WordType import Wordtype
 from dataScraper.Parser.Entity import Entity
 from dataScraper.Parser.HelperFunctions import *
 
-def initialize(phrase, infoItems):
+def unpackPhraseAndInfoItems(kwds):
+    return kwds["phrase"], kwds["infoItems"]
+
+def initialize(**kwds):
     # initialize everything
     infoItems = []
-    return (State.NewItem, phrase, infoItems)
+    return (State.NewItem, kwds["phrase"], infoItems)
 
-def newItem(phrase, infoItems):
+def newItem(**kwds):
+    phrase, infoItems = unpackPhraseAndInfoItems(kwds)
     infoItems.append(InfoItem())
     return (State.DetermineWordMeaning, phrase, infoItems)
 
-def determineWordMeaning(phrase, infoItems):
+def determineWordMeaning(**kwds):
+    phrase, infoItems = unpackPhraseAndInfoItems(kwds)
     word, remainingPhrase = getFirstWord(phrase)
     wordWithoutPunctuation = stripPunctuation(word)
     
@@ -47,7 +52,8 @@ def determineWordMeaning(phrase, infoItems):
     # print("unknown word .... precede with parsing") # todo: use logger ...
     return (State.DetermineWordMeaning, remainingPhrase, infoItems) 
 
-def activity(phrase, infoItems):
+def activity(**kwds):
+    phrase, infoItems = unpackPhraseAndInfoItems(kwds)
     word, remainingPhrase = getFirstWord(phrase)  
     wordWithoutPunctuation = stripPunctuation(word)
     
@@ -73,7 +79,8 @@ def activity(phrase, infoItems):
     
     return (State.DetermineWordMeaning, phrase, infoItems) 
 
-def entity_PoliticalParty(phrase, infoItems):
+def entity_PoliticalParty(**kwds):
+    phrase, infoItems = unpackPhraseAndInfoItems(kwds)
     word, remainingPhrase = getFirstWord(phrase)         
     isInterjectionFollowing = word.endswith(":")    
     wordWithoutPunctuation = stripPunctuation(word)
@@ -95,7 +102,9 @@ def entity_PoliticalParty(phrase, infoItems):
     
     return (State.DetermineWordMeaning, phrase, infoItems)   
 
-def entity_PersonOrPeople(phrase, infoItems):
+def entity_PersonOrPeople(**kwds):
+    phrase, infoItems = unpackPhraseAndInfoItems(kwds)
+    validPersonNames = cleanStringList(kwds["validPersonNames"])
     word, remainingPhrase = getFirstWord(phrase)
     isInterjectionFollowing = word.endswith(":") 
     isEndOfCurrentEntity = word.endswith(".") # todo: this is a temp fix (right now we don't know when a person name ends....)
@@ -119,9 +128,9 @@ def entity_PersonOrPeople(phrase, infoItems):
         # some persons of a political party
         entityInstance = Entity("somePersonsOfPoliticalParty", entity)
         infoItems[-1].entityList.append(entityInstance)
-    else:
+    elif wordWithoutPunctuation.lower() in validPersonNames:
         # name of specific person  
-        entityInstance = Entity("person", wordWithoutPunctuation) # todo: this needs further enhancements for full names ....
+        entityInstance = Entity("person", wordWithoutPunctuation)
         infoItems[-1].entityList.append(entityInstance) 
          
     if isInterjectionFollowing:
@@ -134,7 +143,8 @@ def entity_PersonOrPeople(phrase, infoItems):
     infoItems[-1].addToRawSourceText(word)
     return (State.DetermineWordMeaning, remainingPhrase, infoItems)
         
-def behaviourDescription(phrase, infoItems):
+def behaviourDescription(**kwds):
+    phrase, infoItems = unpackPhraseAndInfoItems(kwds)
     word, remainingPhrase = getFirstWord(phrase) 
     infoItems[-1].addToRawSourceText(word)
     if word.endswith("–:"):
@@ -143,7 +153,8 @@ def behaviourDescription(phrase, infoItems):
     infoItems[-1].description = appendWordToPhrase(infoItems[-1].description, word)
     return (State.BehaviourDescription, remainingPhrase, infoItems)
 
-def interjection(phrase, infoItems):
+def interjection(**kwds):
+    phrase, infoItems = unpackPhraseAndInfoItems(kwds)
     word, remainingPhrase = getFirstWord(phrase)
     if word == "" or word == "–":
         return (State.DetermineWordMeaning, phrase, infoItems)

@@ -27,8 +27,7 @@ def getActivity(word):
     return activityDict.get(word.lower()) 
     
 def detectPoliticalPartyAbr(word):
-    # strip any punctuation ...
-    word = word.translate(str.maketrans('', '', string.punctuation))
+    word = stripPunctuation(word)
     entityDict = {
         "övp": "övp",
         "fpö": "fpö",
@@ -53,3 +52,11 @@ def stripPunctuation(word):
 
 def appendWordToPhrase(phrase, word):
     return phrase + word if phrase == "" else phrase + " " + word
+
+def cleanStringList(list):
+    result = []
+    for string in list:
+        s = string.strip()
+        s = stripPunctuation(s.lower())        
+        result.append(s)
+    return result

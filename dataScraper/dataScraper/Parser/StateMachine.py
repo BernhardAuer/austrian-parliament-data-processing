@@ -15,7 +15,7 @@ class StateMachine:
     def set_start(self, name):
         self.startState = name.upper()
 
-    def run(self, cargo):
+    def run(self, phrase, validPersonNames = []):
         try:
             handler = self.handlers[self.startState]
         except:
@@ -30,7 +30,7 @@ class StateMachine:
             if (i > 1000):
                 print("detected a potential endless loop. abort parsing.") # todo: logger & warning
                 return None
-            (newState, cargo, infoItems) = handler(cargo, infoItems)
+            (newState, phrase, infoItems) = handler(phrase = phrase, infoItems = infoItems, validPersonNames = validPersonNames)
             if newState.upper() in self.endStates:
                 # for infoItem in infoItems:
                 #     print("New ITEM:")
@@ -39,5 +39,5 @@ class StateMachine:
                 return infoItems
             else:                
                 # print("currently ", newState)
-                # print("TEXT:", cargo)
+                # print("TEXT:", phrase)
                 handler = self.handlers[newState.upper()]   
