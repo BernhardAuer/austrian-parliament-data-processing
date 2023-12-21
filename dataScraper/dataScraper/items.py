@@ -6,13 +6,9 @@
 import scrapy
 from dateutil.parser import parse
 from itemloaders.processors import MapCompose, Compose, TakeFirst, Join
-from datetime import datetime
-from dataclasses import dataclass, field
-from validTitlesList import validTitles
-from austrianParliamentSpecificTitlesList import austrianParliamentTitles
+from dataScraper.validTitlesList import validTitles
+from dataScraper.austrianParliamentSpecificTitlesList import austrianParliamentTitles
 from jmespath import search
-import re
-import unicodedata
 
 def parseDate(dateString):
      dateTime = parse(dateString).replace(microsecond=0) # this replace shitty thing is needed for mongodb (js dates only, huh)

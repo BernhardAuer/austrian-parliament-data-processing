@@ -1,8 +1,7 @@
 from pathlib import Path
-
 import scrapy
 import json
-from items import NationalCouncilMeetingItem
+from dataScraper.items import NationalCouncilMeetingItem
 from scrapy.loader import ItemLoader
 
 class NationalCouncilMeetingSpider(scrapy.Spider):
