@@ -27,6 +27,7 @@ class SpeechesSpider(scrapy.Spider):
         if not self.mongodb_uri: sys.exit("You need to provide a Connection String.")
         self.baseUrl = 'https://www.parlament.gv.at'
         self.start_urls = self.get_urls_from_db()
+        self.infoItemParser = initStateMachine()
     
     @classmethod
     def from_crawler(cls, crawler):    
@@ -62,16 +63,11 @@ class SpeechesSpider(scrapy.Spider):
             dictList.append(entity.asDict())
         return dictList
     
-    def parseInfoObject(self, value, paragraph, parentItemLoader):
-        # temp fix! pls tell me how to avoid this at all ...
+    def parseInfoObject(self, value, paragraph, parentItemLoader, validPersonNames):
         value = self.cleanInput(value)
-        # parser = SpeechInfoParserStateMachine(self.logger)
-        # results = parser.doParsing(value)
-        parser = initStateMachine()
-        results = parser.run(value)
+        results = self.infoItemParser.run(value, validPersonNames)
         
         for parsedItem in results:
-            print(parsedItem)
             l = ItemLoader(item=ParsedInfoItem(), selector=paragraph)
             l.add_value('activityList', parsedItem.activityList)
             l.add_value('entityList', self.convertEntityListToDictList(parsedItem.entityList))
@@ -148,8 +144,9 @@ class SpeechesSpider(scrapy.Spider):
                     if item is None or item.strip() == "":
                         continue       
                     if j % 2:       
-                        l = ItemLoader(item=GeneralInfoItem(), response=response, selector=paragraph)                   
-                        self.parseInfoObject(item, paragraph, l)
+                        l = ItemLoader(item=GeneralInfoItem(), response=response, selector=paragraph) 
+                        validPersonNames = response.css("b ::text").getall()
+                        self.parseInfoObject(item, paragraph, l, validPersonNames)
                         l.add_value('data', item) # this is original data for "info" objects.                          
                         l.add_value('type', "info")
                         l.add_value('orderId', index)
