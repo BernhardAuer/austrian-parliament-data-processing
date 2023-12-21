@@ -49,7 +49,7 @@ def getFirstWord(txt):
     return (word, txt)
 
 def stripPunctuation(word):    
-    return word.translate(str.maketrans('', '', string.punctuation))
+    return word.strip(string.punctuation)
 
 def appendWordToPhrase(phrase, word):
     return phrase + word if phrase == "" else phrase + " " + word
