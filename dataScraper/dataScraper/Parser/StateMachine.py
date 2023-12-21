@@ -1,5 +1,3 @@
-from dataScraper.Parser.InfoItem import InfoItem
-
 # https://python-course.eu/applications-python/finite-state-machine.php
 class StateMachine:
     
@@ -8,7 +6,7 @@ class StateMachine:
         self.startState = None
         self.endStates = []
 
-    def add_state(self, name, handler, infoItems=None, end_state=0):
+    def add_state(self, name, handler, end_state=0):
         name = name.upper()
         self.handlers[name] = handler
         if end_state:
@@ -25,12 +23,12 @@ class StateMachine:
         if not self.endStates:
             raise InitializationError("at least one state must be an end_state")
 
-        infoItems = [InfoItem]
+        infoItems = None
         i = 0
         while True:
             i += 1
             if (i > 1000):
-                print("detected potentially endless loop. abort parsing.")
+                print("detected a potential endless loop. abort parsing.") # todo: logger & warning
                 return None
             (newState, cargo, infoItems) = handler(cargo, infoItems)
             if newState.upper() in self.endStates:
