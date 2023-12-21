@@ -1,7 +1,7 @@
 from dataScraper.Parser.InfoItem import InfoItem 
 from dataScraper.Parser.State import State
 from dataScraper.Parser.StateMachine import StateMachine
-from dataScraper.Parser.StateMachineTransistions import *
+from dataScraper.Parser.StateMachineTransitions import *
 
 def initStateMachine():
     infoItem = [InfoItem()]
