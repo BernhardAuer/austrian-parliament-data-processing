@@ -57,6 +57,9 @@ def activity(phrase, infoItems):
         
     # python 3.8 walrus operator -> func return val gets added to list only if not null
     if activity := getActivity(wordWithoutPunctuation):
+        if infoItems[-1].entityList:            
+            return (State.NewItem, phrase, infoItems)
+        
         infoItems[-1].activityList.append(activity)
         if "unknown" in infoItems[-1].activityList:
             infoItems[-1].activityList.remove("unknown")

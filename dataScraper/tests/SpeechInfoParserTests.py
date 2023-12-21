@@ -117,9 +117,7 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(result.entityList[0].name, expectedPartyEntity.name)
         self.assertEqual(result.entityList[1].type, expectedPersonEntity.type)
         self.assertEqual(result.entityList[1].name, expectedPersonEntity.name)
-        
-    # todo: bug detected: fix pls
-    @unittest.SkipTest
+    
     def test_run_differentActivitiesByDifferentEntitiesInSamePhrase_shouldReturnParsedItem(self):
         # arrange
         expectedActivityListItem1 = "cheerfulness"
@@ -133,7 +131,7 @@ class SpeechInfoParserTests(unittest.TestCase):
         # assert
         self.assertEqual(len(results), 2)
         
-        self.assertEqual(results[0].rawSourceText, "Heiterkeit und Beifall bei den Grünen")
+        self.assertEqual(results[0].rawSourceText, "Heiterkeit und Beifall bei den Grünen sowie")
         self.assertEqual(results[0].description, "")
         self.assertEqual(results[0].quote, "")
         self.assertEqual(len(results[0].activityList), 2)
@@ -145,15 +143,15 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(results[0].entityList[0].name, expectedPartyEntity.name)
         
                 
-        self.assertEqual(results[1].rawSourceText, "sowie Beifall der Abg. Herr.")
+        self.assertEqual(results[1].rawSourceText, "Beifall der Abg. Herr.")
         self.assertEqual(results[1].description, "")
         self.assertEqual(results[1].quote, "")
         self.assertEqual(len(results[1].activityList), 1)
         self.assertEqual(results[1].activityList[0], expectedActivityListItem2)
         
         self.assertEqual(len(results[1].entityList), 1)
-        self.assertEqual(results[1].entityList[1].type, expectedPersonEntity.type)
-        self.assertEqual(results[1].entityList[1].name, expectedPersonEntity.name)    
+        self.assertEqual(results[1].entityList[0].type, expectedPersonEntity.type)
+        self.assertEqual(results[1].entityList[0].name, expectedPersonEntity.name)    
      
     def test_run_interjectionByPersonWithoutBehaviourDescription_shouldReturnParsedItem(self):
         # arrange
