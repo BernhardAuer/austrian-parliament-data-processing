@@ -99,7 +99,7 @@ class SpeechInfoParserTests(unittest.TestCase):
         expectedActivityListItem2 = "applause"
         expectedPartyEntity = Entity("politicalParty", "grüne")        
         expectedPersonEntity = Entity("person", "Herr")
-        validPersonNames = [" HErr,  "] # todo: make own test for this
+        validPersonNames = ["Herr"]
              
         # execute
         results = self.fsm.run("Heiterkeit und Beifall bei den Grünen sowie der Abg. Herr.", validPersonNames)
@@ -220,7 +220,6 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(results[0].rawSourceText, "Abg. Stögmann schneuzt sich")
         self.assertEqual(results[0].description, "")
         self.assertEqual(results[0].quote, "")
-        # todo: fix this! "unknown" activity is missing
         # self.assertEqual(len(results[0].activityList), 1)
         # self.assertEqual(results[0].activityList[0], "unknown")
         
@@ -238,6 +237,52 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(results[1].entityList[0].type, expectedPersonEntity2.type)
         self.assertEqual(results[1].entityList[0].name, expectedPersonEntity2.name)
     
+    # todo fix this!
+    @unittest.skip
+    def test_run_unknownActivity_shouldReturnParsedItem(self):
+        # arrange 
+        expectedPersonEntity1 = Entity("person", "Stögmann")
+        validPersonNames = ["Stögmann"]
+             
+        # execute
+        results = self.fsm.run("Abg. Stögmann schneuzt sich.", validPersonNames)
+        
+        # assert
+        self.assertEqual(len(results), 1)
+        
+        self.assertEqual(results[0].rawSourceText, "Abg. Stögmann schneuzt sich.")
+        self.assertEqual(results[0].description, "")
+        self.assertEqual(results[0].quote, "")
+        self.assertEqual(len(results[0].activityList), 1)
+        self.assertEqual(results[0].activityList[0], "unknown")
+        
+        self.assertEqual(len(results[0].entityList), 1)
+        self.assertEqual(results[0].entityList[0].type, expectedPersonEntity1.type)
+        self.assertEqual(results[0].entityList[0].name, expectedPersonEntity1.name)
+    
+    # todo fix this!
+    @unittest.skip
+    def test_run_unknownPhraseWithoutPeriodPotentialEndlessLoop_shouldReturnParsedItem(self):
+        # arrange 
+        expectedPersonEntity1 = Entity("person", "Stögmann")
+        validPersonNames = ["Stögmann"]
+             
+        # execute
+        results = self.fsm.run("Abg. Stögmann verursacht eine Endlosschleife", validPersonNames)
+        
+        # assert
+        self.assertEqual(len(results), 1)
+        
+        self.assertEqual(results[0].rawSourceText, "Abg. Stögmann verursacht eine Endlosschleife")
+        self.assertEqual(results[0].description, "")
+        self.assertEqual(results[0].quote, "")
+        self.assertEqual(len(results[0].activityList), 1)
+        self.assertEqual(results[0].activityList[0], "unknown")
+        
+        self.assertEqual(len(results[0].entityList), 1)
+        self.assertEqual(results[0].entityList[0].type, expectedPersonEntity1.type)
+        self.assertEqual(results[0].entityList[0].name, expectedPersonEntity1.name)
+        
     def test_run_interjectionWithoutQuote_shouldReturnParsedItem(self):
         # arrange
         expectedRawSourceText = "Zwischenrufe der Abgeordneten Heinisch und Kucharowits."
@@ -468,6 +513,31 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(results[0].entityList[6].type, expectedEntity7.type)
         self.assertEqual(results[0].entityList[6].name, expectedEntity7.name)
         
+    def test_run_validPersonNamesWithWhitespacesAndPunctuation_shouldReturnParsedItem(self):
+        # arrange
+        expectedRawSourceText = "Beifall bei der Abg. Julia Herr."
+        expectedActivityListItem = "applause"      
+        expectedPersonEntity = Entity("person", "Herr")
+        validPersonNames = [" HErr:  "]
+             
+        # execute
+        results = self.fsm.run("Beifall bei der Abg. Julia Herr.", validPersonNames)
+        
+        # assert
+        self.assertEqual(len(results), 1)
+        result = results[0]
+        
+        self.assertEqual(result.rawSourceText, expectedRawSourceText)
+        self.assertEqual(result.description, "")
+        self.assertEqual(result.quote, "")
+        self.assertEqual(len(result.activityList), 1)
+        self.assertEqual(result.activityList[0], expectedActivityListItem)
+        
+        self.assertEqual(len(result.entityList), 1)
+        self.assertEqual(result.entityList[0].type, expectedPersonEntity.type)
+        self.assertEqual(result.entityList[0].name, expectedPersonEntity.name)
+        
+# todo missing tests: failure, endless loop, log messages
 
 if __name__ == '__main__':
     unittest.main()
