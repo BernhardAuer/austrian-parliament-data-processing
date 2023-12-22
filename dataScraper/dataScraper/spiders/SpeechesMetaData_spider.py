@@ -1,7 +1,6 @@
 import scrapy
 import json
-from pathlib import Path
-from items import SpeechesMetaDataItem
+from dataScraper.items import SpeechesMetaDataItem
 from scrapy.loader import ItemLoader
 from jmespath import search
 from datetime import datetime

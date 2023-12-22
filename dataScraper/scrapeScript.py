@@ -1,10 +1,8 @@
-from spiders.NationalCouncilMeeting_spider import NationalCouncilMeetingSpider
-from spiders.SpeechesMetaData_spider import SpeechesMetaDataSpider
-from spiders.Speeches_spider import SpeechesSpider
-import scrapy
+from dataScraper.spiders.NationalCouncilMeeting_spider import NationalCouncilMeetingSpider
+from dataScraper.spiders.SpeechesMetaData_spider import SpeechesMetaDataSpider
+from dataScraper.spiders.Speeches_spider import SpeechesSpider
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
-import sys
 import os
 import logging
 from scrapy.utils.log import configure_logging

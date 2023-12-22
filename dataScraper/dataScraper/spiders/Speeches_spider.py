@@ -1,11 +1,7 @@
 import scrapy
-import json
-from pathlib import Path
-from Parser.SpeechInfoParser import SpeechInfoParserStateMachine
-from items import GeneralInfoItem, ParsedInfoItem, SpeechItem, SpeechInfoItem, ApplauseItem, InputCleaner
+from dataScraper.Parser.InitStateMachine import initStateMachine
+from dataScraper.items import GeneralInfoItem, ParsedInfoItem, SpeechItem, SpeechInfoItem, ApplauseItem, InputCleaner
 from scrapy.loader import ItemLoader
-from jmespath import search
-from datetime import datetime
 import re
 import pymongo
 import traceback
@@ -31,6 +27,7 @@ class SpeechesSpider(scrapy.Spider):
         if not self.mongodb_uri: sys.exit("You need to provide a Connection String.")
         self.baseUrl = 'https://www.parlament.gv.at'
         self.start_urls = self.get_urls_from_db()
+        self.infoItemParser = initStateMachine()
     
     @classmethod
     def from_crawler(cls, crawler):    
@@ -60,15 +57,20 @@ class SpeechesSpider(scrapy.Spider):
         
         return item.get("data", "")
     
-    def parseInfoObject(self, value, paragraph, parentItemLoader):
+    def convertEntityListToDictList(self, list):
+        dictList = []
+        for entity in list:
+            dictList.append(entity.asDict())
+        return dictList
+    
+    def parseInfoObject(self, value, paragraph, parentItemLoader, validPersonNames):
         value = self.cleanInput(value)
-        parser = SpeechInfoParserStateMachine(self.logger)
-        results = parser.doParsing(value)
+        results = self.infoItemParser.run(value, validPersonNames)
         
         for parsedItem in results:
             l = ItemLoader(item=ParsedInfoItem(), selector=paragraph)
             l.add_value('activityList', parsedItem.activityList)
-            l.add_value('entityList',  parsedItem.entityList)
+            l.add_value('entityList', self.convertEntityListToDictList(parsedItem.entityList))
             l.add_value('quote', parsedItem.quote)
             l.add_value('description', parsedItem.description)
             l.add_value('rawSourceText', parsedItem.rawSourceText) 
@@ -142,8 +144,9 @@ class SpeechesSpider(scrapy.Spider):
                     if item is None or item.strip() == "":
                         continue       
                     if j % 2:       
-                        l = ItemLoader(item=GeneralInfoItem(), response=response, selector=paragraph)                   
-                        self.parseInfoObject(item, paragraph, l)
+                        l = ItemLoader(item=GeneralInfoItem(), response=response, selector=paragraph) 
+                        validPersonNames = response.css("b ::text").getall()
+                        self.parseInfoObject(item, paragraph, l, validPersonNames)
                         l.add_value('data', item) # this is original data for "info" objects.                          
                         l.add_value('type', "info")
                         l.add_value('orderId', index)

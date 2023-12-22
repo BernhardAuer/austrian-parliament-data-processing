@@ -1,0 +1,11 @@
+class State:
+    Initialize = "initialize"
+    DetermineWordMeaning = "determineWordMeaning"    
+    ConnectingWord = "ConnectingWord"
+    Activity = "activity"
+    EntityPoliticalParty = "entity_PoliticalParty"
+    EntityPersonOrPeople = "entity_PersonOrPeople"
+    BehaviourDescription = "behaviourDescription"
+    Interjection = "interjection"
+    NewItem = "newItem"     
+    Ending = "ending"  
