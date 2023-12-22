@@ -205,6 +205,39 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(result.entityList[0].type, expectedPersonEntity.type)
         self.assertEqual(result.entityList[0].name, expectedPersonEntity.name)
     
+    def test_run_edgeCaseinterjectionByPersonWithBehaviourDescription_shouldReturnParsedItem(self):
+        # arrange 
+        expectedPersonEntity1 = Entity("person", "Stögmann")
+        expectedPersonEntity2 = Entity("person", "Blah")
+        validPersonNames = ["Stögmann", "Blah"]
+             
+        # execute
+        results = self.fsm.run("Abg. Stögmann schneuzt sich – Abg. Blah – na sowas –: Für die Bevölkerung ist die Polizei zuständig, Herr Kollege! – Präsident Sobotka gibt das Glockenzeichen.", validPersonNames)
+        
+        # assert
+        self.assertEqual(len(results), 3)
+        
+        self.assertEqual(results[0].rawSourceText, "Abg. Stögmann schneuzt sich")
+        self.assertEqual(results[0].description, "")
+        self.assertEqual(results[0].quote, "")
+        # todo: fix this! "unknown" activity is missing
+        # self.assertEqual(len(results[0].activityList), 1)
+        # self.assertEqual(results[0].activityList[0], "unknown")
+        
+        self.assertEqual(len(results[0].entityList), 1)
+        self.assertEqual(results[0].entityList[0].type, expectedPersonEntity1.type)
+        self.assertEqual(results[0].entityList[0].name, expectedPersonEntity1.name)
+        
+        self.assertEqual(results[1].rawSourceText, "Abg. Blah – na sowas –: Für die Bevölkerung ist die Polizei zuständig, Herr Kollege!")
+        self.assertEqual(results[1].description, "na sowas")
+        self.assertEqual(results[1].quote, "Für die Bevölkerung ist die Polizei zuständig, Herr Kollege!")
+        self.assertEqual(len(results[1].activityList), 1)
+        self.assertEqual(results[1].activityList[0], "shouting")
+        
+        self.assertEqual(len(results[1].entityList), 1)
+        self.assertEqual(results[1].entityList[0].type, expectedPersonEntity2.type)
+        self.assertEqual(results[1].entityList[0].name, expectedPersonEntity2.name)
+    
     def test_run_interjectionWithoutQuote_shouldReturnParsedItem(self):
         # arrange
         expectedRawSourceText = "Zwischenrufe der Abgeordneten Heinisch und Kucharowits."
@@ -394,12 +427,47 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(results[0].entityList[4].type, expectedEntity5.type)
         self.assertEqual(results[0].entityList[4].name, expectedEntity5.name)
 
-# todo: write tests for every known activity
-#todos:
-#m.run("Abg. Meinl-Reisinger: Geh bitte, he! – Abg. Stögmüller schneuzt sich – Zwischenruf von Abg. Hafenecker – Abg. Blah – na sowas –: Für die Bevölkerung ist die Polizei zuständig, Herr Kollege! – Präsident Sobotka gibt das Glockenzeichen.")
-# complex parsing multiple items
-#m.run("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ, Neos und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker.")
-
+    def test_run_complexPhrase_shouldItem(self):
+        # arrange
+        expectedEntity1 = Entity("politicalParty", "fpö")
+        expectedEntity2 = Entity("politicalParty", "övp")
+        expectedEntity3 = Entity("somePersonsOfPoliticalParty", "spö")
+        expectedEntity4 = Entity("somePersonsOfPoliticalParty", "neos")
+        expectedEntity5 = Entity("somePersonsOfPoliticalParty", "grüne")
+        expectedEntity6 = Entity("person", "Brandstätter")
+        expectedEntity7 = Entity("person", "Ecker")
+        expectedActivity1 = "applause"
+        expectedActivity2 = "cheerfulness"
+        validPersonNames = ["Brandstätter", "Ecker"]
+        
+        # execute
+        results = self.fsm.run("Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ, Neos und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker.", validPersonNames)
+        
+        # assert
+        self.assertEqual(len(results), 1)
+        
+        self.assertEqual(results[0].rawSourceText, "Beifall und Heiterkeit bei der FPÖ, ÖVP sowie bei Abgeordneten der SPÖ, Neos und den Grünen, dem Abg. Brandstätter und der Abgeordneten Cornellia Ecker.")
+        self.assertEqual(results[0].description, "")
+        self.assertEqual(results[0].quote, "")
+        self.assertEqual(len(results[0].activityList), 2)
+        self.assertEqual(results[0].activityList[0], expectedActivity1)   
+        self.assertEqual(results[0].activityList[1], expectedActivity2)     
+        self.assertEqual(len(results[0].entityList), 7)
+        self.assertEqual(results[0].entityList[0].type, expectedEntity1.type)
+        self.assertEqual(results[0].entityList[0].name, expectedEntity1.name)
+        self.assertEqual(results[0].entityList[1].type, expectedEntity2.type)
+        self.assertEqual(results[0].entityList[1].name, expectedEntity2.name)
+        self.assertEqual(results[0].entityList[2].type, expectedEntity3.type)
+        self.assertEqual(results[0].entityList[2].name, expectedEntity3.name)        
+        self.assertEqual(results[0].entityList[3].type, expectedEntity4.type)
+        self.assertEqual(results[0].entityList[3].name, expectedEntity4.name)
+        self.assertEqual(results[0].entityList[4].type, expectedEntity5.type)
+        self.assertEqual(results[0].entityList[4].name, expectedEntity5.name)
+        self.assertEqual(results[0].entityList[5].type, expectedEntity6.type)
+        self.assertEqual(results[0].entityList[5].name, expectedEntity6.name)
+        self.assertEqual(results[0].entityList[6].type, expectedEntity7.type)
+        self.assertEqual(results[0].entityList[6].name, expectedEntity7.name)
+        
 
 if __name__ == '__main__':
     unittest.main()
