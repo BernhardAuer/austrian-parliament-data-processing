@@ -106,21 +106,14 @@ def entity_PersonOrPeople(**kwds):
     phrase, infoItems = unpackPhraseAndInfoItems(kwds)
     validPersonNames = cleanStringList(kwds["validPersonNames"])
     word, remainingPhrase = getFirstWord(phrase)
-    isInterjectionFollowing = word.endswith(":") 
-    isEndOfCurrentEntity = word.endswith(".") # todo: this is a temp fix (right now we don't know when a person name ends....)
     wordWithoutPunctuation = stripPunctuation(word)    
-    
-    if isFillerWord(word) or isWordOfType(Wordtype.CONNECTING_WORDS, wordWithoutPunctuation) or isWordOfType(Wordtype.PRECEDING_Entity_WORDS, wordWithoutPunctuation):
-        infoItems[-1].addToRawSourceText(word)
-        return (State.EntityPersonOrPeople, remainingPhrase, infoItems)
-    
+        
     # detect descriptive behaviour of speaker
-    # attention: gedankenstrich
     if word == "–" and "–:" in remainingPhrase and not "–" in remainingPhrase[:remainingPhrase.index("–:")]:
-        # description before speech e.g.:"Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!"
+        # e.g. "Abg. Leichtfried – in Richtung des das Red­nerpult verlassenden Abg. Scherak –: Also die Rede war jetzt in Ordnung!"
         infoItems[-1].addToRawSourceText(word)
         return (State.BehaviourDescription, remainingPhrase, infoItems)
-    elif word == "–":
+    elif word == "–" or word == "":
         return (State.DetermineWordMeaning, phrase, infoItems)
     
     entity = detectPoliticalPartyAbr(wordWithoutPunctuation)    
@@ -133,15 +126,12 @@ def entity_PersonOrPeople(**kwds):
         entityInstance = Entity("person", wordWithoutPunctuation)
         infoItems[-1].entityList.append(entityInstance) 
          
-    if isInterjectionFollowing:
+    if word.endswith(":"):
         infoItems[-1].addToRawSourceText(word)
         return (State.Interjection, remainingPhrase, infoItems)
-    elif not isEndOfCurrentEntity: # todo: this is a temp fix ...
-        infoItems[-1].addToRawSourceText(word)
-        return (State.EntityPersonOrPeople, remainingPhrase, infoItems)
     
     infoItems[-1].addToRawSourceText(word)
-    return (State.DetermineWordMeaning, remainingPhrase, infoItems)
+    return (State.EntityPersonOrPeople, remainingPhrase, infoItems)
         
 def behaviourDescription(**kwds):
     phrase, infoItems = unpackPhraseAndInfoItems(kwds)
