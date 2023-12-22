@@ -15,13 +15,16 @@ def initialize(**kwds):
 def newItem(**kwds):
     phrase, infoItems = unpackPhraseAndInfoItems(kwds)
     infoItems.append(InfoItem())
+    # default: flag as unknown activity
+    # todo convert list to set
+    infoItems[-1].activityList.append("unknown")
     return (State.DetermineWordMeaning, phrase, infoItems)
 
 def determineWordMeaning(**kwds):
     phrase, infoItems = unpackPhraseAndInfoItems(kwds)
     word, remainingPhrase = getFirstWord(phrase)
     wordWithoutPunctuation = stripPunctuation(word)
-    
+
     # -------------------------------------- general tasks ---------------------------------
     if word == "":
         return (State.Ending, remainingPhrase, infoItems)
@@ -44,10 +47,7 @@ def determineWordMeaning(**kwds):
         
     if detectPoliticalPartyAbr(wordWithoutPunctuation):
         return (State.EntityPoliticalParty, phrase, infoItems) 
-    
-    # flag as unknown activity if neccessary # todo convert list to set
-    if not infoItems[-1].activityList and "unknown" not in infoItems[-1].activityList:
-        infoItems[-1].activityList.append("unknown")
+
     infoItems[-1].addToRawSourceText(word)
     # print("unknown word .... precede with parsing") # todo: use logger ...
     return (State.DetermineWordMeaning, remainingPhrase, infoItems) 
@@ -67,8 +67,7 @@ def activity(**kwds):
             return (State.NewItem, phrase, infoItems)
         
         infoItems[-1].activityList.append(activity)
-        if "unknown" in infoItems[-1].activityList:
-            infoItems[-1].activityList.remove("unknown")
+        removeUnknownActivity(infoItems)
         infoItems[-1].addToRawSourceText(word)
         return (State.Activity, remainingPhrase, infoItems)
     
@@ -153,8 +152,11 @@ def interjection(**kwds):
     
     # add item to list if not there already
     if "shouting" not in infoItems[-1].activityList:
-        infoItems[-1].activityList.append("shouting")
-        if "unknown" in infoItems[-1].activityList:
-            infoItems[-1].activityList.remove("unknown")
+        infoItems[-1].activityList.append("shouting")        
+        removeUnknownActivity(infoItems)
     infoItems[-1].addToRawSourceText(word)
     return (State.Interjection, remainingPhrase, infoItems)
+
+def removeUnknownActivity(infoItems):
+    if "unknown" in infoItems[-1].activityList:
+        infoItems[-1].activityList.remove("unknown")

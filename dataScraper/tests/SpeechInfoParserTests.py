@@ -237,8 +237,6 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(results[1].entityList[0].type, expectedPersonEntity2.type)
         self.assertEqual(results[1].entityList[0].name, expectedPersonEntity2.name)
     
-    # todo fix this!
-    @unittest.skip
     def test_run_unknownActivity_shouldReturnParsedItem(self):
         # arrange 
         expectedPersonEntity1 = Entity("person", "Stögmann")
@@ -260,8 +258,7 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(results[0].entityList[0].type, expectedPersonEntity1.type)
         self.assertEqual(results[0].entityList[0].name, expectedPersonEntity1.name)
     
-    # todo fix this!
-    @unittest.skip
+    # there was a bug once which has caused an endless loop... should be fixed by now!
     def test_run_unknownPhraseWithoutPeriodPotentialEndlessLoop_shouldReturnParsedItem(self):
         # arrange 
         expectedPersonEntity1 = Entity("person", "Stögmann")
