@@ -73,7 +73,7 @@ def activity(**kwds):
     
     # edge case ... pls tell me if you know a better solution
     if "allgemeiner beifall" in infoItems[-1].rawSourceText.lower():
-        for partyName in ["övp", "spö", "fpö", "grüne", "neos"]: # todo make this dynamically
+        for partyName in ["ÖVP", "SPÖ", "FPÖ", "GRÜNE", "NEOS"]: # todo make this dynamically
             infoItems[-1].entityList.append(Entity("politicalParty", partyName)) 
     
     return (State.DetermineWordMeaning, phrase, infoItems) 

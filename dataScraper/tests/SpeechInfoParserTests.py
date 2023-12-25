@@ -1,6 +1,5 @@
 import unittest
 from dataScraper.Parser.InitStateMachine import initStateMachine
-from dataScraper.Parser.InfoItem import InfoItem
 from dataScraper.Parser.Entity import Entity
 
 class SpeechInfoParserTests(unittest.TestCase):
@@ -30,7 +29,7 @@ class SpeechInfoParserTests(unittest.TestCase):
         # arrange
         expectedRawSourceText = "Beifall bei den Grünen sowie der Abg. Musterfrau."
         expectedActivityListItem = "applause"
-        expectedPartyEntity = Entity("politicalParty", "grüne")        
+        expectedPartyEntity = Entity("politicalParty", "GRÜNE")        
         expectedPersonEntity = Entity("person", "Musterfrau")
         validPersonNames = ["Musterfrau"]
              
@@ -57,10 +56,10 @@ class SpeechInfoParserTests(unittest.TestCase):
         # arrange
         expectedRawSourceText = "Beifall bei den Grünen, bei Abgeordneten der ÖVP, NEOS und der FPÖ sowie der Abgeordneten Herr und Kucharowits."
         expectedActivityListItem = "applause"
-        expectedPartyEntity = Entity("politicalParty", "grüne")   
-        expectedPeopleOfPartyEntity1 = Entity("somePersonsOfPoliticalParty", "övp")  
-        expectedPeopleOfPartyEntity2 = Entity("somePersonsOfPoliticalParty", "neos")  
-        expectedPeopleOfPartyEntity3 = Entity("somePersonsOfPoliticalParty", "fpö")        
+        expectedPartyEntity = Entity("politicalParty", "GRÜNE")   
+        expectedPeopleOfPartyEntity1 = Entity("somePersonsOfPoliticalParty", "ÖVP")  
+        expectedPeopleOfPartyEntity2 = Entity("somePersonsOfPoliticalParty", "NEOS")  
+        expectedPeopleOfPartyEntity3 = Entity("somePersonsOfPoliticalParty", "FPÖ")        
         expectedPersonEntity1 = Entity("person", "Herr")       
         expectedPersonEntity2 = Entity("person", "Kucharowits")
         validPersonNames = ["Herr", "Kucharowits"]
@@ -97,7 +96,7 @@ class SpeechInfoParserTests(unittest.TestCase):
         expectedRawSourceText = "Heiterkeit und Beifall bei den Grünen sowie der Abg. Herr."
         expectedActivityListItem1 = "cheerfulness"
         expectedActivityListItem2 = "applause"
-        expectedPartyEntity = Entity("politicalParty", "grüne")        
+        expectedPartyEntity = Entity("politicalParty", "GRÜNE")        
         expectedPersonEntity = Entity("person", "Herr")
         validPersonNames = ["Herr"]
              
@@ -125,7 +124,7 @@ class SpeechInfoParserTests(unittest.TestCase):
         # arrange
         expectedActivityListItem1 = "cheerfulness"
         expectedActivityListItem2 = "applause"
-        expectedPartyEntity = Entity("politicalParty", "grüne")        
+        expectedPartyEntity = Entity("politicalParty", "GRÜNE")        
         expectedPersonEntity = Entity("person", "Herr")
         validPersonNames = ["Herr"]
              
@@ -335,9 +334,9 @@ class SpeechInfoParserTests(unittest.TestCase):
         # arrange
         expectedActivityListItem1 = "cheerfulness"
         expectedActivityListItem2 = "shouting"
-        expectedEntity1 = Entity("politicalParty", "grüne")
-        expectedEntity2 = Entity("somePersonsOfPoliticalParty", "spö")
-        expectedEntity3 = Entity("politicalParty", "spö")
+        expectedEntity1 = Entity("politicalParty", "GRÜNE")
+        expectedEntity2 = Entity("somePersonsOfPoliticalParty", "SPÖ")
+        expectedEntity3 = Entity("politicalParty", "SPÖ")
         
         # execute
         results = self.fsm.run("Heiterkeit bei den Grünen und bei Abgeordneten der SPÖ. – Zwischenruf bei der SPÖ.")
@@ -367,7 +366,7 @@ class SpeechInfoParserTests(unittest.TestCase):
 
     def test_run_phraseWithManyWhitespacesBetweenIndent_shouldReturnMultipleItemsWithContent(self):
         # arrange
-        expectedEntity1 = Entity("politicalParty", "spö")
+        expectedEntity1 = Entity("politicalParty", "SPÖ")
         
         # execute
         results = self.fsm.run("Beifall der SPÖ. –     hallo, das ist ein test  –  und noch ein test")
@@ -401,7 +400,7 @@ class SpeechInfoParserTests(unittest.TestCase):
 
     def test_run_interjectionByPoliticalParty_shouldReturnItem(self):
         # arrange
-        expectedEntity1 = Entity("politicalParty", "övp")
+        expectedEntity1 = Entity("politicalParty", "ÖVP")
         
         # execute
         results = self.fsm.run("Weitere Rufe bei der ÖVP: Streng!")
@@ -440,11 +439,11 @@ class SpeechInfoParserTests(unittest.TestCase):
         
     def test_run_generalApplause_shouldReturnItem(self):
         # arrange
-        expectedEntity1 = Entity("politicalParty", "övp")
-        expectedEntity2 = Entity("politicalParty", "spö")
-        expectedEntity3 = Entity("politicalParty", "fpö")
-        expectedEntity4 = Entity("politicalParty", "grüne")
-        expectedEntity5 = Entity("politicalParty", "neos")
+        expectedEntity1 = Entity("politicalParty", "ÖVP")
+        expectedEntity2 = Entity("politicalParty", "SPÖ")
+        expectedEntity3 = Entity("politicalParty", "FPÖ")
+        expectedEntity4 = Entity("politicalParty", "GRÜNE")
+        expectedEntity5 = Entity("politicalParty", "NEOS")
         
         # execute
         results = self.fsm.run("Allgemeiner Beifall.")
@@ -471,11 +470,11 @@ class SpeechInfoParserTests(unittest.TestCase):
 
     def test_run_complexPhrase_shouldItem(self):
         # arrange
-        expectedEntity1 = Entity("politicalParty", "fpö")
-        expectedEntity2 = Entity("politicalParty", "övp")
-        expectedEntity3 = Entity("somePersonsOfPoliticalParty", "spö")
-        expectedEntity4 = Entity("somePersonsOfPoliticalParty", "neos")
-        expectedEntity5 = Entity("somePersonsOfPoliticalParty", "grüne")
+        expectedEntity1 = Entity("politicalParty", "FPÖ")
+        expectedEntity2 = Entity("politicalParty", "ÖVP")
+        expectedEntity3 = Entity("somePersonsOfPoliticalParty", "SPÖ")
+        expectedEntity4 = Entity("somePersonsOfPoliticalParty", "NEOS")
+        expectedEntity5 = Entity("somePersonsOfPoliticalParty", "GRÜNE")
         expectedEntity6 = Entity("person", "Brandstätter")
         expectedEntity7 = Entity("person", "Ecker")
         expectedActivity1 = "applause"

@@ -29,12 +29,12 @@ def getActivity(word):
 def detectPoliticalPartyAbr(word):
     word = stripPunctuation(word)
     entityDict = {
-        "övp": "övp",
-        "fpö": "fpö",
-        "spö": "spö",
-        "grünen": "grüne",
-        "grüne": "grüne",
-        "neos": "neos"
+        "övp": "ÖVP",
+        "fpö": "FPÖ",
+        "spö": "SPÖ",
+        "grünen": "GRÜNE",
+        "grüne": "GRÜNE",
+        "neos": "NEOS"
     }
     return entityDict.get(word.lower()) 
 
