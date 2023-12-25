@@ -181,8 +181,7 @@ class SpeechesSpider(scrapy.Spider):
                         parlamentaryRequestReadBySpeaker = False
                     continue
                    
-                # regex from gruselkabinett :(
-                result = re.split(r'(?!\(\d+ d\.B\.\)|\(E\))[\(\)](?<!\(E\))(?<!\(\d d\.B\.\))(?<!\(\d{2} d\.B\.\))(?<!\(\d{3} d\.B\.\))(?<!\(\d{4} d\.B\.\))(?<!\(\d{5} d\.B\.\))', pureSpeech)
+                result = re.split(r"[()]", pureSpeech)
                 for j, item in enumerate(result):   
                     if item is None or item.strip() == "":
                         continue       
