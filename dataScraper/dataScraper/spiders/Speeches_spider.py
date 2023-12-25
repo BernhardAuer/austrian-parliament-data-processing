@@ -102,13 +102,34 @@ class SpeechesSpider(scrapy.Spider):
             currentSpeaker = None
             pureSpeech = None
             currentSpeakerPoliticalRole = None
+            currentlyParsingParlamentaryRequest = False
             index = 0
             for paragraph in response.css("p"):
                 potentialSpeaker = paragraph.css("b a *::text").get() # first entry should be the speaker...
                 
                 paragraphAsText = "".join(paragraph.css("*::text").getall())  # todo: check if parsing results are better with or without whitespace
                 paragraphAsText = self.cleanInput(paragraphAsText)              
-                extractSpeakerRegex = re.search("^[^:]*:", paragraphAsText)         
+                extractSpeakerRegex = re.search("^[^:]*:", paragraphAsText)
+                
+                parlamentaryRequest = paragraph.css(".ZM ::text").getall()
+                parlamentaryRequestClean = []
+                for pr in parlamentaryRequest:
+                    pr = self.cleanInput(pr).lower()
+                    parlamentaryRequestClean.append(pr)
+                if "entschließungsantrag" in parlamentaryRequestClean or currentlyParsingParlamentaryRequest:
+                    currentlyParsingParlamentaryRequest = True
+                    l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
+                    l.add_value('type', "info")
+                    l.add_value('subType', "parlamentaryRequest")
+                    l.add_value('orderId', index)
+                    l.add_value('data', paragraphAsText) 
+                    l = self.getOriginalRequestUrl(response, l)
+                    if "*****" in parlamentaryRequestClean:
+                        currentlyParsingParlamentaryRequest = False
+                    yield l.load_item()
+                    index += 1
+                    continue
+                      
                 if potentialSpeaker is not None:
                     potentialSpeaker = self.cleanInput(potentialSpeaker)
                     currentSpeaker = potentialSpeaker
