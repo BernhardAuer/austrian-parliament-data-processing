@@ -102,38 +102,16 @@ class SpeechesSpider(scrapy.Spider):
             currentSpeaker = None
             pureSpeech = None
             currentSpeakerPoliticalRole = None
-            infoItemOriginalParlamentaryRequest = False
-            parlamentaryRequestReadBySpeaker = False
+            isOriginalParlamentaryRequestFollowing = False
+            isParlamentaryRequestOngoing = False
             index = 0
             for paragraph in response.css("p"):                
                 paragraphAsText = "".join(paragraph.css("*::text").getall())  # todo: check if parsing results are better with or without whitespace
                 paragraphAsText = self.cleanInput(paragraphAsText)
-                
-                if "Gesamtwortlaut:".lower() in paragraphAsText.lower():
-                    infoItemOriginalParlamentaryRequest = True                
 
                 potentialSpeaker = paragraph.css("b a *::text").get() # first entry should be the speaker...
                 extractSpeakerRegex = re.search("^[^:]*:", paragraphAsText)
 
-                parlamentaryRequest = paragraph.css(".ZM ::text").getall()
-                parlamentaryRequestClean = []
-                for pr in parlamentaryRequest:
-                    pr = self.cleanInput(pr).lower()
-                    parlamentaryRequestClean.append(pr)
-                if infoItemOriginalParlamentaryRequest:
-                    infoItemOriginalParlamentaryRequest = True
-                    l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
-                    l.add_value('type', "info")
-                    l.add_value('subType', "parlamentaryRequest")
-                    l.add_value('orderId', index)
-                    l.add_value('data', paragraphAsText) 
-                    l = self.getOriginalRequestUrl(response, l)
-                    if "*****" in parlamentaryRequestClean:
-                        infoItemOriginalParlamentaryRequest = False
-                    yield l.load_item()
-                    index += 1
-                    continue
-                                     
                 if potentialSpeaker is not None:
                     potentialSpeaker = self.cleanInput(potentialSpeaker)
                     currentSpeaker = potentialSpeaker
@@ -163,24 +141,41 @@ class SpeechesSpider(scrapy.Spider):
                     index += 1
                     continue
                 
+                if "Gesamtwortlaut:".lower() in paragraphAsText.lower():
+                    isOriginalParlamentaryRequestFollowing = True
+                    
+                parlamentaryRequestHeaderList = []
+                for header in paragraph.css(".ZM ::text").getall():
+                    cleanedHeader = self.cleanInput(header).lower()
+                    parlamentaryRequestHeaderList.append(cleanedHeader)
+                                    
+                if isParlamentaryRequestOngoing or parlamentaryRequestHeaderList:
+                    isParlamentaryRequestOngoing = True
+                    if isOriginalParlamentaryRequestFollowing:
+                        l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
+                        l.add_value('type', "info")
+                        l.add_value('subType', "parlamentaryRequest")
+                        l.add_value('orderId', index)
+                        l.add_value('data', paragraphAsText) 
+                        l = self.getOriginalRequestUrl(response, l)
+                        yield l.load_item()
+                        index += 1
+                    else:
+                        l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)               
+                        l.add_value('data', pureSpeech)                                
+                        l.add_value('type', "speech")
+                        l.add_value('subType', "parlamentaryRequest")
+                        l.add_value('orderId', index) 
+                        if currentSpeaker is not None:
+                            l.add_value('speaker', currentSpeaker) 
+                            l.add_value('politicalRole', currentSpeakerPoliticalRole) 
+                        l = self.getOriginalRequestUrl(response, l)                                  
+                        yield l.load_item()
+                        index += 1
+                    if "*****" in parlamentaryRequestHeaderList:
+                        isParlamentaryRequestOngoing = False
+                    continue   
                 
-                
-                if "entschließungsantrag" in parlamentaryRequestClean or parlamentaryRequestReadBySpeaker:
-                    parlamentaryRequestReadBySpeaker = True
-                    l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)               
-                    l.add_value('data', pureSpeech)                                
-                    l.add_value('type', "speech")
-                    l.add_value('subType', "parlamentaryRequest")
-                    l.add_value('orderId', index) 
-                    if currentSpeaker is not None:
-                        l.add_value('speaker', currentSpeaker) 
-                        l.add_value('politicalRole', currentSpeakerPoliticalRole) 
-                    l = self.getOriginalRequestUrl(response, l)                                  
-                    yield l.load_item()
-                    if "*****" in parlamentaryRequestClean:
-                        parlamentaryRequestReadBySpeaker = False
-                    continue
-                   
                 result = re.split(r"[()]", pureSpeech)
                 for j, item in enumerate(result):   
                     if item is None or item.strip() == "":
