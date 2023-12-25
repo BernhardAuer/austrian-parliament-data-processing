@@ -102,22 +102,26 @@ class SpeechesSpider(scrapy.Spider):
             currentSpeaker = None
             pureSpeech = None
             currentSpeakerPoliticalRole = None
-            currentlyParsingParlamentaryRequest = False
+            infoItemOriginalParlamentaryRequest = False
+            parlamentaryRequestReadBySpeaker = False
             index = 0
-            for paragraph in response.css("p"):
-                potentialSpeaker = paragraph.css("b a *::text").get() # first entry should be the speaker...
-                
+            for paragraph in response.css("p"):                
                 paragraphAsText = "".join(paragraph.css("*::text").getall())  # todo: check if parsing results are better with or without whitespace
-                paragraphAsText = self.cleanInput(paragraphAsText)              
-                extractSpeakerRegex = re.search("^[^:]*:", paragraphAsText)
+                paragraphAsText = self.cleanInput(paragraphAsText)
                 
+                if "Gesamtwortlaut:".lower() in paragraphAsText.lower():
+                    infoItemOriginalParlamentaryRequest = True                
+
+                potentialSpeaker = paragraph.css("b a *::text").get() # first entry should be the speaker...
+                extractSpeakerRegex = re.search("^[^:]*:", paragraphAsText)
+
                 parlamentaryRequest = paragraph.css(".ZM ::text").getall()
                 parlamentaryRequestClean = []
                 for pr in parlamentaryRequest:
                     pr = self.cleanInput(pr).lower()
                     parlamentaryRequestClean.append(pr)
-                if "entschließungsantrag" in parlamentaryRequestClean or currentlyParsingParlamentaryRequest:
-                    currentlyParsingParlamentaryRequest = True
+                if infoItemOriginalParlamentaryRequest:
+                    infoItemOriginalParlamentaryRequest = True
                     l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
                     l.add_value('type', "info")
                     l.add_value('subType', "parlamentaryRequest")
@@ -125,11 +129,11 @@ class SpeechesSpider(scrapy.Spider):
                     l.add_value('data', paragraphAsText) 
                     l = self.getOriginalRequestUrl(response, l)
                     if "*****" in parlamentaryRequestClean:
-                        currentlyParsingParlamentaryRequest = False
+                        infoItemOriginalParlamentaryRequest = False
                     yield l.load_item()
                     index += 1
                     continue
-                      
+                                     
                 if potentialSpeaker is not None:
                     potentialSpeaker = self.cleanInput(potentialSpeaker)
                     currentSpeaker = potentialSpeaker
@@ -159,6 +163,24 @@ class SpeechesSpider(scrapy.Spider):
                     index += 1
                     continue
                 
+                
+                
+                if "entschließungsantrag" in parlamentaryRequestClean or parlamentaryRequestReadBySpeaker:
+                    parlamentaryRequestReadBySpeaker = True
+                    l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)               
+                    l.add_value('data', pureSpeech)                                
+                    l.add_value('type', "speech")
+                    l.add_value('subType', "parlamentaryRequest")
+                    l.add_value('orderId', index) 
+                    if currentSpeaker is not None:
+                        l.add_value('speaker', currentSpeaker) 
+                        l.add_value('politicalRole', currentSpeakerPoliticalRole) 
+                    l = self.getOriginalRequestUrl(response, l)                                  
+                    yield l.load_item()
+                    if "*****" in parlamentaryRequestClean:
+                        parlamentaryRequestReadBySpeaker = False
+                    continue
+                   
                 # regex from gruselkabinett :(
                 result = re.split(r'(?!\(\d+ d\.B\.\)|\(E\))[\(\)](?<!\(E\))(?<!\(\d d\.B\.\))(?<!\(\d{2} d\.B\.\))(?<!\(\d{3} d\.B\.\))(?<!\(\d{4} d\.B\.\))(?<!\(\d{5} d\.B\.\))', pureSpeech)
                 for j, item in enumerate(result):   
