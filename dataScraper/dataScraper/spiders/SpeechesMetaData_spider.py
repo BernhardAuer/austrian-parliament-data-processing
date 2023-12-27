@@ -33,6 +33,7 @@ class SpeechesMetaDataSpider(scrapy.Spider):
             lastEditBySource = search('content[].update', jsonAsPythonObject)
             nationalCouncilMeetingTitle = search('content[].info.title', jsonAsPythonObject)
             debates = search('content[].past_debates[]', jsonAsPythonObject)
+            typetextDict = {}
             
             for singleDebate in debates:
 
@@ -42,6 +43,15 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                 speechesInProtocol = None
                 if topNr is not None:
                     speechesInProtocol = search('content[].progress[?starts_with(text, \'' + topNr + ' \' )].speeches[]', jsonAsPythonObject) 
+                else:              
+                    typetext = search('typetext', singleDebate)
+                    if typetext in typetextDict:
+                        typetextDict[typetext] += 1
+                    else:
+                        typetextDict[typetext] = 0
+                        
+                    speechesInProtocol = search('content[].progress[?contains(text, \'' + typetext + ' \' )].speeches[]', jsonAsPythonObject)
+                    speechesInProtocol = [speechesInProtocol[typetextDict[typetext]]]
 
                 speakersForDebate = []
                 speeches = search('speeches', singleDebate)
