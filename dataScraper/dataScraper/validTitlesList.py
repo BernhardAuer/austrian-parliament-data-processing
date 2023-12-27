@@ -138,6 +138,7 @@ validTitles = [
     'BA',
     'Dipl.-Dolm.',
     'Dipl.-Kfm.',
+    'Dipl.-Kffr. (FH)',
     'Dipl.-Kffr.',
     'Dipl.Vw.',
     'Dipl.-Vw.',
