@@ -94,6 +94,8 @@ def extractPoliticalFunction(value):
      return politicalFunction
 
 def matchAndParseDataFromProtocol(value, loader_context):
+     if not loader_context.get('hasSpeechFinished'):
+          return None
      speechesInProtocol = loader_context.get('speechesInProtocol')
      nrOfSpeechByThisPerson = loader_context.get('nrOfSpeechByThisPerson')
      url = search('[*][?contains(texta, \''+ value +'\')][]', speechesInProtocol)[nrOfSpeechByThisPerson]
@@ -108,6 +110,8 @@ def giveMeError(value, loader_context):
 
 def parseVideoUrl(value, loader_context):
      try:
+          if not loader_context.get('hasSpeechFinished'):
+               return None
           speechData = matchAndParseDataFromProtocol(value, loader_context)
           videoUrl = search('video', speechData)
      except:
@@ -116,7 +120,9 @@ def parseVideoUrl(value, loader_context):
      return videoUrl 
 
 def parseSpeechUrl(value, loader_context):
-     try:
+     try:          
+          if not loader_context.get('hasSpeechFinished'):
+               return None
           speechData = matchAndParseDataFromProtocol(value, loader_context)
           url = search('filename', speechData)     
      except:
@@ -125,7 +131,9 @@ def parseSpeechUrl(value, loader_context):
      return url 
 
 def parseSpeechTimeFromProtocol(value, loader_context):
-     try:
+     try:          
+          if not loader_context.get('hasSpeechFinished'):
+               return None
           speechData = matchAndParseDataFromProtocol(value, loader_context)
           time = search('time', speechData)
      except:

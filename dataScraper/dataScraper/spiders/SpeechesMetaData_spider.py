@@ -53,14 +53,16 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                     speechesInProtocol = search('content[].progress[?contains(text, \'' + typetext + ' \' )].speeches[]', jsonAsPythonObject)
                     speechesInProtocol = [speechesInProtocol[typetextDict[typetext]]]
 
-                speakersForDebate = []
                 speeches = search('speeches', singleDebate)
+                nameDict = {}
                 for singleSpeech in speeches:
-                    nrOfSpeachByThisPersonInDebate = speakersForDebate.count(singleSpeech[2])
-                    speakersForDebate.append(singleSpeech[2])
+                    hasSpeechFinished = singleSpeech[1] == 'fertig'
+                    if singleSpeech[2] not in nameDict:
+                        nameDict[singleSpeech[2]] = 0
+                       
                     isVoluntaryTimeLimit = singleSpeech[9] if singleSpeech[9] != None else 'unfreiwillig lol' # quick fix, there must be a better solution for null values
 
-                    l = ItemLoader(item=SpeechesMetaDataItem(), meetingDate = meetingDate, speechesInProtocol = speechesInProtocol, nrOfSpeechByThisPerson = nrOfSpeachByThisPersonInDebate, selector=singleSpeech)      
+                    l = ItemLoader(item=SpeechesMetaDataItem(), meetingDate = meetingDate, speechesInProtocol = speechesInProtocol, nrOfSpeechByThisPerson = nameDict[singleSpeech[2]], hasSpeechFinished = hasSpeechFinished, selector=singleSpeech)      
 
                     l.add_value('titleBeforeName', singleSpeech[2],    re='^([^,]*),?.*\(.+\)$') # needs extra parsing ...
                     l.add_value('nameOfSpeaker', singleSpeech[2],      re='^([^,]*),?.*\(.+\)$') # needs extra parsing ...
@@ -88,7 +90,10 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                     l.add_value('videoUrl', singleSpeech[2], re='^([^,]*),?.*\(.+\)$')
                     l.add_value('speechUrl',  singleSpeech[2], re='^([^,]*),?.*\(.+\)$') 
                     l.add_value('speechTimeProtocol',  singleSpeech[2], re='^([^,]*),?.*\(.+\)$') 
-
+                    
+                    if hasSpeechFinished and singleSpeech[2] in nameDict:
+                        nameDict[singleSpeech[2]] += 1
+                            
                     yield l.load_item()
         except:
             print("an error occured while parsing data") 
