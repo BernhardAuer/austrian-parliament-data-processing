@@ -61,7 +61,6 @@ validTitles = [
     'MBA',
     'MedR',
     'MIB',
-    'MSc',
     'MES',
     'Parl. R',
     'Prof.',
@@ -169,5 +168,7 @@ validTitles = [
     'MDes',
     'M.Ed.Univ.',
     'MScPH',
+    'MMSc',
+    'MSc',
     'Tzt.'
 ]
