@@ -83,7 +83,7 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                     l.add_value('topNr', topNr)
                     l.add_value('typeOfDebate', typeOfDebate) 
                     l.add_value('speechNrInDebate', singleSpeech[0]) 
-                    l.add_value('nrOfSpeechByThisPerson', singleSpeech[4])
+                    l.add_value('nrOfSpeechByThisPerson', nameDict[singleSpeech[2]])
                     l.add_value('externalPersonId', singleSpeech[3]) 
                     l.add_value('lastEditBySource', lastEditBySource)
                     l.add_value('parsingDatetime',  datetime.now()) 
