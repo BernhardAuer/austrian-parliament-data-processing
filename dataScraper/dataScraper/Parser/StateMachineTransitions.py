@@ -120,11 +120,13 @@ def entity_PersonOrPeople(**kwds):
         # some persons of a political party
         entityInstance = Entity("somePersonsOfPoliticalParty", entity)
         infoItems[-1].entityList.append(entityInstance)
-    elif wordWithoutPunctuation.lower() in validPersonNames:
-        # name of specific person  
-        entityInstance = Entity("person", wordWithoutPunctuation)
-        infoItems[-1].entityList.append(entityInstance) 
-         
+          
+    for name in validPersonNames:
+        if phrase.lower().startswith(name.lower()):
+            entityInstance = Entity("person", name)
+            infoItems[-1].entityList.append(entityInstance)
+            break           
+
     if word.endswith(":"):
         infoItems[-1].addToRawSourceText(word)
         return (State.Interjection, remainingPhrase, infoItems)

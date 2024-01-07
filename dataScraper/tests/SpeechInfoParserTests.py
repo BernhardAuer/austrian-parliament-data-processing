@@ -514,7 +514,7 @@ class SpeechInfoParserTests(unittest.TestCase):
         expectedRawSourceText = "Beifall bei der Abg. Julia Herr."
         expectedActivityListItem = "applause"      
         expectedPersonEntity = Entity("person", "Herr")
-        validPersonNames = [" HErr:  "]
+        validPersonNames = [" Herr:  "]
              
         # execute
         results = self.fsm.run("Beifall bei der Abg. Julia Herr.", validPersonNames)
@@ -532,6 +532,58 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(len(result.entityList), 1)
         self.assertEqual(result.entityList[0].type, expectedPersonEntity.type)
         self.assertEqual(result.entityList[0].name, expectedPersonEntity.name)
+        
+    def test_run_validPersonNamesWithWhitespaceInName_shouldReturnParsedItem(self):
+        # arrange
+        expectedRawSourceText = "Zwischenruf der Abg. Künsberg Sarre."
+        expectedActivityListItem = "shouting"      
+        expectedPersonEntity = Entity("person", "Künsberg Sarre")
+        validPersonNames = ["Künsberg Sarre"]
+             
+        # execute
+        results = self.fsm.run("Zwischenruf der Abg. Künsberg Sarre.", validPersonNames)
+        
+        # assert
+        self.assertEqual(len(results), 1)
+        result = results[0]
+        
+        self.assertEqual(result.rawSourceText, expectedRawSourceText)
+        self.assertEqual(result.description, "")
+        self.assertEqual(result.quote, "")
+        self.assertEqual(len(result.activityList), 1)
+        self.assertEqual(result.activityList[0], expectedActivityListItem)
+        
+        self.assertEqual(len(result.entityList), 1)
+        self.assertEqual(result.entityList[0].type, expectedPersonEntity.type)
+        self.assertEqual(result.entityList[0].name, expectedPersonEntity.name)
+
+    def test_run_validPersonNamesWithWhitespaceInNameInterjection_shouldReturnParsedItem(self):
+        # arrange
+        expectedRawSourceText = "Abg. Künsberg Sarre: Genau!"
+        expectedActivityListItem = "shouting"      
+        expectedPersonEntity = Entity("person", "Künsberg Sarre")
+        validPersonNames = ["Künsberg Sarre", "Künsberg Sarre.", "Künsberg Sarre:"]
+             
+        # execute
+        results = self.fsm.run("Abg. Künsberg Sarre: Genau!", validPersonNames)
+        
+        # assert
+        self.assertEqual(len(results), 1)
+        result = results[0]
+        
+        self.assertEqual(result.rawSourceText, expectedRawSourceText)
+        self.assertEqual(result.description, "")
+        self.assertEqual(result.quote, "Genau!")
+        self.assertEqual(len(result.activityList), 1)
+        self.assertEqual(result.activityList[0], expectedActivityListItem)
+        
+        self.assertEqual(len(result.entityList), 1)
+        self.assertEqual(result.entityList[0].type, expectedPersonEntity.type)
+        self.assertEqual(result.entityList[0].name, expectedPersonEntity.name)    
+            
+        # html parser tests: 'Abgeordnete ', 'Martina\xa0Kaufmann,\xa0MMSc\xa0BA', ['Blimlinger ', 'Disoski.', ' Graf', 'Künsberg\r\nSarre.']
+        
+        # von der leyen test
         
 # todo missing tests: failure, endless loop, log messages
 

@@ -181,8 +181,9 @@ class SpeechesSpider(scrapy.Spider):
                     if item is None or item.strip() == "":
                         continue       
                     if j % 2:       
-                        l = ItemLoader(item=GeneralInfoItem(), response=response, selector=paragraph) 
-                        validPersonNames = response.css("b ::text").getall()
+                        l = ItemLoader(item=GeneralInfoItem(), response=response, selector=paragraph)
+                        boldElements = paragraph.css("b")
+                        validPersonNames = [self.cleanInput(' '.join(element.css('::text').getall())) for element in boldElements]
                         self.parseInfoObject(item, paragraph, l, validPersonNames)
                         l.add_value('data', item) # this is original data for "info" objects.                          
                         l.add_value('type', "info")

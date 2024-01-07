@@ -57,6 +57,7 @@ def cleanStringList(list):
     result = []
     for string in list:
         s = string.strip()
-        s = stripPunctuation(s.lower())        
-        result.append(s)
+        s = stripPunctuation(s) 
+        if s and not s.isspace():       
+            result.append(s)
     return result
