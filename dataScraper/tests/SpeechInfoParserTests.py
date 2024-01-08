@@ -601,8 +601,9 @@ class SpeechInfoParserTests(unittest.TestCase):
         self.assertEqual(result.activityList[0], expectedActivityListItem)
         
         self.assertEqual(len(result.entityList), 0) 
+        
             
-        # html parser tests: 'Abgeordnete ', 'Martina\xa0Kaufmann,\xa0MMSc\xa0BA', ['Blimlinger ', 'Disoski.', ' Graf', 'Künsberg\r\nSarre.']
+        # html parser tests: 'Abgeordnete ', 'Martina\xa0Kaufmann,\xa0MMSc\xa0BA', ['Blimlinger ', 'Disoski.', ' Graf', 'Künsberg\r\nSarre.']; Präsidentin des REchnungshofes
         
         # von der leyen test
         

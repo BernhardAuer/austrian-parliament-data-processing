@@ -85,6 +85,9 @@ class SpeechesSpider(scrapy.Spider):
         return itemLoader
 
     def parsePoliticalRole(self, value):
+        if "präsidentin des rechnungshofes" in value.lower() or "präsident des rechnungshofes" in value.lower():
+            return "presidentOfCourtOfAuditors"
+        
         if "präsident" in value.lower(): # Präsident xyz or Präsidentin zx
             return "presidentOfParliament"
         
