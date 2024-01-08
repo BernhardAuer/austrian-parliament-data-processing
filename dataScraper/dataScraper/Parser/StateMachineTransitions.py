@@ -60,7 +60,11 @@ def activity(**kwds):
     if isWordOfType(Wordtype.CONNECTING_WORDS, wordWithoutPunctuation):
         infoItems[-1].addToRawSourceText(word)
         return (State.Activity, remainingPhrase, infoItems)
-        
+    
+    if word.endswith(":"):
+        infoItems[-1].addToRawSourceText(word)
+        return (State.Interjection, remainingPhrase, infoItems)
+    
     # python 3.8 walrus operator -> func return val gets added to list only if not null
     if activity := getActivity(wordWithoutPunctuation):
         if infoItems[-1].entityList:            

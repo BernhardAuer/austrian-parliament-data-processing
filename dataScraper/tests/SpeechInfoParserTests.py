@@ -579,7 +579,28 @@ class SpeechInfoParserTests(unittest.TestCase):
         
         self.assertEqual(len(result.entityList), 1)
         self.assertEqual(result.entityList[0].type, expectedPersonEntity.type)
-        self.assertEqual(result.entityList[0].name, expectedPersonEntity.name)    
+        self.assertEqual(result.entityList[0].name, expectedPersonEntity.name) 
+        
+    def test_run_interjectionByUnknownPerson_shouldReturnParsedItem(self):
+        # arrange
+        expectedRawSourceText = "Ruf: Drei Jahre!"
+        expectedActivityListItem = "shouting"      
+        expectedPersonEntity = Entity("person", "Künsberg Sarre")
+             
+        # execute
+        results = self.fsm.run("Ruf: Drei Jahre!")
+        
+        # assert
+        self.assertEqual(len(results), 1)
+        result = results[0]
+        
+        self.assertEqual(result.rawSourceText, expectedRawSourceText)
+        self.assertEqual(result.description, "")
+        self.assertEqual(result.quote, "Drei Jahre!")
+        self.assertEqual(len(result.activityList), 1)
+        self.assertEqual(result.activityList[0], expectedActivityListItem)
+        
+        self.assertEqual(len(result.entityList), 0) 
             
         # html parser tests: 'Abgeordnete ', 'Martina\xa0Kaufmann,\xa0MMSc\xa0BA', ['Blimlinger ', 'Disoski.', ' Graf', 'Künsberg\r\nSarre.']
         
