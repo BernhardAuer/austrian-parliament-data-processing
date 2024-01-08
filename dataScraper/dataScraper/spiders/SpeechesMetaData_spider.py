@@ -51,7 +51,12 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                         typetextDict[typetext] = 0
                         
                     speechesInProtocol = search('content[].progress[?contains(text, \'' + typetext + ' \' )].speeches[]', jsonAsPythonObject)
-                    speechesInProtocol = [speechesInProtocol[typetextDict[typetext]]]
+                    self.logger.info("typetext" + str(typetext))
+                    self.logger.info("dict" + str(typetextDict))
+                    self.logger.info("" + str(speechesInProtocol))
+                    if 0 <= typetextDict[typetext] < len(speechesInProtocol): # check if index exists
+                        speechesInProtocol = [speechesInProtocol[typetextDict[typetext]]]
+                    
 
                 speeches = search('speeches', singleDebate)
                 nameDict = {}
