@@ -4,6 +4,7 @@ from dataScraper.items import SpeechesMetaDataItem
 from scrapy.loader import ItemLoader
 from jmespath import search
 from datetime import datetime
+import traceback
 
 class SpeechesMetaDataSpider(scrapy.Spider):
     name = "speechesMetaData"
@@ -100,8 +101,10 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                         nameDict[singleSpeech[2]] += 1
                             
                     yield l.load_item()
-        except:
-            print("an error occured while parsing data") 
+        except Exception as e:
+            self.logger.error('an error occured while parsing data:')
+            self.logger.error('%s', e)
+            self.logger.error('%s', traceback.format_exc())
             
         self.idCounter += 1
         url = self.urlPlaceholder % self.idCounter        
