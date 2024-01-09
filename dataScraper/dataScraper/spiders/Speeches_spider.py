@@ -85,6 +85,9 @@ class SpeechesSpider(scrapy.Spider):
         return itemLoader
 
     def parsePoliticalRole(self, value):
+        if "präsidentin des rechnungshofes" in value.lower() or "präsident des rechnungshofes" in value.lower():
+            return "presidentOfCourtOfAuditors"
+        
         if "präsident" in value.lower(): # Präsident xyz or Präsidentin zx
             return "presidentOfParliament"
         
@@ -102,13 +105,16 @@ class SpeechesSpider(scrapy.Spider):
             currentSpeaker = None
             pureSpeech = None
             currentSpeakerPoliticalRole = None
+            isOriginalParlamentaryRequestFollowing = False
+            isParlamentaryRequestOngoing = False
             index = 0
-            for paragraph in response.css("p"):
-                potentialSpeaker = paragraph.css("b a *::text").get() # first entry should be the speaker...
-                
+            for paragraph in response.css("p"):                
                 paragraphAsText = "".join(paragraph.css("*::text").getall())  # todo: check if parsing results are better with or without whitespace
-                paragraphAsText = self.cleanInput(paragraphAsText)              
-                extractSpeakerRegex = re.search("^[^:]*:", paragraphAsText)         
+                paragraphAsText = self.cleanInput(paragraphAsText)
+
+                potentialSpeaker = paragraph.css("b a *::text").get() # first entry should be the speaker...
+                extractSpeakerRegex = re.search("^[^:]*:", paragraphAsText)
+
                 if potentialSpeaker is not None:
                     potentialSpeaker = self.cleanInput(potentialSpeaker)
                     currentSpeaker = potentialSpeaker
@@ -126,26 +132,61 @@ class SpeechesSpider(scrapy.Spider):
                         pureSpeech = paragraphAsText
                 else:
                     pureSpeech = paragraphAsText
-                timeRegex = re.search("^\d{1,2}.\d{2}$", paragraphAsText)
+                timeRegex = re.search("^(\d{1,2}.\d{2}).?\d{0,2}$", paragraphAsText)
                 if timeRegex:                    
                     l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
                     l.add_value('type', "info")
                     l.add_value('subType', "time")
                     l.add_value('orderId', index)
-                    l.add_value('data', paragraphAsText) 
+                    l.add_value('data', timeRegex.group(1)) 
                     l = self.getOriginalRequestUrl(response, l)
                     yield l.load_item()
                     index += 1
                     continue
                 
-                # regex from gruselkabinett :(
-                result = re.split(r'(?!\(\d+ d\.B\.\)|\(E\))[\(\)](?<!\(E\))(?<!\(\d d\.B\.\))(?<!\(\d{2} d\.B\.\))(?<!\(\d{3} d\.B\.\))(?<!\(\d{4} d\.B\.\))(?<!\(\d{5} d\.B\.\))', pureSpeech)
+                if "Gesamtwortlaut:".lower() in paragraphAsText.lower():
+                    isOriginalParlamentaryRequestFollowing = True
+                    
+                parlamentaryRequestHeaderList = []
+                for header in paragraph.css(".ZM ::text").getall():
+                    cleanedHeader = self.cleanInput(header).lower()
+                    parlamentaryRequestHeaderList.append(cleanedHeader)
+                                    
+                if isParlamentaryRequestOngoing or parlamentaryRequestHeaderList:
+                    isParlamentaryRequestOngoing = True
+                    if isOriginalParlamentaryRequestFollowing:
+                        l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)
+                        l.add_value('type', "info")
+                        l.add_value('subType', "parlamentaryRequest")
+                        l.add_value('orderId', index)
+                        l.add_value('data', paragraphAsText) 
+                        l = self.getOriginalRequestUrl(response, l)
+                        yield l.load_item()
+                        index += 1
+                    else:
+                        l = ItemLoader(item=SpeechItem(), response=response, selector=paragraph)               
+                        l.add_value('data', pureSpeech)                                
+                        l.add_value('type', "speech")
+                        l.add_value('subType', "parlamentaryRequest")
+                        l.add_value('orderId', index) 
+                        if currentSpeaker is not None:
+                            l.add_value('speaker', currentSpeaker) 
+                            l.add_value('politicalRole', currentSpeakerPoliticalRole) 
+                        l = self.getOriginalRequestUrl(response, l)                                  
+                        yield l.load_item()
+                        index += 1
+                    if "*****" in parlamentaryRequestHeaderList:
+                        isParlamentaryRequestOngoing = False
+                    continue   
+                
+                result = re.split(r"[()]", pureSpeech)
                 for j, item in enumerate(result):   
                     if item is None or item.strip() == "":
                         continue       
                     if j % 2:       
-                        l = ItemLoader(item=GeneralInfoItem(), response=response, selector=paragraph) 
-                        validPersonNames = response.css("b ::text").getall()
+                        l = ItemLoader(item=GeneralInfoItem(), response=response, selector=paragraph)
+                        boldElements = paragraph.css("b")
+                        validPersonNames = [self.cleanInput(' '.join(element.css('::text').getall())) for element in boldElements]
                         self.parseInfoObject(item, paragraph, l, validPersonNames)
                         l.add_value('data', item) # this is original data for "info" objects.                          
                         l.add_value('type', "info")

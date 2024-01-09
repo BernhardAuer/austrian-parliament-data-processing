@@ -9,6 +9,7 @@ from itemloaders.processors import MapCompose, Compose, TakeFirst, Join
 from dataScraper.validTitlesList import validTitles
 from dataScraper.austrianParliamentSpecificTitlesList import austrianParliamentTitles
 from jmespath import search
+import string
 
 def parseDate(dateString):
      dateTime = parse(dateString).replace(microsecond=0) # this replace shitty thing is needed for mongodb (js dates only, huh)
@@ -94,6 +95,8 @@ def extractPoliticalFunction(value):
      return politicalFunction
 
 def matchAndParseDataFromProtocol(value, loader_context):
+     if not loader_context.get('hasSpeechFinished'):
+          return None
      speechesInProtocol = loader_context.get('speechesInProtocol')
      nrOfSpeechByThisPerson = loader_context.get('nrOfSpeechByThisPerson')
      url = search('[*][?contains(texta, \''+ value +'\')][]', speechesInProtocol)[nrOfSpeechByThisPerson]
@@ -108,6 +111,8 @@ def giveMeError(value, loader_context):
 
 def parseVideoUrl(value, loader_context):
      try:
+          if not loader_context.get('hasSpeechFinished'):
+               return None
           speechData = matchAndParseDataFromProtocol(value, loader_context)
           videoUrl = search('video', speechData)
      except:
@@ -116,7 +121,9 @@ def parseVideoUrl(value, loader_context):
      return videoUrl 
 
 def parseSpeechUrl(value, loader_context):
-     try:
+     try:          
+          if not loader_context.get('hasSpeechFinished'):
+               return None
           speechData = matchAndParseDataFromProtocol(value, loader_context)
           url = search('filename', speechData)     
      except:
@@ -125,7 +132,9 @@ def parseSpeechUrl(value, loader_context):
      return url 
 
 def parseSpeechTimeFromProtocol(value, loader_context):
-     try:
+     try:          
+          if not loader_context.get('hasSpeechFinished'):
+               return None
           speechData = matchAndParseDataFromProtocol(value, loader_context)
           time = search('time', speechData)
      except:
@@ -169,13 +178,15 @@ def stripNewline(value):
 def stripDuplicateSpaces(value):
      return value.replace("  ", " ")
 
-
+def stripPunctuation(word):
+     return word.strip(string.punctuation)
+    
 class SpeechItem(scrapy.Item):
      orderId = scrapy.Field(output_processor = TakeFirst())     
      type = scrapy.Field(input_processor = MapCompose(stripString), output_processor = Join())
      subType = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())     
      data = scrapy.Field(input_processor = Compose(MapCompose(stripString, stripNewline), Join(), stripDuplicateSpaces), output_processor = TakeFirst())
-     speaker = scrapy.Field(input_processor = MapCompose(getName, stripString), output_processor = TakeFirst())
+     speaker = scrapy.Field(input_processor = MapCompose(getName, stripString, stripPunctuation), output_processor = TakeFirst())
      politicalRole = scrapy.Field(input_processor = MapCompose(stripString), output_processor = TakeFirst())
      requestUrl = scrapy.Field(output_processor = TakeFirst()) 
      pass

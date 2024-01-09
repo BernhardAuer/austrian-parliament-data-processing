@@ -60,7 +60,11 @@ def activity(**kwds):
     if isWordOfType(Wordtype.CONNECTING_WORDS, wordWithoutPunctuation):
         infoItems[-1].addToRawSourceText(word)
         return (State.Activity, remainingPhrase, infoItems)
-        
+    
+    if word.endswith(":"):
+        infoItems[-1].addToRawSourceText(word)
+        return (State.Interjection, remainingPhrase, infoItems)
+    
     # python 3.8 walrus operator -> func return val gets added to list only if not null
     if activity := getActivity(wordWithoutPunctuation):
         if infoItems[-1].entityList:            
@@ -73,7 +77,7 @@ def activity(**kwds):
     
     # edge case ... pls tell me if you know a better solution
     if "allgemeiner beifall" in infoItems[-1].rawSourceText.lower():
-        for partyName in ["övp", "spö", "fpö", "grüne", "neos"]: # todo make this dynamically
+        for partyName in ["ÖVP", "SPÖ", "FPÖ", "GRÜNE", "NEOS"]: # todo make this dynamically
             infoItems[-1].entityList.append(Entity("politicalParty", partyName)) 
     
     return (State.DetermineWordMeaning, phrase, infoItems) 
@@ -120,11 +124,13 @@ def entity_PersonOrPeople(**kwds):
         # some persons of a political party
         entityInstance = Entity("somePersonsOfPoliticalParty", entity)
         infoItems[-1].entityList.append(entityInstance)
-    elif wordWithoutPunctuation.lower() in validPersonNames:
-        # name of specific person  
-        entityInstance = Entity("person", wordWithoutPunctuation)
-        infoItems[-1].entityList.append(entityInstance) 
-         
+          
+    for name in validPersonNames:
+        if phrase.lower().startswith(name.lower()):
+            entityInstance = Entity("person", name)
+            infoItems[-1].entityList.append(entityInstance)
+            break           
+
     if word.endswith(":"):
         infoItems[-1].addToRawSourceText(word)
         return (State.Interjection, remainingPhrase, infoItems)

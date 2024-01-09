@@ -4,6 +4,7 @@ from dataScraper.items import SpeechesMetaDataItem
 from scrapy.loader import ItemLoader
 from jmespath import search
 from datetime import datetime
+import traceback
 
 class SpeechesMetaDataSpider(scrapy.Spider):
     name = "speechesMetaData"
@@ -33,6 +34,7 @@ class SpeechesMetaDataSpider(scrapy.Spider):
             lastEditBySource = search('content[].update', jsonAsPythonObject)
             nationalCouncilMeetingTitle = search('content[].info.title', jsonAsPythonObject)
             debates = search('content[].past_debates[]', jsonAsPythonObject)
+            typetextDict = {}
             
             for singleDebate in debates:
 
@@ -42,15 +44,44 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                 speechesInProtocol = None
                 if topNr is not None:
                     speechesInProtocol = search('content[].progress[?starts_with(text, \'' + topNr + ' \' )].speeches[]', jsonAsPythonObject) 
+                else:              
+                    typetext = search('typetext', singleDebate)
+                    if typetext in typetextDict:
+                        typetextDict[typetext] += 1
+                    else:
+                        typetextDict[typetext] = 0
+                        
+                    
+                    progressObjectList = search('content[].progress[]', jsonAsPythonObject)
+                    
+                    mergedProgressObjectDict = {}
+                    # group by
+                    for progressObject in progressObjectList:                       
+                        key = progressObject['text']
+                        speeches = search('speeches[]', progressObject)
 
-                speakersForDebate = []
+                        if key not in mergedProgressObjectDict:
+                            mergedProgressObjectDict[key] = [speeches]
+                        else:
+                            mergedProgressObjectDict[key].append(speeches)  
+                    
+                    currentDebatteTitleList = search('keys(@)[?contains(@, \'' + typetext + ' \' )]', mergedProgressObjectDict)
+                    currentDebatteTitle = ""
+                    if 0 <= typetextDict[typetext] < len(currentDebatteTitleList): # check if index exists
+                        currentDebatteTitle = currentDebatteTitleList[typetextDict[typetext]]
+                        speechesInProtocol = list(mergedProgressObjectDict[currentDebatteTitle])
+                    
+
                 speeches = search('speeches', singleDebate)
+                nameDict = {}
                 for singleSpeech in speeches:
-                    nrOfSpeachByThisPersonInDebate = speakersForDebate.count(singleSpeech[2])
-                    speakersForDebate.append(singleSpeech[2])
+                    hasSpeechFinished = singleSpeech[1] == 'fertig'
+                    if singleSpeech[2] not in nameDict:
+                        nameDict[singleSpeech[2]] = 0
+                       
                     isVoluntaryTimeLimit = singleSpeech[9] if singleSpeech[9] != None else 'unfreiwillig lol' # quick fix, there must be a better solution for null values
 
-                    l = ItemLoader(item=SpeechesMetaDataItem(), meetingDate = meetingDate, speechesInProtocol = speechesInProtocol, nrOfSpeechByThisPerson = nrOfSpeachByThisPersonInDebate, selector=singleSpeech)      
+                    l = ItemLoader(item=SpeechesMetaDataItem(), meetingDate = meetingDate, speechesInProtocol = speechesInProtocol, nrOfSpeechByThisPerson = nameDict[singleSpeech[2]], hasSpeechFinished = hasSpeechFinished, selector=singleSpeech)      
 
                     l.add_value('titleBeforeName', singleSpeech[2],    re='^([^,]*),?.*\(.+\)$') # needs extra parsing ...
                     l.add_value('nameOfSpeaker', singleSpeech[2],      re='^([^,]*),?.*\(.+\)$') # needs extra parsing ...
@@ -71,17 +102,22 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                     l.add_value('topNr', topNr)
                     l.add_value('typeOfDebate', typeOfDebate) 
                     l.add_value('speechNrInDebate', singleSpeech[0]) 
-                    l.add_value('nrOfSpeechByThisPerson', singleSpeech[4])
+                    l.add_value('nrOfSpeechByThisPerson', nameDict[singleSpeech[2]])
                     l.add_value('externalPersonId', singleSpeech[3]) 
                     l.add_value('lastEditBySource', lastEditBySource)
                     l.add_value('parsingDatetime',  datetime.now()) 
                     l.add_value('videoUrl', singleSpeech[2], re='^([^,]*),?.*\(.+\)$')
                     l.add_value('speechUrl',  singleSpeech[2], re='^([^,]*),?.*\(.+\)$') 
                     l.add_value('speechTimeProtocol',  singleSpeech[2], re='^([^,]*),?.*\(.+\)$') 
-
+                    
+                    if hasSpeechFinished and singleSpeech[2] in nameDict:
+                        nameDict[singleSpeech[2]] += 1
+                            
                     yield l.load_item()
-        except:
-            print("an error occured while parsing data") 
+        except Exception as e:
+            self.logger.error('an error occured while parsing data:')
+            self.logger.error('%s', e)
+            self.logger.error('%s', traceback.format_exc())
             
         self.idCounter += 1
         url = self.urlPlaceholder % self.idCounter        
