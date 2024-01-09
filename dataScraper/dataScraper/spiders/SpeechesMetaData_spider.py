@@ -51,12 +51,25 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                     else:
                         typetextDict[typetext] = 0
                         
-                    speechesInProtocol = search('content[].progress[?contains(text, \'' + typetext + ' \' )].speeches[]', jsonAsPythonObject)
-                    self.logger.info("typetext" + str(typetext))
-                    self.logger.info("dict" + str(typetextDict))
-                    self.logger.info("" + str(speechesInProtocol))
-                    if 0 <= typetextDict[typetext] < len(speechesInProtocol): # check if index exists
-                        speechesInProtocol = [speechesInProtocol[typetextDict[typetext]]]
+                    
+                    progressObjectList = search('content[].progress[]', jsonAsPythonObject)
+                    
+                    mergedProgressObjectDict = {}
+                    # group by
+                    for progressObject in progressObjectList:                       
+                        key = progressObject['text']
+                        speeches = search('speeches[]', progressObject)
+
+                        if key not in mergedProgressObjectDict:
+                            mergedProgressObjectDict[key] = [speeches]
+                        else:
+                            mergedProgressObjectDict[key].append(speeches)  
+                    
+                    currentDebatteTitleList = search('keys(@)[?contains(@, \'' + typetext + ' \' )]', mergedProgressObjectDict)
+                    currentDebatteTitle = ""
+                    if 0 <= typetextDict[typetext] < len(currentDebatteTitleList): # check if index exists
+                        currentDebatteTitle = currentDebatteTitleList[typetextDict[typetext]]
+                        speechesInProtocol = list(mergedProgressObjectDict[currentDebatteTitle])
                     
 
                 speeches = search('speeches', singleDebate)
