@@ -44,7 +44,7 @@ class SpeechesSpider(scrapy.Spider):
         db = client[self.mongodb_db]        
         collection = db["speechesMetaData"]
         urls = []
-        for item in collection.find({'speechUrl': { "$exists": True }}):
+        for item in collection.find({'speechUrl': { "$exists": True }, 'speech': { "$exists": False }}):
             url = self.baseUrl + item["speechUrl"]
             urls.append(url)
         client.close()

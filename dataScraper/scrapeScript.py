@@ -10,13 +10,18 @@ from datetime import datetime
 
 # https://victorsanner.nl/azure/scraping/container/instances/docker/2022/04/25/cheap-and-easy-scraping-using-scrapy-docker-and-azure-container-instances.html
 
+MODE_INCREMENTAL = "incremental"
+MODE_OVERWRITE = "overwrite"
+
 #this is where we start the scraper 
 def scrape():
     settings = get_project_settings()
     
     mongodbUri=""
+    mode=MODE_INCREMENTAL
     try:
         mongodbUri = os.environ['MONGODB_URI']
+        mode = os.environ['MODE']
     except:
         print("could not read env variable mongodb_uri")
     finally:
@@ -26,18 +31,19 @@ def scrape():
             overridenSettings = {
                 "MONGODB_URI": mongodbUri
             }
-            customSettings = settings._to_dict() | overridenSettings
+            customSettings = settings._to_dict() | overridenSettings 
+         
 
-    customSettings = settings   
-    speechesMetaDataBaseUrl = 'https://www.parlament.gv.at/gegenstand/XXVII/NRSITZ/197?json=true'
-    gps = ['XXVII',
-          'XXVI',
-          'XXV',
-          'XXIV',
-          'XXIII',
-          'XXII',
-          'XXI',
+    customSettings = settings
+    gps = [
           'XX',
+          'XXI',
+          'XXII',
+          'XXIII',
+          'XXIV',
+          'XXV',
+          'XXVI',
+          'XXVII',
           ]
 
     # configure logging
@@ -59,10 +65,16 @@ def scrape():
     logging.root.addHandler(file_handler) 
     
     process = CrawlerProcess(customSettings)
-    process.crawl(NationalCouncilMeetingSpider)
-    for gp in gps:
-        process.crawl(SpeechesMetaDataSpider, gp)
-    process.crawl(SpeechesSpider)
+    
+    if mode == MODE_OVERWRITE:
+        process.crawl(NationalCouncilMeetingSpider)
+        for gp in gps:
+            process.crawl(SpeechesMetaDataSpider, gp)
+        process.crawl(SpeechesSpider)
+    elif mode == MODE_INCREMENTAL:
+        process.crawl(SpeechesMetaDataSpider, gps[-1])
+        process.crawl(SpeechesSpider)
+        
     process.start() # the script will block here until the crawling is finished
 
 scrape()
