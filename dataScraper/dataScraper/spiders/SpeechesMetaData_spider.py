@@ -24,8 +24,8 @@ class SpeechesMetaDataSpider(scrapy.Spider):
         )
         
         collection = mongo_provider.get_collection()
-        latestMeetingNr = collection.find().sort("meetingNr", -1).limit(1)[0]["meetingNr"]
-        self.meetingNr = latestMeetingNr + 1 if latestMeetingNr is not None else 1
+        latestItem = list(collection.find().sort("meetingNr", -1).limit(1))
+        self.meetingNr = latestItem[0]["meetingNr"] + 1 if len(latestItem) else 1
         self.urlPlaceholder = 'https://www.parlament.gv.at/gegenstand/%s/NRSITZ/' % gp + '%d?json=true'
         self.start_urls = [self.urlPlaceholder % self.meetingNr]
         
