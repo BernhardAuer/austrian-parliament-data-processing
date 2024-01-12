@@ -67,11 +67,13 @@ def scrape():
     process = CrawlerProcess(customSettings)
     
     if mode == MODE_OVERWRITE:
-        process.crawl(NationalCouncilMeetingSpider)
+        for gp in gps:            
+            process.crawl(NationalCouncilMeetingSpider, gp)
         for gp in gps:
             process.crawl(SpeechesMetaDataSpider, gp)
         process.crawl(SpeechesSpider)
-    elif mode == MODE_INCREMENTAL:
+    elif mode == MODE_INCREMENTAL:           
+        process.crawl(NationalCouncilMeetingSpider, gps[-1])
         process.crawl(SpeechesMetaDataSpider, gps[-1])
         process.crawl(SpeechesSpider)
         
