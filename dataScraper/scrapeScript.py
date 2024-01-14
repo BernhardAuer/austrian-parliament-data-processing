@@ -13,8 +13,27 @@ from datetime import datetime
 MODE_INCREMENTAL = "incremental"
 MODE_OVERWRITE = "overwrite"
 
-#this is where we start the scraper 
+
+def configureLogging():
+    configure_logging(install_root_handler=False)
+    # see https://stackoverflow.com/a/64617052 
+    # this is also interesting https://stackoverflow.com/a/52930823
+    configure_logging(settings={
+        "LOG_STDOUT": True
+    })
+    formattedDate = datetime.now().strftime("%Y-%m-%d")
+    logfileName = "./logs/scrapy_" + formattedDate + ".log"
+    file_handler = logging.FileHandler(logfileName, mode="a")
+    formatter = logging.Formatter(
+        fmt="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
+        datefmt="%H:%M:%S"
+    )
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel("INFO")
+    logging.root.addHandler(file_handler)    
+
 def scrape():
+    configureLogging()
     settings = get_project_settings()
     
     mongodbUri = None
@@ -22,12 +41,12 @@ def scrape():
     try:
         mongodbUri = os.environ['MONGODB_URI']
     except:
-        print("could not read env variable MONGODB_URI")
+        logging.info('could not read env variable MONGODB_URI')
         
     try:
         mode = os.environ['MODE']
     except:
-        print("could not read env variable MODE")
+        logging.info('could not read env variable MODE')
 
     if not mongodbUri:
         customSettings = settings            
@@ -37,7 +56,6 @@ def scrape():
         }
         customSettings = settings._to_dict() | overridenSettings 
          
-
     customSettings = settings
     gps = [
           'XX',
@@ -49,25 +67,6 @@ def scrape():
           'XXVI',
           'XXVII',
           ]
-
-    # configure logging
-    configure_logging(install_root_handler=False)
-    # see https://stackoverflow.com/a/64617052 
-    # this is also interesting https://stackoverflow.com/a/52930823
-    configure_logging(settings={
-    "LOG_STDOUT": True
-    })
-    formattedDate = datetime.now().strftime("%Y-%m-%d")
-    logfileName = "./logs/scrapy_" + formattedDate + ".log"
-    file_handler = logging.FileHandler(logfileName, mode="a")
-    formatter = logging.Formatter(
-        fmt="%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s",
-        datefmt="%H:%M:%S"
-    )
-    file_handler.setFormatter(formatter)
-    file_handler.setLevel("INFO")
-    logging.root.addHandler(file_handler) 
-    
     process = CrawlerProcess(customSettings)
     
     if mode == MODE_OVERWRITE:
