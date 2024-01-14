@@ -10,6 +10,8 @@ from dataScraper.validTitlesList import validTitles
 from dataScraper.austrianParliamentSpecificTitlesList import austrianParliamentTitles
 from jmespath import search
 import string
+from slugify import slugify
+from functools import partial
 
 def parseDate(dateString):
      dateTime = parse(dateString).replace(microsecond=0) # this replace shitty thing is needed for mongodb (js dates only, huh)
@@ -140,11 +142,15 @@ def parseSpeechTimeFromProtocol(value, loader_context):
      except:
           print('parsing error')
           return [None]
-     return time 
+     return time
+
+def slugifyConsiderGermanUmlaute(txt):
+     return slugify(txt,replacements=[['ü', 'ue'], ['ä', 'ae'], ['ö', 'oe'], ['Ü', 'UE'], ['Ä', 'AE'], ['Ö', 'OE']])
 
 class SpeechesMetaDataItem(scrapy.Item):
      titleBeforeName = scrapy.Field(input_processor = MapCompose(extractTitles, stripString)) # todo: "parlaments"titel wie BM usw.
      nameOfSpeaker = scrapy.Field(input_processor = MapCompose(getName, stripString), output_processor = TakeFirst())
+     nameOfSpeakerUrlSlug = scrapy.Field(input_processor = MapCompose(getName, stripString, slugifyConsiderGermanUmlaute), output_processor = TakeFirst())
      titlePrecedingName = scrapy.Field(input_processor = MapCompose(extractTitles, stripString))
      politicalFunction = scrapy.Field(input_processor = MapCompose(extractPoliticalFunction, stripString), output_processor = TakeFirst())
      politicalPartie = scrapy.Field(output_processor = TakeFirst())
@@ -157,6 +163,7 @@ class SpeechesMetaDataItem(scrapy.Item):
      hasSpeechFinished = scrapy.Field(input_processor= MapCompose(parseHasSpeechedFinishProperty), output_processor = TakeFirst())
      nationalCouncilMeetingTitle = scrapy.Field(output_processor = TakeFirst()) ## ?? really? better use int
      topic = scrapy.Field(output_processor = TakeFirst())
+     topicUrlSlug = scrapy.Field(input_processor = MapCompose(slugifyConsiderGermanUmlaute), output_processor = TakeFirst())
      speechNrInDebate = scrapy.Field(output_processor = TakeFirst())
      externalPersonId = scrapy.Field(output_processor = TakeFirst())
      parsingDatetime = scrapy.Field(output_processor = TakeFirst())
