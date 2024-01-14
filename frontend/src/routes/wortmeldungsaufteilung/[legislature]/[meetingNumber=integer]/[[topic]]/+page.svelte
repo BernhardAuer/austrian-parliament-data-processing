@@ -18,22 +18,21 @@
 		history.replaceState(
 			history.state,
 			document.title,
-			`/wortmeldungsverhältnisse/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}/${topicEncoded}?fraktion=${shownFilterOptions.politicalParties}`
+			`/wortmeldungsaufteilung/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}/${topicEncoded}?fraktion=${shownFilterOptions.politicalParties}`
 		);
 	};
 </script>
 
 <svelte:head>
-	<title>Wortmeldungsverhältnis | parli-info.org</title>
+	<title>Wortmeldungsaufteilung | parli-info.org</title>
 </svelte:head>
 
 <div class="md:2xl:mx-96">
 	<h1 class="text-4xl font-normal leading-normal mt-0 mb-2 text-blue-800 break-words">
-		Übersicht über das Verhältnis von Anzahl und Dauer der Wortmeldungen im Nationalrat
+		Übersicht über die Aufteilung von Wortmeldungen im Nationalrat
 	</h1>
 	<p class="text-1xl leading-tight mt-0 mb-2">
-		Die Grafik visualisiert das Verhältnis von Sprechdauer bzw. Anzahl an Wortmeldungen pro Fraktion
-		im Nationalrat.
+		Die Grafik visualisiert die Aufteilung der Wortmeldungen bzw. der Sprechdauer zwischen den Fraktionen im Nationalrat.
 	</p>
 </div>
 <div class="flex justify-center gap-x-16 gap-y-4 flex-wrap">
