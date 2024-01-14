@@ -5,20 +5,41 @@ from scrapy.loader import ItemLoader
 from jmespath import search
 from datetime import datetime
 import traceback
+from dataScraper.mongoProvider import MongoProvider
 
 class SpeechesMetaDataSpider(scrapy.Spider):
     name = "speechesMetaData"
-    idCounter = 1
+    meetingNr = 1
     urlPlaceholder = ''
     start_urls = []
     
     handle_httpstatus_list = [404]
     # todo: maybe log / store date of web request?
     
-    def __init__(self, gp):
+    def __init__(self, gp, mongodb_uri, mongodb_db):
+        mongo_provider = MongoProvider(
+            mongodb_uri,
+            mongodb_db,
+            self.name
+        )
+        
+        collection = mongo_provider.get_collection()
+        latestItem = list(collection.find().sort("meetingNr", -1).limit(1))
+        self.meetingNr = latestItem[0]["meetingNr"] + 1 if len(latestItem) else 1
         self.urlPlaceholder = 'https://www.parlament.gv.at/gegenstand/%s/NRSITZ/' % gp + '%d?json=true'
-        self.start_urls = [self.urlPlaceholder % self.idCounter]
+        self.start_urls = [self.urlPlaceholder % self.meetingNr]
+        
+    @classmethod
+    def from_crawler(cls, crawler, gp):    
 
+        spider = cls(
+            gp,
+            mongodb_uri=crawler.settings.get('MONGODB_URI'),
+            mongodb_db=crawler.settings.get('MONGODB_DATABASE')
+        )
+        spider._set_crawler(crawler)
+        return spider 
+     
     def parse(self, response):
         
         if response.status == 404:
@@ -119,8 +140,8 @@ class SpeechesMetaDataSpider(scrapy.Spider):
             self.logger.error('%s', e)
             self.logger.error('%s', traceback.format_exc())
             
-        self.idCounter += 1
-        url = self.urlPlaceholder % self.idCounter        
+        self.meetingNr += 1
+        url = self.urlPlaceholder % self.meetingNr        
         yield scrapy.Request(url, self.parse)
 
         #example json

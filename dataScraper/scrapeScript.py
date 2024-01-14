@@ -10,42 +10,16 @@ from datetime import datetime
 
 # https://victorsanner.nl/azure/scraping/container/instances/docker/2022/04/25/cheap-and-easy-scraping-using-scrapy-docker-and-azure-container-instances.html
 
-#this is where we start the scraper 
-def scrape():
-    settings = get_project_settings()
-    
-    mongodbUri=""
-    try:
-        mongodbUri = os.environ['MONGODB_URI']
-    except:
-        print("could not read env variable mongodb_uri")
-    finally:
-        if not mongodbUri:
-            customSettings = settings            
-        else:
-            overridenSettings = {
-                "MONGODB_URI": mongodbUri
-            }
-            customSettings = settings._to_dict() | overridenSettings
+MODE_INCREMENTAL = "incremental"
+MODE_OVERWRITE = "overwrite"
 
-    customSettings = settings   
-    speechesMetaDataBaseUrl = 'https://www.parlament.gv.at/gegenstand/XXVII/NRSITZ/197?json=true'
-    gps = ['XXVII',
-          'XXVI',
-          'XXV',
-          'XXIV',
-          'XXIII',
-          'XXII',
-          'XXI',
-          'XX',
-          ]
 
-    # configure logging
+def configureLogging():
     configure_logging(install_root_handler=False)
     # see https://stackoverflow.com/a/64617052 
     # this is also interesting https://stackoverflow.com/a/52930823
     configure_logging(settings={
-    "LOG_STDOUT": True
+        "LOG_STDOUT": True
     })
     formattedDate = datetime.now().strftime("%Y-%m-%d")
     logfileName = "./logs/scrapy_" + formattedDate + ".log"
@@ -56,13 +30,56 @@ def scrape():
     )
     file_handler.setFormatter(formatter)
     file_handler.setLevel("INFO")
-    logging.root.addHandler(file_handler) 
+    logging.root.addHandler(file_handler)    
+
+def scrape():
+    configureLogging()
+    settings = get_project_settings()
     
+    mongodbUri = None
+    mode = settings["MODE"]
+    try:
+        mongodbUri = os.environ['MONGODB_URI']
+    except:
+        logging.info('could not read env variable MONGODB_URI')
+        
+    try:
+        mode = os.environ['MODE']
+    except:
+        logging.info('could not read env variable MODE')
+
+    if not mongodbUri:
+        customSettings = settings            
+    else:
+        overridenSettings = {
+            "MONGODB_URI": mongodbUri
+        }
+        customSettings = settings._to_dict() | overridenSettings 
+         
+    customSettings = settings
+    gps = [
+          'XX',
+          'XXI',
+          'XXII',
+          'XXIII',
+          'XXIV',
+          'XXV',
+          'XXVI',
+          'XXVII',
+          ]
     process = CrawlerProcess(customSettings)
-    process.crawl(NationalCouncilMeetingSpider)
-    for gp in gps:
-        process.crawl(SpeechesMetaDataSpider, gp)
-    process.crawl(SpeechesSpider)
+    
+    if mode == MODE_OVERWRITE:
+        for gp in gps:            
+            process.crawl(NationalCouncilMeetingSpider, gp)
+        for gp in gps:
+            process.crawl(SpeechesMetaDataSpider, gp)
+        process.crawl(SpeechesSpider)
+    elif mode == MODE_INCREMENTAL:
+        process.crawl(NationalCouncilMeetingSpider, gps[-1])
+        process.crawl(SpeechesMetaDataSpider, gps[-1])
+        process.crawl(SpeechesSpider)
+        
     process.start() # the script will block here until the crawling is finished
 
 scrape()
