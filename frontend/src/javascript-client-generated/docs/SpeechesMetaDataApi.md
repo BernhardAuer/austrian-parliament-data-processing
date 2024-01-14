@@ -118,8 +118,8 @@ let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.Speeches
 let opts = {
   'legislature': "legislature_example", // String | 
   'meetingNumber': 56, // Number | 
-  'topic': "topic_example", // String | 
-  'nameOfSpeaker': "nameOfSpeaker_example", // String | 
+  'topicUrlSlug': "topicUrlSlug_example", // String | 
+  'nameOfSpeakerUrlSlug': "nameOfSpeakerUrlSlug_example", // String | 
   'speechNrOfPerson': 0 // Number | 
 };
 apiInstance.apiSpeechesMetaDataGetPureSpeechesGet(opts).then((data) => {
@@ -137,8 +137,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **legislature** | **String**|  | [optional] 
  **meetingNumber** | **Number**|  | [optional] 
- **topic** | **String**|  | [optional] 
- **nameOfSpeaker** | **String**|  | [optional] 
+ **topicUrlSlug** | **String**|  | [optional] 
+ **nameOfSpeakerUrlSlug** | **String**|  | [optional] 
  **speechNrOfPerson** | **Number**|  | [optional] [default to 0]
 
 ### Return type
@@ -220,8 +220,8 @@ let apiInstance = new WebApiVersion1000CultureneutralPublicKeyTokennull.Speeches
 let opts = {
   'legislature': "legislature_example", // String | 
   'meetingNumber': 56, // Number | 
-  'topic': "topic_example", // String | 
-  'nameOfSpeaker': "nameOfSpeaker_example", // String | 
+  'topicUrlSlug': "topicUrlSlug_example", // String | 
+  'nameOfSpeakerUrlSlug': "nameOfSpeakerUrlSlug_example", // String | 
   'speechNrOfPerson': 0 // Number | 
 };
 apiInstance.apiSpeechesMetaDataGetSpeechSourceLinksGet(opts).then((data) => {
@@ -239,8 +239,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **legislature** | **String**|  | [optional] 
  **meetingNumber** | **Number**|  | [optional] 
- **topic** | **String**|  | [optional] 
- **nameOfSpeaker** | **String**|  | [optional] 
+ **topicUrlSlug** | **String**|  | [optional] 
+ **nameOfSpeakerUrlSlug** | **String**|  | [optional] 
  **speechNrOfPerson** | **Number**|  | [optional] [default to 0]
 
 ### Return type

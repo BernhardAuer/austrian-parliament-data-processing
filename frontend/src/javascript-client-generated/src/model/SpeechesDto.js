@@ -50,6 +50,9 @@ class SpeechesDto {
             if (data.hasOwnProperty('nameOfSpeaker')) {
                 obj['nameOfSpeaker'] = ApiClient.convertToType(data['nameOfSpeaker'], 'String');
             }
+            if (data.hasOwnProperty('nameOfSpeakerUrlSlug')) {
+                obj['nameOfSpeakerUrlSlug'] = ApiClient.convertToType(data['nameOfSpeakerUrlSlug'], 'String');
+            }
             if (data.hasOwnProperty('typeOfSpeech')) {
                 obj['typeOfSpeech'] = ApiClient.convertToType(data['typeOfSpeech'], 'String');
             }
@@ -62,8 +65,11 @@ class SpeechesDto {
             if (data.hasOwnProperty('topic')) {
                 obj['topic'] = ApiClient.convertToType(data['topic'], 'String');
             }
-            if (data.hasOwnProperty('politicalPartie')) {
-                obj['politicalPartie'] = ApiClient.convertToType(data['politicalPartie'], 'String');
+            if (data.hasOwnProperty('topicUrlSlug')) {
+                obj['topicUrlSlug'] = ApiClient.convertToType(data['topicUrlSlug'], 'String');
+            }
+            if (data.hasOwnProperty('politicalParty')) {
+                obj['politicalParty'] = ApiClient.convertToType(data['politicalParty'], 'String');
             }
             if (data.hasOwnProperty('speechSneakPeak')) {
                 obj['speechSneakPeak'] = ApiClient.convertToType(data['speechSneakPeak'], 'String');
@@ -92,6 +98,10 @@ class SpeechesDto {
             throw new Error("Expected the field `nameOfSpeaker` to be a primitive type in the JSON string but got " + data['nameOfSpeaker']);
         }
         // ensure the json data is a string
+        if (data['nameOfSpeakerUrlSlug'] && !(typeof data['nameOfSpeakerUrlSlug'] === 'string' || data['nameOfSpeakerUrlSlug'] instanceof String)) {
+            throw new Error("Expected the field `nameOfSpeakerUrlSlug` to be a primitive type in the JSON string but got " + data['nameOfSpeakerUrlSlug']);
+        }
+        // ensure the json data is a string
         if (data['typeOfSpeech'] && !(typeof data['typeOfSpeech'] === 'string' || data['typeOfSpeech'] instanceof String)) {
             throw new Error("Expected the field `typeOfSpeech` to be a primitive type in the JSON string but got " + data['typeOfSpeech']);
         }
@@ -104,8 +114,12 @@ class SpeechesDto {
             throw new Error("Expected the field `topic` to be a primitive type in the JSON string but got " + data['topic']);
         }
         // ensure the json data is a string
-        if (data['politicalPartie'] && !(typeof data['politicalPartie'] === 'string' || data['politicalPartie'] instanceof String)) {
-            throw new Error("Expected the field `politicalPartie` to be a primitive type in the JSON string but got " + data['politicalPartie']);
+        if (data['topicUrlSlug'] && !(typeof data['topicUrlSlug'] === 'string' || data['topicUrlSlug'] instanceof String)) {
+            throw new Error("Expected the field `topicUrlSlug` to be a primitive type in the JSON string but got " + data['topicUrlSlug']);
+        }
+        // ensure the json data is a string
+        if (data['politicalParty'] && !(typeof data['politicalParty'] === 'string' || data['politicalParty'] instanceof String)) {
+            throw new Error("Expected the field `politicalParty` to be a primitive type in the JSON string but got " + data['politicalParty']);
         }
         // ensure the json data is a string
         if (data['speechSneakPeak'] && !(typeof data['speechSneakPeak'] === 'string' || data['speechSneakPeak'] instanceof String)) {
@@ -124,6 +138,11 @@ class SpeechesDto {
  * @member {String} nameOfSpeaker
  */
 SpeechesDto.prototype['nameOfSpeaker'] = undefined;
+
+/**
+ * @member {String} nameOfSpeakerUrlSlug
+ */
+SpeechesDto.prototype['nameOfSpeakerUrlSlug'] = undefined;
 
 /**
  * @member {String} typeOfSpeech
@@ -146,9 +165,14 @@ SpeechesDto.prototype['topNr'] = undefined;
 SpeechesDto.prototype['topic'] = undefined;
 
 /**
- * @member {String} politicalPartie
+ * @member {String} topicUrlSlug
  */
-SpeechesDto.prototype['politicalPartie'] = undefined;
+SpeechesDto.prototype['topicUrlSlug'] = undefined;
+
+/**
+ * @member {String} politicalParty
+ */
+SpeechesDto.prototype['politicalParty'] = undefined;
 
 /**
  * @member {String} speechSneakPeak

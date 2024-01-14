@@ -22,6 +22,6 @@ export async function load({ params, url }) {
         speechesByTopic: speechesByTopic,
         legislature: params.legislature,
         meetingNr: params.meetingNumber,
-        selectedTopic: url.searchParams.get('thema')
+        selectedTopicUrlSlug: url.searchParams.get('thema')
     };
 }

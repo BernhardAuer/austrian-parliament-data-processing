@@ -6,5 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **videoUrl** | **String** |  | [optional] 
 **speechUrl** | **String** |  | [optional] 
+**nameOfSpeaker** | **String** |  | [optional] 
+**topic** | **String** |  | [optional] 
 
 

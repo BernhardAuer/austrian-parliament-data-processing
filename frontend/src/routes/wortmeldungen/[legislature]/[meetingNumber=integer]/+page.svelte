@@ -23,8 +23,9 @@
 		legislature={data.legislature} 
 		meetingNr={data.meetingNr} 
 		topic={topic} 
+		topicUrlSlug={data.speechesByTopic[topic][0]?.topicUrlSlug} 
 		topNr={data.speechesByTopic[topic][0]?.topNr} 
 		speeches={data.speechesByTopic[topic]} 
-		selectedTopic={data.selectedTopic} />	
+		selectedTopicUrlSlug={data.selectedTopicUrlSlug} />	
 	{/each}
 </div>

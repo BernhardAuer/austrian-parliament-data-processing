@@ -53,6 +53,12 @@ class SpeechSourceLinksDto {
             if (data.hasOwnProperty('speechUrl')) {
                 obj['speechUrl'] = ApiClient.convertToType(data['speechUrl'], 'String');
             }
+            if (data.hasOwnProperty('nameOfSpeaker')) {
+                obj['nameOfSpeaker'] = ApiClient.convertToType(data['nameOfSpeaker'], 'String');
+            }
+            if (data.hasOwnProperty('topic')) {
+                obj['topic'] = ApiClient.convertToType(data['topic'], 'String');
+            }
         }
         return obj;
     }
@@ -70,6 +76,14 @@ class SpeechSourceLinksDto {
         // ensure the json data is a string
         if (data['speechUrl'] && !(typeof data['speechUrl'] === 'string' || data['speechUrl'] instanceof String)) {
             throw new Error("Expected the field `speechUrl` to be a primitive type in the JSON string but got " + data['speechUrl']);
+        }
+        // ensure the json data is a string
+        if (data['nameOfSpeaker'] && !(typeof data['nameOfSpeaker'] === 'string' || data['nameOfSpeaker'] instanceof String)) {
+            throw new Error("Expected the field `nameOfSpeaker` to be a primitive type in the JSON string but got " + data['nameOfSpeaker']);
+        }
+        // ensure the json data is a string
+        if (data['topic'] && !(typeof data['topic'] === 'string' || data['topic'] instanceof String)) {
+            throw new Error("Expected the field `topic` to be a primitive type in the JSON string but got " + data['topic']);
         }
 
         return true;
@@ -89,6 +103,16 @@ SpeechSourceLinksDto.prototype['videoUrl'] = undefined;
  * @member {String} speechUrl
  */
 SpeechSourceLinksDto.prototype['speechUrl'] = undefined;
+
+/**
+ * @member {String} nameOfSpeaker
+ */
+SpeechSourceLinksDto.prototype['nameOfSpeaker'] = undefined;
+
+/**
+ * @member {String} topic
+ */
+SpeechSourceLinksDto.prototype['topic'] = undefined;
 
 
 

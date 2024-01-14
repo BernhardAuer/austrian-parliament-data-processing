@@ -25,7 +25,7 @@ class SpeechesMetaDataSpider(scrapy.Spider):
         
         collection = mongo_provider.get_collection()
         latestItem = list(collection.find().sort("meetingNr", -1).limit(1))
-        self.meetingNr = latestItem[0]["meetingNr"] + 1 if len(latestItem) else 1
+        self.meetingNr = latestItem[0]["meetingNr"] + 1 if len(latestItem) else self.meetingNr
         self.urlPlaceholder = 'https://www.parlament.gv.at/gegenstand/%s/NRSITZ/' % gp + '%d?json=true'
         self.start_urls = [self.urlPlaceholder % self.meetingNr]
         
@@ -106,6 +106,7 @@ class SpeechesMetaDataSpider(scrapy.Spider):
 
                     l.add_value('titleBeforeName', singleSpeech[2],    re='^([^,]*),?.*\(.+\)$') # needs extra parsing ...
                     l.add_value('nameOfSpeaker', singleSpeech[2],      re='^([^,]*),?.*\(.+\)$') # needs extra parsing ...
+                    l.add_value('nameOfSpeakerUrlSlug', singleSpeech[2],      re='^([^,]*),?.*\(.+\)$') # needs extra parsing ...
                     l.add_value('politicalFunction', singleSpeech[2],  re='^([^,]*),?.*\(.+\)$') # needs extra parsing ...
                     l.add_value('titlePrecedingName', singleSpeech[2], re='^[^,]*,?(.*)\(.+\)$')  
                     l.add_value('politicalPartie', singleSpeech[2], re='\((\S+)\)$')
@@ -120,6 +121,7 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                     l.add_value('meetingNr', meetingNr)
                     l.add_value('nationalCouncilMeetingTitle', nationalCouncilMeetingTitle)
                     l.add_value('topic', topic)
+                    l.add_value('topicUrlSlug', topic)
                     l.add_value('topNr', topNr)
                     l.add_value('typeOfDebate', typeOfDebate) 
                     l.add_value('speechNrInDebate', singleSpeech[0]) 

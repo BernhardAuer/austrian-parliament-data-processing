@@ -10,6 +10,7 @@ public class SpeechesMetaData
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
     public string? nameOfSpeaker { get; set; }
+    public string? nameOfSpeakerUrlSlug { get; set; }
     public int nrOfSpeechByThisPerson { get; set; }
     public string? typeOfSpeech { get; set; }
     public DateTime startDateTime { get; set; }
@@ -18,6 +19,7 @@ public class SpeechesMetaData
     public int lengthOfSpeechInSec { get; set; }
     public string? nationalCouncilMeetingTitle { get; set; }
     public string? topic { get; set; }
+    public string? topicUrlSlug { get; set; }
     public bool hasSpeechFinished { get; set; }
     
     public string politicalPartie { get; set; }

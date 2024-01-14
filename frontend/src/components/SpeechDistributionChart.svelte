@@ -56,7 +56,7 @@
 	});
 </script>
 
-<h2 class="card-title">Wortmeldungsverhältnisse</h2>
+<h2 class="card-title">Wortmeldungsverteilung</h2>
 {#await chartDataPromise}
 	<LoadingSpinner />
 {:then chartData}
