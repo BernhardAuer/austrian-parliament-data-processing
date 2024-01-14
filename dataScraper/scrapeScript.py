@@ -17,21 +17,25 @@ MODE_OVERWRITE = "overwrite"
 def scrape():
     settings = get_project_settings()
     
-    mongodbUri=""
-    mode=MODE_INCREMENTAL
+    mongodbUri = None
+    mode = settings["MODE"]
     try:
         mongodbUri = os.environ['MONGODB_URI']
+    except:
+        print("could not read env variable MONGODB_URI")
+        
+    try:
         mode = os.environ['MODE']
     except:
-        print("could not read env variable mongodb_uri")
-    finally:
-        if not mongodbUri:
-            customSettings = settings            
-        else:
-            overridenSettings = {
-                "MONGODB_URI": mongodbUri
-            }
-            customSettings = settings._to_dict() | overridenSettings 
+        print("could not read env variable MODE")
+
+    if not mongodbUri:
+        customSettings = settings            
+    else:
+        overridenSettings = {
+            "MONGODB_URI": mongodbUri
+        }
+        customSettings = settings._to_dict() | overridenSettings 
          
 
     customSettings = settings
@@ -72,7 +76,7 @@ def scrape():
         for gp in gps:
             process.crawl(SpeechesMetaDataSpider, gp)
         process.crawl(SpeechesSpider)
-    elif mode == MODE_INCREMENTAL:           
+    elif mode == MODE_INCREMENTAL:
         process.crawl(NationalCouncilMeetingSpider, gps[-1])
         process.crawl(SpeechesMetaDataSpider, gps[-1])
         process.crawl(SpeechesSpider)

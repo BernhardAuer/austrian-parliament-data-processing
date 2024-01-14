@@ -95,3 +95,4 @@ FEED_EXPORT_ENCODING = "utf-8"
 # custom settings
 MONGODB_URI="mongodb://localhost:27017/" # gets overriden on deployment
 MONGODB_DATABASE="austrianParliamentaryDataScraping"
+MODE="incremental"
