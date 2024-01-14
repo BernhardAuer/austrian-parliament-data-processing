@@ -69,17 +69,17 @@ public class SpeechesMetaDataService
         return result.ToList();
     }
     
-    public async Task<dynamic> GetSpeechSourceLinks(string legislature, int meetingNumber, string topic, string nameOfSpeaker, int speechNrOfPerson)
+    public async Task<dynamic> GetSpeechSourceLinks(string legislature, int meetingNumber, string topicUrlSlug, string nameOfSpeakerUrlSlug, int speechNrOfPerson)
     {
         var query = _speechesMetaDataCollection
             .Aggregate()
             .Match(x => x.legislature == legislature && x.meetingNr == meetingNumber 
-                                                     && x.topic == topic
-                                                     && x.nameOfSpeaker == nameOfSpeaker
+                                                     && x.topicUrlSlug == topicUrlSlug
+                                                     && x.nameOfSpeakerUrlSlug == nameOfSpeakerUrlSlug
                                                      && x.nrOfSpeechByThisPerson == speechNrOfPerson);
         
         var result = await query.Limit(1)
-            .Project(x => new { x.videoUrl, x.speechUrl })
+            .Project(x => new { x.videoUrl, x.speechUrl, x.nameOfSpeaker, x.topic })
             .FirstOrDefaultAsync();
         return result;
     }

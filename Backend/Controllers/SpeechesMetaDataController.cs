@@ -201,12 +201,13 @@ namespace WebApi.Controllers
         [HttpGet]
         [Route("getSpeechSourceLinks")]
         public async Task<SpeechSourceLinksDto> GetSpeechSourceLinks([FromQuery] string legislature, [FromQuery] int meetingNumber, 
-            [FromQuery] string topic, [FromQuery] string nameOfSpeaker, [FromQuery] int speechNrOfPerson = 0)
+            [FromQuery] string topicUrlSlug, [FromQuery] string nameOfSpeakerUrlSlug, [FromQuery] int speechNrOfPerson = 0)
         {
             var sourceLinks =
-                await _speechesMetaDataService.GetSpeechSourceLinks(legislature, meetingNumber, topic, nameOfSpeaker, speechNrOfPerson);
+                await _speechesMetaDataService.GetSpeechSourceLinks(legislature, meetingNumber, topicUrlSlug, nameOfSpeakerUrlSlug, speechNrOfPerson);
 
-            return new SpeechSourceLinksDto { SpeechUrl = _sourceOriginBaseUrl + sourceLinks?.speechUrl, VideoUrl = _sourceOriginBaseUrl + sourceLinks?.videoUrl };
+            return new SpeechSourceLinksDto { SpeechUrl = _sourceOriginBaseUrl + sourceLinks?.speechUrl, VideoUrl = _sourceOriginBaseUrl + sourceLinks?.videoUrl, 
+                Topic = sourceLinks.topic, NameOfSpeaker = sourceLinks.nameOfSpeaker };
         }
         
         [HttpGet]
