@@ -33,9 +33,11 @@ namespace WebApi.Controllers
             var result = speeches.Select(x => new SpeechesDto()
                 {
                     NameOfSpeaker = x.nameOfSpeaker,
+                    NameOfSpeakerUrlSlug = x.nameOfSpeakerUrlSlug,
                     Topic = x.topic,
+                    TopicUrlSlug = x.topicUrlSlug,
                     TopNr = x.topNr,
-                    PoliticalPartie = x.politicalPartie,
+                    PoliticalParty = x.politicalPartie,
                     TypeOfSpeech = _austrianParliamentAbbreviationMappings.GetLongNameSpeechType(x.typeOfSpeech),
                     LengthOfSpeechInSec = x.lengthOfSpeechInSec,
                     SpeechSneakPeak = GetTextWithoutSalutation(x?.speech?.FirstOrDefault(x => x.type == SpeechObjectTypeEnum.Speech)?.data),
@@ -80,10 +82,10 @@ namespace WebApi.Controllers
         [HttpGet]
         [Route("getPureSpeeches")]
         public async Task<List<SpeechDto>> GetPureSpeeches([FromQuery] string legislature, [FromQuery] int meetingNumber, 
-            [FromQuery] string topic, [FromQuery] string nameOfSpeaker, [FromQuery] int speechNrOfPerson = 0)
+            [FromQuery] string topicUrlSlug, [FromQuery] string nameOfSpeakerUrlSlug, [FromQuery] int speechNrOfPerson = 0)
         {
             var speeches =
-                await _speechesMetaDataService.GetPureSpeeches(legislature, meetingNumber, topic, nameOfSpeaker, speechNrOfPerson);
+                await _speechesMetaDataService.GetPureSpeeches(legislature, meetingNumber, topicUrlSlug, nameOfSpeakerUrlSlug, speechNrOfPerson);
             List<SpeechDto> speechDtos = new List<SpeechDto>();
             foreach (var speech in speeches)
             {

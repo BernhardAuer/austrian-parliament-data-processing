@@ -4,8 +4,8 @@ let service = new SpeechService();
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params, url }) {
-    let speechPromise = service.fetchPureSpeech({ legislature: params.legislature, meetingNumber: params.meetingNumber, topic: params.topic,
-    nameOfSpeaker: params.nameOfSpeaker, speechNrOfPerson: params?.speechNrOfPerson });    
+    let speechPromise = service.fetchPureSpeech({ legislature: params.legislature, meetingNumber: params.meetingNumber, topicUrlSlug: params.topic,
+    nameOfSpeakerUrlSlug: params.nameOfSpeaker, speechNrOfPerson: params?.speechNrOfPerson });    
     
     let sourceLinksPromise = service.fetchSpeechSourceLinks({ legislature: params.legislature, meetingNumber: params.meetingNumber, topic: params.topic,
         nameOfSpeaker: params.nameOfSpeaker, speechNrOfPerson: params?.speechNrOfPerson });

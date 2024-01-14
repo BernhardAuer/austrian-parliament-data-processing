@@ -75,13 +75,13 @@
 				<p class="text-justify line-clamp-4">
 					{speech.speechSneakPeak}
 				</p>
-				<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(topic)}/{speech.nameOfSpeaker}{getUrlParamSpeechNrOfPerson(speech.speechNrOfPerson)}" class="btn btn-ghost">
+				<a href="/wortmeldung/{legislature}/{meetingNr}/{encodeURIComponent(speech.topicUrlSlug)}/{speech.nameOfSpeakerUrlSlug}{getUrlParamSpeechNrOfPerson(speech.speechNrOfPerson)}" class="btn btn-ghost">
 					weiterlesen
 				</a>
 			{/if}
 		
 		<div class="flex flex-wrap self-center gap-2">
-			<div class="badge badge-outline">{getLongNameOfPoliticalParty(speech.politicalPartie)}</div>			
+			<div class="badge badge-outline">{getLongNameOfPoliticalParty(speech.politicalParty)}</div>			
 			<div class="badge badge-outline">
 				{convertLengthToReadableString(speech.lengthOfSpeechInSec)} min
 			</div>
