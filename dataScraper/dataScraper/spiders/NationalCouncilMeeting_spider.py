@@ -20,6 +20,7 @@ class NationalCouncilMeetingSpider(scrapy.Spider):
         collection = mongo_provider.get_collection()
         latestItem = list(collection.find({"legislativePeriod": gp}).sort("meetingNumber", -1).limit(1))
         self.nextMeetingNr = latestItem[0]["meetingNumber"] + 1 if len(latestItem) else 1
+        self.logger.info(f"start national council meeting scraping with meetingNr {self.nextMeetingNr}")
         
     @classmethod
     def from_crawler(cls, crawler, gp):
@@ -39,6 +40,7 @@ class NationalCouncilMeetingSpider(scrapy.Spider):
         ]
 
     def parsePostData(self, response):
+        self.logger.debug(f"requestUrl: '{response.request.url}'")
         results = json.loads(response.body)
 
         for meeting in results["rows"]:
