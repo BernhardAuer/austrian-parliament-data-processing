@@ -20,7 +20,7 @@ class NationalCouncilMeetingSpider(scrapy.Spider):
         collection = mongo_provider.get_collection()
         latestItem = list(collection.find({"legislativePeriod": gp}).sort("meetingNumber", -1).limit(1))
         self.nextMeetingNr = latestItem[0]["meetingNumber"] + 1 if len(latestItem) else 1
-        self.logger.info(f"start national council meeting scraping with meetingNr {self.nextMeetingNr}")
+        self.logger.info(f"start national council meeting scraping with meetingNr {self.nextMeetingNr} of gp: {gp}")
         
     @classmethod
     def from_crawler(cls, crawler, gp):
