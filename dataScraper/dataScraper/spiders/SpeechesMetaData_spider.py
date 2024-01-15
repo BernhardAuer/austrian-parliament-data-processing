@@ -40,9 +40,10 @@ class SpeechesMetaDataSpider(scrapy.Spider):
         spider._set_crawler(crawler)
         return spider 
      
-    def parse(self, response):
-        
+    def parse(self, response):        
+        self.logger.debug(f"requestUrl: '{response.request.url}'")
         if response.status == 404:
+            self.logger.info(f"got 404, so abort further scraping of speechMetaData. meetingNr: {self.meetingNr}, url: '{response.request.url}'")
             return None
             
         try:
@@ -64,6 +65,7 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                 typeOfDebate = search('type', singleDebate)
                 speechesInProtocol = None
                 if topNr is not None:
+                    self.logger.debug(f"parse topic with topNr {topNr}")
                     speechesInProtocol = search('content[].progress[?starts_with(text, \'' + topNr + ' \' )].speeches[]', jsonAsPythonObject) 
                 else:              
                     typetext = search('typetext', singleDebate)
@@ -71,8 +73,8 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                         typetextDict[typetext] += 1
                     else:
                         typetextDict[typetext] = 0
-                        
-                    
+                    self.logger.debug(f"parse topic with typetext '{typetext}' and index {typetextDict[typetext]}")
+
                     progressObjectList = search('content[].progress[]', jsonAsPythonObject)
                     
                     mergedProgressObjectDict = {}
@@ -91,7 +93,6 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                     if 0 <= typetextDict[typetext] < len(currentDebatteTitleList): # check if index exists
                         currentDebatteTitle = currentDebatteTitleList[typetextDict[typetext]]
                         speechesInProtocol = list(mergedProgressObjectDict[currentDebatteTitle])
-                    
 
                 speeches = search('speeches', singleDebate)
                 nameDict = {}
@@ -138,38 +139,10 @@ class SpeechesMetaDataSpider(scrapy.Spider):
                             
                     yield l.load_item()
         except Exception as e:
-            self.logger.error('an error occured while parsing data:')
-            self.logger.error('%s', e)
+            self.logger.info(f"ATTENTION: further manual checks are needed (scraped data is incomplete) - could not finish parsing speechMetaData of meetingNr {self.meetingNr} - url: '{response.request.url}'")
+            self.logger.error('an error occured while parsing data: %s', e)
             self.logger.error('%s', traceback.format_exc())
             
         self.meetingNr += 1
         url = self.urlPlaceholder % self.meetingNr        
         yield scrapy.Request(url, self.parse)
-
-        #example json
-        #  "speeches": [
-        #                 [
-        #                     1,
-        #                     "fertig",
-        #                     "Mag. Faika El-Nagashi (G)",
-        #                     5651,
-        #                     0,
-        #                     "p",
-        #                     "10:27",
-        #                     "4:56",
-        #                     4,
-        #                     "*"
-        #                 ],
-        #                 [
-        #                     2,
-        #                     "fertig",
-        #                     "Dietmar Keck (S)",
-        #                     14840,
-        #                     0,
-        #                     "p",
-        #                     "10:32",
-        #                     "3:51",
-        #                     3,
-        #                     "*"
-        #                 ]
-        #               ]
