@@ -40,7 +40,7 @@
 				>
 					<li><a href="/wortmeldungsarten">Wortmeldungsarten</a></li>
 					<li><a href="/wortmeldungsdauer">Wortmeldungsdauer</a></li>		
-					<li><a href="/wortmeldungsaufteilung">Wortmeldungsaufteilung</a></li>		
+					<li><a href="/wortmeldungsverteilung">Wortmeldungsverteilung</a></li>		
 					<li><a href="/sitzungsverteilung">Sitzungsverteilung</a></li>			
 				</ul>
 			</div>
@@ -51,7 +51,7 @@
 			<ul class="menu menu-horizontal px-1">
 				<li><a href="/wortmeldungsarten">Wortmeldungsarten</a></li>	
 				<li><a href="/wortmeldungsdauer">Wortmeldungsdauer</a></li>		
-				<li><a href="/wortmeldungsaufteilung">Wortmeldungsaufteilung</a></li>		
+				<li><a href="/wortmeldungsverteilung">Wortmeldungsverteilung</a></li>		
 				<li><a href="/sitzungsverteilung">Sitzungsverteilung</a></li>				
 			</ul>
 		</div>
