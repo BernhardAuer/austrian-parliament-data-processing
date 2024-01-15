@@ -40,11 +40,13 @@ def scrape():
     mode = settings["MODE"]
     try:
         mongodbUri = os.environ['MONGODB_URI']
+        logging.info(f'read env variable MONGODB_URI: "{mongodbUri}"')
     except:
         logging.info('could not read env variable MONGODB_URI')
         
     try:
         mode = os.environ['MODE']
+        logging.info(f'read env variable MODE: "{mode}"')
     except:
         logging.info('could not read env variable MODE')
 
@@ -56,7 +58,7 @@ def scrape():
         }
         customSettings = settings._to_dict() | overridenSettings 
          
-    customSettings = settings
+    customSettings = settings    
     gps = [
           'XX',
           'XXI',
@@ -68,18 +70,29 @@ def scrape():
           'XXVII',
           ]
     process = CrawlerProcess(customSettings)
-    
+    logging.info(f"loaded custom app settings. mongoDbUri: '{customSettings['MONGODB_URI']}', mode: '{mode}', gps: {gps}")
     if mode == MODE_OVERWRITE:
-        for gp in gps:            
+        logging.info(f"queue crawlers in data overwrite mode")  
+        for gp in gps:
+            logging.info(f"queue NationalCouncilMeetingSpider for GP '{gp}'")             
             process.crawl(NationalCouncilMeetingSpider, gp)
         for gp in gps:
+            logging.info(f"queue SpeechesMetaDataSpider for GP '{gp}'")  
             process.crawl(SpeechesMetaDataSpider, gp)
+        logging.info(f"queue SpeechesSpider") 
         process.crawl(SpeechesSpider)
     elif mode == MODE_INCREMENTAL:
-        process.crawl(NationalCouncilMeetingSpider, gps[-1])
-        process.crawl(SpeechesMetaDataSpider, gps[-1])
+        logging.info(f"queue crawlers in incremental data update mode")  
+        currentGp = gps[-1]
+        logging.info(f"queue NationalCouncilMeetingSpider for GP '{currentGp}'") 
+        process.crawl(NationalCouncilMeetingSpider, currentGp)
+        logging.info(f"queue SpeechesMetaDataSpider for GP '{currentGp}'")  
+        process.crawl(SpeechesMetaDataSpider, currentGp)
+        logging.info(f"queue SpeechesSpider") 
         process.crawl(SpeechesSpider)
-        
+    
+    logging.info(f"start scrape process")  
     process.start() # the script will block here until the crawling is finished
+    logging.info(f"finished scrape process")  
 
 scrape()
