@@ -18,13 +18,13 @@
 		history.replaceState(
 			history.state,
 			document.title,
-			`/wortmeldungsaufteilung/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}/${topicEncoded}?fraktion=${shownFilterOptions.politicalParties}`
+			`/wortmeldungsverteilung/${shownFilterOptions.legislature}/${shownFilterOptions.meetingNumber}/${topicEncoded}?fraktion=${shownFilterOptions.politicalParties}`
 		);
 	};
 </script>
 
 <svelte:head>
-	<title>Wortmeldungsaufteilung | parli-info.org</title>
+	<title>Wortmeldungsverteilung | parli-info.org</title>
 </svelte:head>
 
 <div class="md:2xl:mx-96">
