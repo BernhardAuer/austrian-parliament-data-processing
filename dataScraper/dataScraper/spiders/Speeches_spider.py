@@ -5,7 +5,6 @@ from scrapy.loader import ItemLoader
 import re
 import pymongo
 import traceback
-import logging
 
 class SpeechesSpider(scrapy.Spider):
     name = "speeches"
@@ -40,6 +39,7 @@ class SpeechesSpider(scrapy.Spider):
         return spider  
 
     def get_urls_from_db(self):
+        self.logger.info(f"query speech scrape URLs from DB")
         client = pymongo.MongoClient(self.mongodb_uri)
         db = client[self.mongodb_db]        
         collection = db["speechesMetaData"]
@@ -48,6 +48,7 @@ class SpeechesSpider(scrapy.Spider):
             url = self.baseUrl + item["speechUrl"]
             urls.append(url)
         client.close()
+        self.logger.info(f"found {len(urls)} speech URLs for scraping")
         return urls
     
     def cleanInput(self, value):
@@ -97,8 +98,9 @@ class SpeechesSpider(scrapy.Spider):
         return None
 
     def parse(self, response):
-        
+        self.logger.debug(f"requestUrl: '{response.request.url}'")
         if response.status == 404:
+            self.logger.info(f"got 404, go ahead with scraping other speeches. url: '{response.request.url}'")
             return None
           
         try:
@@ -204,10 +206,9 @@ class SpeechesSpider(scrapy.Spider):
                     l = self.getOriginalRequestUrl(response, l)                                  
                     yield l.load_item()                    
                     index += 1  
-        except Exception as e:
-            self.logger.error('an error occured while parsing data:')
-            self.logger.error('%s', e)
+        except Exception as e:            
+            self.logger.info(f"could not finish parsing speech with url: '{response.request.url}'")
+            self.logger.error('an error occured while parsing data: %s', e)
             self.logger.error('%s', traceback.format_exc())
                 
-        # yield scrapy.Request(url, self.parse)
         
