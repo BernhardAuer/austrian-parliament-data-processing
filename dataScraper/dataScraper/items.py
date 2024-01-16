@@ -12,6 +12,7 @@ from jmespath import search
 import string
 from slugify import slugify
 from functools import partial
+import logging
 
 def parseDate(dateString):
      dateTime = parse(dateString).replace(microsecond=0) # this replace shitty thing is needed for mongodb (js dates only, huh)
@@ -97,13 +98,21 @@ def extractPoliticalFunction(value):
      return politicalFunction
 
 def matchAndParseDataFromProtocol(value, loader_context):
-     if not loader_context.get('hasSpeechFinished'):
+     if not loader_context.get('hasSpeechFinished', None):
+          logging.info(f"extracted extra data not possible")
           return None
-     speechesInProtocol = loader_context.get('speechesInProtocol')
-     nrOfSpeechByThisPerson = loader_context.get('nrOfSpeechByThisPerson')
-     url = search('[*][?contains(texta, \''+ value +'\')][]', speechesInProtocol)[nrOfSpeechByThisPerson]
-
-     return url
+     try:
+          speechesInProtocol = loader_context.get('speechesInProtocol', None)
+          nrOfSpeechByThisPerson = loader_context.get('nrOfSpeechByThisPerson', 0)
+          speechByPersonList = search('[*][?contains(texta, \''+ value +'\')][]', speechesInProtocol)
+          if speechByPersonList is None or len(speechByPersonList) == 0 or len(speechByPersonList) <= nrOfSpeechByThisPerson:
+               logging.debug(f"could not extract speech data. speechesInProtocol: {speechesInProtocol}, nrOfSpeechByThisPerson: {nrOfSpeechByThisPerson}, speechByPersonList: {speechByPersonList}")
+               return None     
+          speechByPerson = speechByPersonList[nrOfSpeechByThisPerson]
+          return speechByPerson
+     except:          
+          logging.info(f"error while extracting speech data")
+          return None
 
 def giveMeError(value, loader_context):
      speechesInProtocol = loader_context.get('speechesInProtocol')
@@ -113,34 +122,35 @@ def giveMeError(value, loader_context):
 
 def parseVideoUrl(value, loader_context):
      try:
-          if not loader_context.get('hasSpeechFinished'):
+          if not loader_context.get('hasSpeechFinished', None):
                return None
+          
           speechData = matchAndParseDataFromProtocol(value, loader_context)
           videoUrl = search('video', speechData)
-     except:
-          print('parsing error')
+     except:          
+          logging.info(f"error while extracting video url of speech by person: {value}")
           return [None]
      return videoUrl 
 
 def parseSpeechUrl(value, loader_context):
      try:          
-          if not loader_context.get('hasSpeechFinished'):
+          if not loader_context.get('hasSpeechFinished', None):
                return None
           speechData = matchAndParseDataFromProtocol(value, loader_context)
           url = search('filename', speechData)     
      except:
-          print('parsing error')
+          logging.info(f"error while extracting speech url of speech by person: {value}")
           return [None]
      return url 
 
 def parseSpeechTimeFromProtocol(value, loader_context):
      try:          
-          if not loader_context.get('hasSpeechFinished'):
+          if not loader_context.get('hasSpeechFinished', None):
                return None
           speechData = matchAndParseDataFromProtocol(value, loader_context)
           time = search('time', speechData)
      except:
-          print('parsing error')
+          logging.info(f"error while extracting speech time by person: {value}")
           return [None]
      return time
 
