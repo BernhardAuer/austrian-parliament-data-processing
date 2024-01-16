@@ -122,6 +122,26 @@ SOFTWARE.
 
 
 
+### Hosting
+* Frontend
+  * Azure Static Web App
+  * Azure Function Node.js (SWA managed Function)
+* Backend
+  * Azure App Service (including managed Domain/DNS/SSL-Cert)
+  * MongoDb Atlas (M0 Sandbox)
+* Scraper
+  * Azure Container Registry
+  * Azure Container Apps
+* Monitoring
+  * Azure Monitor
+  * Azure App Insights
+ 
+All Services are running in the Azure Region Westeurope (Netherlands)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
