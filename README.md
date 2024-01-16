@@ -46,18 +46,18 @@ SOFTWARE.
 <br />
 <div align="center">
   <a href="https://github.com/BernhardAuer/austrian-parliament-data-processing">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/BernhardAuer/austrian-parliament-data-processing/assets/40627756/25024a9e-89cc-4141-8d9c-67e1db694c2a" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">parli-info.org</h3>
 
   <p align="center">
-    project_description
+    Website for visualizing austrian's open government data in an appealing, interactive and simple-to-use manner.
     <br />
     <a href="https://github.com/BernhardAuer/austrian-parliament-data-processing"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/BernhardAuer/austrian-parliament-data-processing">View Demo</a>
+    <a href="https://parli-info.org">View Website</a>
     ·
     <a href="https://github.com/BernhardAuer/austrian-parliament-data-processing/issues">Report Bug</a>
     ·
@@ -98,24 +98,25 @@ SOFTWARE.
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](https://parli-info.org/wortmeldungsarten)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `BernhardAuer`, `austrian-parliament-data-processing`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 ### Built With
-
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+* Frontend
+  * [![Svelte][Svelte.dev]][Svelte-url]
+  * [![TailwindCss][tailwindcss]][tailwindcss-url]
+  * DaisyUi
+* Backend
+  * asp.net core
+  * MongoDb
+* Scraper
+  * Python
+  * Scrapy
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -210,7 +211,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Bernhard Auer - auer-bernhard@protonmail.com
 
 Project Link: [https://github.com/BernhardAuer/austrian-parliament-data-processing](https://github.com/BernhardAuer/austrian-parliament-data-processing)
 
@@ -221,9 +222,7 @@ Project Link: [https://github.com/BernhardAuer/austrian-parliament-data-processi
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+* [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -243,9 +242,9 @@ Project Link: [https://github.com/BernhardAuer/austrian-parliament-data-processi
 [license-url]: https://github.com/BernhardAuer/austrian-parliament-data-processing/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
+[product-screenshot]: https://github.com/BernhardAuer/austrian-parliament-data-processing/assets/40627756/50ebf8aa-4b73-48b3-8c22-7cb70b833ec2
+[tailwindcss]: https://img.shields.io/badge/tailwindcss-0F172A?&logo=tailwindcss&style=for-the-badge&logoColor=FF3E00
+[tailwindcss-url]: https://tailwindcss.com/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
 [Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
