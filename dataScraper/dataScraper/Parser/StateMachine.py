@@ -1,3 +1,5 @@
+import logging
+
 # https://python-course.eu/applications-python/finite-state-machine.php
 class StateMachine:
     
@@ -27,17 +29,11 @@ class StateMachine:
         i = 0
         while True:
             i += 1
-            if (i > 1000):
-                print("detected a potential endless loop. abort parsing.") # todo: logger & warning
+            if (i > 1000):                
+                logging.warn(f"detected a potential endless loop. abort parsing of info items. phrase: '{phrase}', validPersonNames: {validPersonNames}")
                 return None
             (newState, phrase, infoItems) = handler(phrase = phrase, infoItems = infoItems, validPersonNames = validPersonNames)
             if newState.upper() in self.endStates:
-                # for infoItem in infoItems:
-                #     print("New ITEM:")
-                #     print(infoItem)
-                #     print("----------------------")
                 return infoItems
-            else:                
-                # print("currently ", newState)
-                # print("TEXT:", phrase)
+            else:
                 handler = self.handlers[newState.upper()]   
