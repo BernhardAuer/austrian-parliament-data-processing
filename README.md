@@ -108,15 +108,17 @@ SOFTWARE.
 
 ### Built With
 * Frontend
-  * [![Svelte][Svelte.dev]][Svelte-url]
-  * [![TailwindCss][tailwindcss]][tailwindcss-url]
-  * DaisyUi
+  * ![SvelteKit](https://img.shields.io/badge/SvelteKit-FF3E00?style=for-the-badge&logo=Svelte&logoColor=white)
+  * ![TailwindCss](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+  * ![DaisyUi](https://img.shields.io/badge/daisyUI-1ad1a5?style=for-the-badge&logo=daisyui&logoColor=white)
 * Backend
-  * asp.net core
-  * MongoDb
+  * ![asp.net core](https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+  * ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white)
+  * ![MongoDb](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 * Scraper
-  * Python
-  * Scrapy
+  * ![Python](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
+  * <img src="https://github.com/BernhardAuer/austrian-parliament-data-processing/assets/40627756/7e749444-b9a5-4288-aa97-3746205cae9e" alt="Scrapy" height="25">
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
