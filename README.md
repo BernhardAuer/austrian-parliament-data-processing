@@ -103,6 +103,7 @@ We provide an easy-to-use platform, which lets people discover debates held in t
 
  
 [![Product Name Screen Shot][product-screenshot]](https://parli-info.org/wortmeldungsarten)
+![frame_safari_light (2)](https://github.com/BernhardAuer/austrian-parliament-data-processing/assets/40627756/384ad18b-520f-4851-b59d-407ad3bc2ecb)
 
 
 #### Our Design Principles
