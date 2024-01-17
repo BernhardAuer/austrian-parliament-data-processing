@@ -97,9 +97,19 @@ SOFTWARE.
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+We provide an easy-to-use platform, which lets people discover debates held in the austrian parliament. Our aim is to encourage people's political curiosity by providing truthful information and statistics. Let's discover the interesting world of politics together!
 
+ <!-- Let us reflect our own political positions and initiate further discussions. Furthermore, this tool might could be used  exploring certain topics of austrian politics. -->
+
+ 
 [![Product Name Screen Shot][product-screenshot]](https://parli-info.org/wortmeldungsarten)
 
+
+#### Our Design Principles
+- Privacy protection. This platform does not and will never collect any user related data. We think that political views are a highly personal subject and worthy of protection.
+- Free to use, for everyone.
+- No advertising, ever.
+- Focus on good UX.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -124,7 +134,7 @@ SOFTWARE.
 
 
 
-### Hosting
+### Hosted on
 * Frontend
   * Azure Static Web App
   * Azure Function Node.js (SWA managed Function)
