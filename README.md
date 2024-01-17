@@ -107,10 +107,10 @@ We provide an easy-to-use platform, which lets people discover debates held in t
 
 
 #### Our Design Principles
-- Privacy protection. This platform does not and will never collect any user related data. We think that political views are a highly personal subject and worthy of protection.
-- Free to use, for everyone.
-- No advertising, ever.
-- Focus on good UX.
+- *Privacy* first. This platform does not and will never collect any user related data. We think that political views are a highly personal subject and worthy of protection.
+- *Free* to use, for everyone.
+- *No ad*vertising, ever.
+- Focus on *good UX*.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -155,63 +155,74 @@ All Services are running in the Azure Region Westeurope (Netherlands)
 
 
 
+<!-- ROADMAP -->
+## Roadmap
+#### Rough Overview of Subject Areas
+- Plenary sittings
+  - speakers
+  - parliamentary bills
+  - parliamentarians
+  - citizens' initiatives
+  - petitions
+
+Releases are planned via tracking issues (marked with label 'tracking issue'). Those issues contain sub-issues, which define the requirements for the implemenation of the (software) features. 
+
+See the [open issues](https://github.com/BernhardAuer/austrian-parliament-data-processing/issues) for a more detailed list of proposed features (and known issues).
+
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+These step-by-step instructions are helpful for setting up this project locally.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+Following software is needed to build & run the project locally:
+- Frontend
+  - node.js >= 18
+  - npm
+  - vite
+- Database
+  - MongoDb >= 5
+- Backend
+  - .net6 (asp.net core)
+- Scraper
+  - python 3
+  - full list of modules & packages see `requirements.txt`
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/BernhardAuer/austrian-parliament-data-processing.git
    ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+
+#### Database
+1. Create a new mongoDb database (e.g. with name `austrianParliamentaryDataScraping`)
+2. Create the schema. Manually create following mongoDb collections in the DB: 
+    - `nationalCouncilMeetings`
+    - `speechesMetaData`
+3. Import the provided .json file datasets. You can easily import these via the MongoDB Compass Client. (TODO add link to import files)
+
+#### Backend
+1. todo
+
+#### Frontend
+1. todo
+
+#### Scraper
+1. todo
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+## CI/CD Pipelines
+todo 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
-
-See the [open issues](https://github.com/BernhardAuer/austrian-parliament-data-processing/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- CONTRIBUTING -->
@@ -228,6 +239,9 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+If you want to request a feature or report a bug but don't have a github account, feel free to contact me via email (<a href="#readme-contact">go to Contact</a>).
+ 
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -237,10 +251,10 @@ Don't forget to give the project a star! Thanks again!
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<p align="right">(<a href="#readme-contact">back to top</a>)</p>
 
 
-
+<a name="readme-contact"></a>
 <!-- CONTACT -->
 ## Contact
 
@@ -256,6 +270,7 @@ Project Link: [https://github.com/BernhardAuer/austrian-parliament-data-processi
 ## Acknowledgments
 
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
+* [Parlament Österreich](https://www.parlament.gv.at/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
