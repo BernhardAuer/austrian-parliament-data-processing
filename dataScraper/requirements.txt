@@ -1,4 +1,4 @@
-Scrapy==2.8.0
+Scrapy==2.11.1
 pathlib==1.0.1
 pymongo==4.3.3
 itemloaders==1.0.6
